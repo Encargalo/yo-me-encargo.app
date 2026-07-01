@@ -1,10 +1,23 @@
-import { Text, View } from "react-native";
+import { router } from "expo-router";
+import { useEffect } from "react";
+import { View } from "react-native";
 
-// TODO: reemplazar por navegación real (auth)/(app) en el primer change de OpenSpec
+import { ROUTES } from "@/constants/routes";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+
 export default function Index() {
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-primary text-xl font-bold">YoMeEncargo</Text>
-    </View>
-  );
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const hydrate = useAuthStore((s) => s.hydrate);
+
+  useEffect(() => {
+    hydrate();
+  }, [hydrate]);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+    router.replace(isAuthenticated ? ROUTES.APP.HOME : ROUTES.AUTH.LOGIN);
+  }, [isHydrated, isAuthenticated]);
+
+  return <View className="flex-1 bg-white" />;
 }
