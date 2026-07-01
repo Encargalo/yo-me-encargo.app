@@ -31,7 +31,13 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
+
+# OpenSpec local config (no commitear tokens/credenciales)
+.claude/openspec-config.json
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
 
 # typescript
 *.tsbuildinfo
