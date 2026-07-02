@@ -5,6 +5,8 @@ export const ROUTES = {
   APP: {
     HOME: "/home",
     BALANCE: "/balance",
+    HISTORIAL: "/historial",
+    PERFIL: "/perfil",
     // Ruta dinámica: navegar con router.push({ pathname, params: { id } })
     ORDER_DETAIL: "/orders/[id]",
   },

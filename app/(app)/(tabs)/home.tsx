@@ -50,8 +50,7 @@ export default function Home() {
         ) : (
           <ScrollView
             className="flex-1"
-            contentContainerClassName="gap-2.5 px-4 pt-1"
-            contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+            contentContainerClassName="gap-2.5 px-4 pt-1 pb-4"
             showsVerticalScrollIndicator={false}
           >
             <View className="mb-0.5 flex-row items-center justify-between">
