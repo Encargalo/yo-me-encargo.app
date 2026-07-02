@@ -40,7 +40,13 @@
           }
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Necesitamos tu ubicación para mostrarte en el mapa y calcular la distancia a los pedidos."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
