@@ -1,21 +1,26 @@
 import type { ActiveOrder, OrderParty } from "../types/order.types";
 import { normalizeStatus } from "./orderStatus";
 
-// El backend puede enviar el mensaje con nombres de campo alternativos. Se
-// normaliza aquí, en un único punto, para que el store y la UI solo conozcan
-// ActiveOrder. Todo el acoplamiento al shape crudo vive en este archivo.
+// El backend puede enviar el mensaje con nombres de campo alternativos dentro
+// de cada parte. Se normaliza aquí, en un único punto, para que el store y la
+// UI solo conozcan ActiveOrder. Todo el acoplamiento al shape crudo vive en
+// este archivo.
 //
-// Shape real observado en `/orders/rider` (order_update / new_order):
-// - La capa `order` (raíz) trae info del restaurante + de la orden.
-// - `address` / `latitude` / `longitude` a nivel raíz = ubicación del CLIENTE
-//   (entrega). Van a la capa `customer` del modelo.
-// - `shop_id` presente pero SIN nombre ni coords del restaurante en el payload.
-// - código = `pickup_code`. Comisión = `delivery_fee` (+ `delivery_fee_bs`).
+// Shape real confirmado en `/orders/rider` (order_update / new_order):
+// { type, order: { id, shop_id, customer_id, batch_id, rider_id?, number,
+//                   method_payment, status, pickup_code?, delivery_fee,
+//                   delivery_fee_bs, created_at },
+//   shop: { id, name, phone, logo, address, latitude, longitude },
+//   customer: { address, latitude, longitude } }
+// `shop` y `customer` viajan como HERMANOS de `order` en la raíz del mensaje,
+// no anidados dentro de él. `rider_id` vacío/ausente = oferta disponible; con
+// valor = ya la tomó algún rider.
 interface RawParty {
   name?: string;
   address?: string;
   phone?: string;
   phone_number?: string;
+  logo?: string;
   latitude?: number;
   longitude?: number;
   lat?: number;
@@ -30,28 +35,30 @@ interface RawOrder {
   pickup_code?: string;
   delivery_code?: string;
   code?: string;
-  // Restaurante: hoy solo llega el id; nombre/coords pueden venir anidados si el
-  // backend los agrega más adelante (se soportan defensivamente).
   shop_id?: string;
-  shop?: RawParty;
-  restaurant?: RawParty;
-  shop_name?: string;
+  customer_id?: string;
+  batch_id?: string;
   // Rider asignado: presente en órdenes ya tomadas, ausente/vacío en ofertas.
   rider_id?: string;
-  // Nivel raíz = cliente / entrega.
-  address?: string;
-  latitude?: number;
-  longitude?: number;
-  customer?: RawParty;
-  client?: RawParty;
-  customer_name?: string;
   method_payment?: string;
   delivery_fee?: number;
   delivery_fee_bs?: number;
   distance_km?: number;
   distance?: number;
   created_at?: string;
-  details?: { shop?: RawParty; shop_name?: string } | null;
+  // Fallback defensivo: si algún mensaje aún manda cliente/tienda anidados o a
+  // nivel raíz de `order` (shape anterior), se soportan sin romper.
+  address?: string;
+  latitude?: number;
+  longitude?: number;
+  shop?: RawParty;
+  customer?: RawParty;
+}
+
+interface RawMessage {
+  order?: RawOrder;
+  shop?: RawParty;
+  customer?: RawParty;
 }
 
 function toNumber(value: unknown): number | undefined {
@@ -67,6 +74,7 @@ function mapParty(
     name: raw?.name ?? fallback.name ?? "",
     address: raw?.address ?? fallback.address,
     phone: raw?.phone ?? raw?.phone_number ?? fallback.phone,
+    logo: raw?.logo ?? fallback.logo,
     latitude: toNumber(raw?.latitude ?? raw?.lat) ?? fallback.latitude,
     longitude:
       toNumber(raw?.longitude ?? raw?.lng ?? raw?.long) ?? fallback.longitude,
@@ -74,36 +82,36 @@ function mapParty(
 }
 
 export function mapRawOrder(input: unknown): ActiveOrder {
-  const raw = (input ?? {}) as RawOrder;
+  const raw = (input ?? {}) as RawMessage & RawOrder;
+  // Si el input no trae `order` anidado, se asume que el input ES la orden
+  // (shape plano, ej. items de `orders_snapshot` sin confirmar todavía).
+  const order: RawOrder = raw.order ?? raw;
 
-  // Restaurante: hoy solo llega `shop_id`, sin nombre ni coords (se soportan
-  // defensivamente por si el backend los anida más adelante).
-  const shop = mapParty(raw.shop ?? raw.restaurant ?? raw.details?.shop, {
-    name: raw.shop_name ?? raw.details?.shop_name,
-  });
-
-  // Cliente / entrega: dirección y coordenadas vienen a nivel raíz del pedido.
-  // Si el backend las anida en `customer`, esas tienen precedencia.
-  const customer = mapParty(raw.customer ?? raw.client, {
-    name: raw.customer_name,
-    address: raw.address,
-    latitude: toNumber(raw.latitude),
-    longitude: toNumber(raw.longitude),
+  // `shop`/`customer` hermanos de `order`; si faltan, se cae al shape anterior
+  // (anidados o dirección/coords a nivel raíz de `order` = cliente).
+  const shop = mapParty(raw.shop ?? order.shop, {});
+  const customer = mapParty(raw.customer ?? order.customer, {
+    address: order.address,
+    latitude: toNumber(order.latitude),
+    longitude: toNumber(order.longitude),
   });
 
   return {
-    id: raw.id ?? "",
-    number: toNumber(raw.number),
-    status: normalizeStatus(raw.status),
-    pickupCode: raw.pickup_code ?? raw.delivery_code ?? raw.code,
+    id: order.id ?? "",
+    number: toNumber(order.number),
+    status: normalizeStatus(order.status),
+    pickupCode: order.pickup_code ?? order.delivery_code ?? order.code,
     shop,
     customer,
-    methodPayment: raw.method_payment,
-    deliveryFee: toNumber(raw.delivery_fee) ?? 0,
-    deliveryFeeBs: toNumber(raw.delivery_fee_bs),
-    distanceKm: toNumber(raw.distance_km ?? raw.distance),
+    shopId: order.shop_id,
+    customerId: order.customer_id,
+    batchId: order.batch_id,
+    methodPayment: order.method_payment,
+    deliveryFee: toNumber(order.delivery_fee) ?? 0,
+    deliveryFeeBs: toNumber(order.delivery_fee_bs),
+    distanceKm: toNumber(order.distance_km ?? order.distance),
     // Cadena vacía = sin asignar → se normaliza a undefined (oferta disponible).
-    riderId: raw.rider_id ? raw.rider_id : undefined,
-    createdAt: raw.created_at ?? new Date().toISOString(),
+    riderId: order.rider_id ? order.rider_id : undefined,
+    createdAt: order.created_at ?? new Date().toISOString(),
   };
 }

@@ -78,7 +78,9 @@ function handleMessage(event: MessageEvent) {
       break;
     case "order_update":
     case "new_order": {
-      const order = mapRawOrder(msg.order);
+      // `shop`/`customer` viajan como hermanos de `order` en la raíz del
+      // mensaje, no anidados dentro de él → se pasa `msg` completo al mapper.
+      const order = mapRawOrder(msg);
       // Rutear ANTES del upsert: el chequeo de "ya es mía" necesita el estado
       // previo de activeOrders (el upsert de un new_order sin riderId lo borraría).
       routeToOffers(order, msg.type);
