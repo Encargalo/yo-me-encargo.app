@@ -1,3 +1,4 @@
+import { useOffersStore } from "../store/useOffersStore";
 import { useOrdersStore } from "../store/useOrdersStore";
 import type { OrderWsMessage } from "../types/order.types";
 import { mapRawOrder } from "../utils/mapRawOrder";
@@ -25,6 +26,37 @@ let subscribers = 0;
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 let manuallyClosed = false;
 
+// Enruta una orden entrante hacia la cola de ofertas del overlay.
+// - Con `riderId` (asignada a mí o a otro) → sale de la cola si estaba.
+// - Ya presente entre mis órdenes aceptadas (una versión previa llegó con
+//   `riderId`) → ya la acepté, no volver a ofrecerla (aunque este `new_order`
+//   venga sin `riderId`). `dropFromQueue` la marca como decidida para que quede
+//   pegada aunque un `upsert` posterior sobrescriba la orden en Home.
+// - Sin `riderId` y tipo `new_order` (oferta fresca) → se encola (con dedupe
+//   y respeto a la suspensión dentro del propio store).
+// IMPORTANTE: se invoca ANTES del `upsertOrder` para que el chequeo de "ya es
+// mía" lea el estado previo de `activeOrders`.
+export function routeToOffers(
+  order: ReturnType<typeof mapRawOrder>,
+  type: "order_update" | "new_order",
+) {
+  const offers = useOffersStore.getState();
+  if (order.riderId) {
+    offers.dropFromQueue(order.id);
+    return;
+  }
+  const alreadyMine = useOrdersStore
+    .getState()
+    .activeOrders.some((o) => o.id === order.id && !!o.riderId);
+  if (alreadyMine) {
+    offers.markDecided(order.id);
+    return;
+  }
+  if (type === "new_order") {
+    offers.enqueue(order);
+  }
+}
+
 function handleMessage(event: MessageEvent) {
   // DEBUG: descomentar para ver el payload crudo del backend y verificar cuándo
   // empieza a mandar las DOS coordenadas (restaurante + cliente).
@@ -45,9 +77,14 @@ function handleMessage(event: MessageEvent) {
       store.setConnecting(false);
       break;
     case "order_update":
-    case "new_order":
-      store.upsertOrder(mapRawOrder(msg.order));
+    case "new_order": {
+      const order = mapRawOrder(msg.order);
+      // Rutear ANTES del upsert: el chequeo de "ya es mía" necesita el estado
+      // previo de activeOrders (el upsert de un new_order sin riderId lo borraría).
+      routeToOffers(order, msg.type);
+      store.upsertOrder(order);
       break;
+    }
     case "orders_snapshot":
       // Lote inicial de órdenes activas al conectar.
       if (Array.isArray(msg.orders)) {
@@ -153,4 +190,26 @@ export function setAvailability(available: boolean): void {
   } else {
     log("⇨ OUT descartado (socket no abierto):", payload);
   }
+}
+
+// ── Aceptar / rechazar una oferta ─────────────────────────────────────────────
+// Hipótesis de transporte: mensajes salientes por el mismo WebSocket. Si el
+// backend expone REST (`POST /orders/{id}/accept`), se cambia SOLO aquí sin
+// tocar store, hook ni UI.
+function sendOrderDecision(type: "accept_order" | "reject_order", id: string) {
+  const payload = JSON.stringify({ type, order_id: id });
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    log("⇨ OUT:", payload);
+    socket.send(payload);
+  } else {
+    log("⇨ OUT descartado (socket no abierto):", payload);
+  }
+}
+
+export function acceptOrder(id: string): void {
+  sendOrderDecision("accept_order", id);
+}
+
+export function rejectOrder(id: string): void {
+  sendOrderDecision("reject_order", id);
 }

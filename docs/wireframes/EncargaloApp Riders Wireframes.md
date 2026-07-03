@@ -123,9 +123,10 @@ Cada pantalla lista su **contenido/función** (qué mostrar) y sus **notas** (la
 ### 04 · Detalle de Orden
 - **Header** con badge de estado (mismo color que en la tarjeta de Inicio) + número/título de orden.
 - **Bloque Restaurante** y **bloque Cliente**: cada uno con pin (A ámbar / B azul), nombre, dirección, y botones circulares de **navegar (⌖)** y **llamar (✆)**.
+- **Código de recogida (pickup code):** una vez aceptada la orden (estado "Recogida pendiente", ámbar), justo debajo del bloque Restaurante se muestra de forma prominente el **código de recogida** que el rider **presenta en el local** para retirar el pedido. Caja con tinte ámbar (`background:#fbf3e2; border:1px solid #ecdcb4`) con etiqueta mono `CÓDIGO DE RECOGIDA` + los dígitos grandes (monoespaciado, tracking amplio, ámbar `#a87d28`). Es el paralelo del código de entrega del cliente (05), pero aquí el rider lo **muestra**, no lo ingresa. Se genera al pasar la orden a preparación (InPreparation) y queda marcado como usado al confirmar la recogida.
 - **Lista de productos** del pedido (colapsable).
 - **Comisión** siempre visible.
-- **Acción primaria contextual al estado:** "Confirmar recogida" / "Marcar en camino"; cuando el estado es "En camino / Entregando" → aparece el campo de código (05).
+- **Acción primaria contextual al estado:** "Confirmar recogida" / "Marcar en camino"; cuando el estado es "En camino / Entregando" → aparece el campo de código del cliente (05).
 
 ### 05 · Confirmación de entrega — Código del cliente
 - Estado **dentro** del Detalle (no pantalla aparte). Campo **OTP de 6 casillas** con teclado numérico.

@@ -33,6 +33,31 @@ describe("mapRawOrder", () => {
     expect(order.methodPayment).toBe("PagoMovil");
   });
 
+  it("mapea rider_id cuando la orden ya fue tomada por un rider", () => {
+    const order = mapRawOrder({
+      id: "taken-1",
+      status: "On The Way",
+      rider_id: "99b33691",
+    });
+
+    expect(order.riderId).toBe("99b33691");
+  });
+
+  it("deja riderId undefined en una oferta sin asignar (rider_id ausente o vacío)", () => {
+    const offer = mapRawOrder({
+      id: "offer-1",
+      status: "In Preparation",
+    });
+    expect(offer.riderId).toBeUndefined();
+
+    const emptyRider = mapRawOrder({
+      id: "offer-2",
+      status: "In Preparation",
+      rider_id: "",
+    });
+    expect(emptyRider.riderId).toBeUndefined();
+  });
+
   it("soporta defensivamente restaurante/cliente anidados si el backend los agrega", () => {
     const order = mapRawOrder({
       id: "order-2",

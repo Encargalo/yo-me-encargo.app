@@ -36,6 +36,8 @@ interface RawOrder {
   shop?: RawParty;
   restaurant?: RawParty;
   shop_name?: string;
+  // Rider asignado: presente en órdenes ya tomadas, ausente/vacío en ofertas.
+  rider_id?: string;
   // Nivel raíz = cliente / entrega.
   address?: string;
   latitude?: number;
@@ -100,6 +102,8 @@ export function mapRawOrder(input: unknown): ActiveOrder {
     deliveryFee: toNumber(raw.delivery_fee) ?? 0,
     deliveryFeeBs: toNumber(raw.delivery_fee_bs),
     distanceKm: toNumber(raw.distance_km ?? raw.distance),
+    // Cadena vacía = sin asignar → se normaliza a undefined (oferta disponible).
+    riderId: raw.rider_id ? raw.rider_id : undefined,
     createdAt: raw.created_at ?? new Date().toISOString(),
   };
 }

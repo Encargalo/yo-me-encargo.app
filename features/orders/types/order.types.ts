@@ -43,6 +43,9 @@ export interface ActiveOrder {
   deliveryFee: number; // comisión del rider (ref, USD)
   deliveryFeeBs?: number; // comisión en bolívares
   distanceKm?: number;
+  // Rider al que quedó asignada. Vacío/ausente = oferta disponible; con valor =
+  // ya la tomó algún rider (señal para retirarla de la cola de ofertas).
+  riderId?: string;
   createdAt: string; // ISO
 }
 
