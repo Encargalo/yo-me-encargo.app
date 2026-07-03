@@ -16,12 +16,17 @@ const DEFAULT_DELTA = { latitudeDelta: 0.01, longitudeDelta: 0.01 };
  * Pide el permiso de ubicación en primer plano y obtiene la posición inicial del
  * rider. Degrada con gracia: si el rider niega el permiso, `region` queda en null
  * y `status` en "denied" — la pantalla debe seguir siendo usable sin el marcador.
+ *
+ * `enabled` (default `true`) permite no solicitar permiso/GPS cuando el mapa que
+ * consume esta posición está desactivado (rider no disponible o sin órdenes) —
+ * ver `rider-orders-home`. Al volver a `true`, se vuelve a pedir la posición.
  */
-export function useRiderLocation(): RiderLocation {
+export function useRiderLocation(enabled: boolean = true): RiderLocation {
   const [region, setRegion] = useState<Region | null>(null);
   const [status, setStatus] = useState<LocationStatus>("loading");
 
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
 
     async function resolve() {
@@ -53,7 +58,7 @@ export function useRiderLocation(): RiderLocation {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [enabled]);
 
   return { region, status };
 }

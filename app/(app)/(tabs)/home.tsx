@@ -9,16 +9,23 @@ import { OrdersEmptyState } from "@/features/orders/components/OrdersEmptyState"
 import { OrdersMap } from "@/features/orders/components/OrdersMap";
 import { useRiderLocation } from "@/features/orders/hooks/useRiderLocation";
 import { useRiderOrders } from "@/features/orders/hooks/useRiderOrders";
+import { useOrdersStore } from "@/features/orders/store/useOrdersStore";
 import type { ActiveOrder } from "@/features/orders/types/order.types";
+import { getFocusedOrder } from "@/features/orders/utils/getFocusedOrder";
 import { haversineKm } from "@/features/orders/utils/haversine";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
   const { orders } = useRiderOrders();
-  const { region, status } = useRiderLocation();
+  const isAvailable = useOrdersStore((s) => s.isAvailable);
 
-  // La primera orden (más cerca de completarse) es la que enfoca el mapa.
-  const focusedOrder = orders[0];
+  // Sin órdenes o en pausa: el mapa se desactiva por completo (sin GPS, sin
+  // MapView montado) para no gastar recursos cuando no hay nada que mostrar.
+  const mapEnabled = isAvailable && orders.length > 0;
+  const { region, status } = useRiderLocation(mapEnabled);
+
+  // La primera orden ACEPTADA (no una oferta sin decidir) es la que enfoca el mapa.
+  const focusedOrder = getFocusedOrder(orders);
 
   function openOrder(id: string) {
     router.push({ pathname: ROUTES.APP.ORDER_DETAIL, params: { id } });
@@ -40,6 +47,7 @@ export default function Home() {
           region={region}
           riderStatus={status}
           focusedOrder={focusedOrder}
+          enabled={mapEnabled}
         />
       </View>
 

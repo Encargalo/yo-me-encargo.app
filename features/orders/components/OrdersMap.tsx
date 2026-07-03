@@ -1,19 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import MapView, { Marker, type Region } from "react-native-maps";
-import Svg, { Path } from "react-native-svg";
-
-import { Neutrals } from "@/constants/theme";
+import MapViewDirections from "react-native-maps-directions";
 
 import type { LocationStatus } from "../hooks/useRiderLocation";
 import type { ActiveOrder, OrderParty } from "../types/order.types";
-import { getStatusColor } from "../utils/orderStatus";
+import { getRouteStageInfo } from "../utils/routeStage";
 import { MapSkeleton } from "./MapSkeleton";
 
 interface OrdersMapProps {
   region: Region | null;
   riderStatus: LocationStatus;
   focusedOrder?: ActiveOrder;
+  // El mapa se desactiva (sin MapView montado, sin GPS) cuando el rider está
+  // "No disponible" o no tiene ninguna orden — ver `rider-orders-home`.
+  enabled: boolean;
 }
 
 // Estilo de relleno absoluto para componentes nativos (MapView/MapSkeleton),
@@ -35,11 +36,9 @@ const FALLBACK_REGION: Region = {
   longitudeDelta: 0.05,
 };
 
-// Pin de mapa (viewBox 24×32): cabeza circular arriba + punta abajo.
-const PIN_W = 36;
-const PIN_H = 48;
-const PIN_PATH =
-  "M12 0.5C6.201 0.5 1.5 5.201 1.5 11c0 7.5 10.5 20.5 10.5 20.5S22.5 18.5 22.5 11C22.5 5.201 17.799 0.5 12 0.5z";
+const PIN_SIZE = 40;
+
+const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
 
 type LatLng = { latitude: number; longitude: number };
 
@@ -50,18 +49,13 @@ function partyCoord(party?: OrderParty): LatLng | null {
   return { latitude, longitude };
 }
 
-// Pin con la letra (A/B), coloreado por el estado de la orden.
-function MapPin({ label, color }: { label: string; color: string }) {
+// Placeholder estático que reemplaza al mapa cuando está desactivado — mismo
+// espacio que ocuparía el MapView, sin GPS ni render nativo detrás.
+function MapDisabledPlaceholder() {
   return (
-    <View className="items-center" style={{ width: PIN_W, height: PIN_H }}>
-      <Svg width={PIN_W} height={PIN_H} viewBox="0 0 24 32">
-        <Path d={PIN_PATH} fill={color} stroke="#ffffff" strokeWidth={1.5} />
-      </Svg>
-      <Text
-        className="absolute top-2 text-center text-[15px] font-bold text-white"
-        style={{ width: PIN_W }}
-      >
-        {label}
+    <View className="flex-1 items-center justify-center bg-block px-8">
+      <Text className="text-center text-[13px] text-muted">
+        Actívate para ver el mapa
       </Text>
     </View>
   );
@@ -71,6 +65,7 @@ export function OrdersMap({
   region,
   riderStatus,
   focusedOrder,
+  enabled,
 }: OrdersMapProps) {
   const mapRef = useRef<MapView>(null);
   const [ready, setReady] = useState(false);
@@ -78,21 +73,37 @@ export function OrdersMap({
   // custom rendericen en Android; se apaga tras un instante para ahorrar batería.
   const [tracks, setTracks] = useState(true);
 
-  const statusColor = focusedOrder
-    ? getStatusColor(focusedOrder.status)
-    : Neutrals.ink;
   const shopCoord = partyCoord(focusedOrder?.shop);
   const customerCoord = partyCoord(focusedOrder?.customer);
+  const stageInfo = focusedOrder ? getRouteStageInfo(focusedOrder.status) : null;
+  const destinationCoord =
+    stageInfo?.destination === "shop" ? shopCoord : customerCoord;
 
   const riderLat = region?.latitude;
   const riderLng = region?.longitude;
+  const riderCoord =
+    riderLat != null && riderLng != null
+      ? { latitude: riderLat, longitude: riderLng }
+      : null;
 
-  // Re-renderizar los marcadores custom cuando cambia la orden enfocada.
+  // Re-renderizar los marcadores custom cuando cambia la orden enfocada, y
+  // también cuando el mapa vuelve a habilitarse: al desactivarse, `MapView`
+  // se desmonta por completo, y Android solo dibuja la vista custom de un
+  // marcador si `tracksViewChanges` está en `true` en el momento en que ese
+  // marcador se MONTA — si `tracks` ya se había apagado antes de ocultar el
+  // mapa, los marcadores del `MapView` remontado nunca llegan a pintarse.
   useEffect(() => {
+    if (!enabled) return;
     setTracks(true);
     const t = setTimeout(() => setTracks(false), 1500);
     return () => clearTimeout(t);
-  }, [focusedOrder?.id, riderLat, riderLng]);
+  }, [enabled, focusedOrder?.id, riderLat, riderLng]);
+
+  // `ready` se resetea al desactivar para que, al remontar `MapView`,
+  // `onMapReady` vuelva a disparar el encuadre de cámara de abajo.
+  useEffect(() => {
+    if (!enabled) setReady(false);
+  }, [enabled]);
 
   // Encuadrar la cámara para que se vean rider + marcadores de la orden.
   useEffect(() => {
@@ -101,9 +112,7 @@ export function OrdersMap({
     if (!map) return;
 
     const points: LatLng[] = [];
-    if (riderLat != null && riderLng != null) {
-      points.push({ latitude: riderLat, longitude: riderLng });
-    }
+    if (riderCoord) points.push(riderCoord);
     if (shopCoord) points.push(shopCoord);
     if (customerCoord) points.push(customerCoord);
 
@@ -122,8 +131,8 @@ export function OrdersMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     ready,
-    riderLat,
-    riderLng,
+    riderCoord?.latitude,
+    riderCoord?.longitude,
     focusedOrder?.id,
     shopCoord?.latitude,
     shopCoord?.longitude,
@@ -134,7 +143,9 @@ export function OrdersMap({
   return (
     <View className="flex-1 p-3">
       <View className="flex-1 overflow-hidden rounded-2xl border border-hair bg-block">
-        {riderStatus === "loading" ? (
+        {!enabled ? (
+          <MapDisabledPlaceholder />
+        ) : riderStatus === "loading" ? (
           <MapSkeleton style={FILL} />
         ) : (
           <MapView
@@ -148,9 +159,10 @@ export function OrdersMap({
             toolbarEnabled={false}
           >
             {/* Marcador del rider (●) — solo con permiso concedido */}
-            {riderLat != null && riderLng != null && (
+            {riderCoord && (
               <Marker
-                coordinate={{ latitude: riderLat, longitude: riderLng }}
+                testID="marker-rider"
+                coordinate={riderCoord}
                 anchor={{ x: 0.5, y: 0.5 }}
                 tracksViewChanges={tracks}
               >
@@ -160,43 +172,78 @@ export function OrdersMap({
               </Marker>
             )}
 
-            {/* Restaurante (A) — coloreado según el estado de la orden */}
+            {/* Restaurante — opacidad reducida cuando la etapa actual va hacia el cliente */}
             {shopCoord && (
               <Marker
+                testID="marker-shop"
                 coordinate={shopCoord}
                 title={focusedOrder?.shop.name}
                 description={focusedOrder?.shop.address}
                 anchor={{ x: 0.5, y: 1 }}
+                opacity={stageInfo?.shopOpacity ?? 1}
                 tracksViewChanges={tracks}
               >
-                <MapPin label="A" color={statusColor} />
+                <Image
+                  source={require("@/assets/shop-location.png")}
+                  style={{ width: PIN_SIZE, height: PIN_SIZE }}
+                  resizeMode="contain"
+                />
               </Marker>
             )}
 
-            {/* Cliente (B) — coloreado según el estado de la orden */}
+            {/* Cliente — opacidad reducida cuando la etapa actual va hacia la tienda */}
             {customerCoord && (
               <Marker
+                testID="marker-customer"
                 coordinate={customerCoord}
                 title={focusedOrder?.customer.name || "Cliente"}
                 description={focusedOrder?.customer.address}
                 anchor={{ x: 0.5, y: 1 }}
+                opacity={stageInfo?.customerOpacity ?? 1}
                 tracksViewChanges={tracks}
               >
-                <MapPin label="B" color={statusColor} />
+                <Image
+                  source={require("@/assets/user-location.png")}
+                  style={{ width: PIN_SIZE, height: PIN_SIZE }}
+                  resizeMode="contain"
+                />
               </Marker>
+            )}
+
+            {/* Ruta hacia el destino de la etapa actual (tienda o cliente).
+                Directions API no tiene modo moto fuera de India (`two_wheeler`
+                está restringido a ese país) — DRIVING es la aproximación más
+                segura: sigue calles reales y respeta sentidos únicos. */}
+            {stageInfo && riderCoord && destinationCoord && (
+              <MapViewDirections
+                origin={riderCoord}
+                destination={destinationCoord}
+                apikey={GOOGLE_MAPS_API_KEY}
+                mode="DRIVING"
+                strokeWidth={4}
+                strokeColor={stageInfo.strokeColor}
+                // La librería ya loguea el error por su cuenta; este handler solo
+                // documenta que el fallo se contiene acá y no rompe el resto del
+                // mapa (pines y demás siguen intactos sin la línea de ruta).
+                onError={(errorMessage: string) =>
+                  console.warn("[OrdersMap] No se pudo trazar la ruta:", errorMessage)
+                }
+              />
             )}
           </MapView>
         )}
 
         {/* Etiqueta mono del wireframe */}
-        <View
-          className="absolute left-2.5 top-2.5 rounded-md bg-white/85 px-2 py-1"
-          pointerEvents="none"
-        >
-          <Text className="font-mono text-[9px] tracking-[1.2px] text-label">
-            MAPA EN TIEMPO REAL
-          </Text>
-        </View>
+        {enabled && (
+          <View
+            className="absolute left-2.5 top-2.5 rounded-md bg-white/85 px-2 py-1"
+            pointerEvents="none"
+          >
+            <Text className="font-mono text-[9px] tracking-[1.2px] text-label">
+              MAPA EN TIEMPO REAL
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );

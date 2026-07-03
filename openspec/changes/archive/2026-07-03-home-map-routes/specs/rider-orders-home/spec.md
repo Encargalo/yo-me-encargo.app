@@ -1,38 +1,4 @@
-## Purpose
-
-Pantalla de Inicio del rider: recepción y visualización en tiempo real de las órdenes activas asignadas (vía WebSocket `GET /orders/rider`), representación en mapa (rider/restaurante/cliente) con color por estado, tarjetas de orden navegables, control de disponibilidad para recibir nuevas órdenes, y estados de carga/vacío.
-
-## Requirements
-
-### Requirement: Conexión en tiempo real a las órdenes del rider
-El sistema SHALL abrir una conexión WebSocket a `GET /orders/rider` mientras la pantalla de Inicio está montada, y SHALL cerrarla al desmontarla. La conexión SHALL ser un singleton compartido (un solo socket aunque varios consumidores lo usen) y SHALL reintentar la conexión automáticamente si se cae de forma no intencional.
-
-#### Scenario: Apertura al entrar a Inicio
-- **WHEN** el rider autenticado entra a la pantalla de Inicio
-- **THEN** el sistema abre la conexión WebSocket a `GET /orders/rider` y refleja el estado "conectando" hasta que el socket confirma la conexión
-
-#### Scenario: Reintento tras caída inesperada
-- **WHEN** la conexión WebSocket se cierra sin que el rider haya salido de Inicio
-- **THEN** el sistema programa un reintento de conexión y actualiza el estado de conexión mientras tanto
-
-#### Scenario: Cierre al salir de Inicio
-- **WHEN** el rider abandona la pantalla de Inicio y no queda ningún consumidor del socket
-- **THEN** el sistema cierra la conexión WebSocket y limpia el estado de órdenes en memoria
-
-### Requirement: Visualización de órdenes activas
-El sistema SHALL mostrar en la zona inferior de Inicio una tarjeta por cada orden activa asignada al rider, con badge de estado (color según estado), nombre del restaurante e información de distancia/dirección. El sistema SHALL actualizar, agregar o quitar tarjetas en respuesta a los mensajes de actualización recibidos por el WebSocket, sin recargar la pantalla.
-
-#### Scenario: Recepción de una nueva orden
-- **WHEN** el WebSocket entrega un mensaje de orden que el rider aún no tenía
-- **THEN** el sistema agrega su tarjeta a la lista de órdenes activas con el badge de estado correspondiente
-
-#### Scenario: Actualización de estado de una orden existente
-- **WHEN** el WebSocket entrega una actualización de una orden ya visible con un nuevo estado
-- **THEN** el sistema actualiza el badge y el color de esa tarjeta sin duplicarla
-
-#### Scenario: Orden que llega a estado terminal
-- **WHEN** una orden activa alcanza un estado terminal (entregada/completada)
-- **THEN** el sistema la retira de la lista de órdenes activas
+## MODIFIED Requirements
 
 ### Requirement: Mapa con posición del rider, restaurante y cliente
 El sistema SHALL mostrar en la zona superior de Inicio un mapa con un marcador de la posición actual del rider obtenida por GPS del dispositivo. El sistema SHALL mostrar los marcadores de restaurante y cliente únicamente cuando exista una orden **aceptada** por el rider (con `riderId` propio) que incluya sus coordenadas; una orden sin decidir (oferta sin `riderId`) NO SHALL mostrar marcadores de restaurante/cliente en el mapa. Los marcadores de restaurante y cliente SHALL usar los assets de pin `shop-location` y `user-location` respectivamente (no un pin genérico con letra), y su color YA NO SHALL depender del estado de la orden.
@@ -53,19 +19,14 @@ El sistema SHALL mostrar en la zona superior de Inicio un mapa con un marcador d
 - **WHEN** el rider no concede el permiso de ubicación
 - **THEN** el sistema muestra el mapa sin el marcador del rider y no bloquea el resto de la pantalla (las órdenes siguen siendo visibles y utilizables)
 
-### Requirement: Estado de carga del mapa
-El sistema SHALL mostrar un skeleton que ocupe el espacio del mapa mientras se resuelve la ubicación inicial, y NO SHALL usar un spinner o `ActivityIndicator` genérico para ese estado de carga.
-
-#### Scenario: Mapa inicializando
-- **WHEN** la pantalla de Inicio se monta y la ubicación inicial aún no está resuelta
-- **THEN** el sistema muestra el skeleton en el área del mapa hasta que la ubicación esté lista
-
 ### Requirement: Estado vacío sin órdenes activas
 El sistema SHALL deshabilitar el mapa (sin montar el componente nativo de mapa ni solicitar la ubicación del dispositivo) cuando el rider no tiene ninguna orden activa (ni ofertas ni aceptadas), mostrando en su lugar un placeholder estático del mismo tamaño con un mensaje breve y tranquilo invitando a que aparezcan órdenes.
 
 #### Scenario: Rider sin órdenes
 - **WHEN** el rider está conectado pero no tiene ninguna orden activa
 - **THEN** el sistema muestra un placeholder estático en el área del mapa (sin marcadores, sin solicitar ubicación) junto con el mensaje "Sin órdenes activas" en la zona de la lista
+
+## ADDED Requirements
 
 ### Requirement: Ruta trazada según la etapa de la orden aceptada
 Cuando exista una orden aceptada por el rider enfocada en el mapa, el sistema SHALL trazar una línea de ruta entre la posición del rider y el destino correspondiente a la etapa actual de esa orden: hacia el restaurante mientras la orden está en recogida pendiente, y hacia el cliente una vez la orden pasa a "En camino". El color de la línea SHALL corresponder al color de estado de esa etapa (ámbar para recogida pendiente, azul para en camino). Los marcadores de restaurante y cliente SHALL reflejar la etapa con opacidad: el destino de la etapa actual a opacidad normal, el otro a opacidad reducida. La ruta SHALL recalcularse cuando la orden cambia de etapa; el sistema NO SHALL recalcular la ruta de forma continua mientras el rider se desplaza dentro de la misma etapa.
@@ -92,28 +53,3 @@ El sistema SHALL deshabilitar el mapa (sin montar el componente nativo de mapa n
 #### Scenario: Rider vuelve a marcarse como Disponible
 - **WHEN** el rider con el toggle en "No disponible" y al menos una orden activa lo cambia a "Disponible"
 - **THEN** el sistema vuelve a solicitar la ubicación del dispositivo y renderiza el mapa activo con los marcadores correspondientes
-
-### Requirement: Navegación al detalle de la orden
-El sistema SHALL navegar a la pantalla de Detalle de Orden cuando el rider toca una tarjeta de orden, usando una ruta definida en `constants/routes.ts`.
-
-#### Scenario: Tap en una tarjeta de orden
-- **WHEN** el rider toca la tarjeta de una orden activa
-- **THEN** el sistema navega a la ruta de Detalle de Orden pasando el identificador de esa orden
-
-### Requirement: Control de disponibilidad del rider
-El sistema SHALL mostrar en el header de Inicio un toggle de disponibilidad (Disponible / No disponible) que controla si el rider recibe nuevas órdenes. Cambiar el toggle NO SHALL cerrar la conexión WebSocket: el rider "No disponible" SHALL seguir conectado para ver y gestionar sus órdenes en curso. El estado de disponibilidad SHALL comunicarse al backend a través de una única función de servicio, de modo que el mecanismo de transporte sea intercambiable en un solo punto.
-
-#### Scenario: Rider se marca como No disponible
-- **WHEN** el rider con el toggle en "Disponible" lo cambia a "No disponible"
-- **THEN** el sistema comunica el nuevo estado al backend y mantiene abierta la conexión WebSocket y visibles las órdenes en curso
-
-#### Scenario: Rider se marca como Disponible
-- **WHEN** el rider con el toggle en "No disponible" lo cambia a "Disponible"
-- **THEN** el sistema comunica el nuevo estado al backend para volver a recibir nuevas órdenes
-
-### Requirement: Acceso rápido a balance desde el header
-El sistema SHALL ofrecer en el header de Inicio un acceso rápido a la pantalla de Balance.
-
-#### Scenario: Tap en acceso a balance
-- **WHEN** el rider toca el acceso rápido a balance del header
-- **THEN** el sistema navega a la sección de Balance
