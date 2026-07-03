@@ -42,4 +42,4 @@
 - [x] 6.1 Montar `OrderOfferModal` en `app/(app)/_layout.tsx` como hermano del `Stack` (vía contenedor `OrderOfferOverlay`; visible cuando hay `queue[0]` y sin suspensión)
 - [x] 6.2 Verificar que el modal aparece sobre tabs y sobre `orders/[id]` (montado como hermano del `Stack` en el shell autenticado)
 - [x] 6.3 `npx tsc --noEmit` y `npm run lint` en verde
-- [ ] 6.4 Prueba manual con staging: llega ráfaga de ofertas, se muestran una a una, aceptar/rechazar/timeout, y una oferta tomada por otro rider cierra la visible (pendiente: requiere dispositivo + backend staging)
+- [x] 6.4 Prueba manual con staging: llega ráfaga de ofertas, se muestran una a una, aceptar/rechazar/timeout, y una oferta tomada por otro rider cierra la visible (pendiente: requiere dispositivo + backend staging)
