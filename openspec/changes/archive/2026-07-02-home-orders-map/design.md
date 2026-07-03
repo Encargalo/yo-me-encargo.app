@@ -32,22 +32,25 @@ Restricciones y hechos confirmados durante la exploración:
 - Alternativa descartada: reimplementar desde cero o usar una librería de WS — el patrón existente ya maneja reconexión y ciclo de vida correctamente.
 
 ### 2. Mapper defensivo `RawOrder → ActiveOrder`
-Se normaliza en un único punto (como en la app hermana) para que store y UI solo conozcan `ActiveOrder`. **Shape real confirmado en runtime** (mensajes `order_update` / `new_order` de `/orders/rider`):
+Se normaliza en un único punto (como en la app hermana) para que store y UI solo conozcan `ActiveOrder`. **Shape real confirmado en runtime, actualizado** (mensajes `order_update` / `new_order` de `/orders/rider`) — `order`, `shop` y `customer` viajan como **hermanos** en la raíz del mensaje, no anidados dentro de `order`:
 ```json
-{ "type": "order_update",   // también "new_order" (órdenes del batch aún sin aceptar)
+{ "type": "new_order",   // también "order_update"
   "order": {
-    "id", "number", "status", "pickup_code", "method_payment",
-    "shop_id",                          // ⚠ NO viene shop_name ni coords del restaurante
-    "address", "latitude", "longitude", // ⚠ nivel RAÍZ = ubicación del CLIENTE/entrega
-    "customer_id",
-    "delivery_fee", "delivery_fee_bs", "created_at" } }
+    "id", "shop_id", "customer_id", "batch_id", "number",
+    "method_payment", "status", "delivery_fee", "delivery_fee_bs", "created_at" },
+  "shop": {
+    "id", "name", "phone", "logo", "address", "latitude", "longitude" },
+  "customer": {
+    "address", "latitude", "longitude" } }
 ```
 - El status se normaliza con una tabla de alias a la forma canónica del backend.
-- **La capa `order` (raíz)** trae info del restaurante + de la orden; **`address`/`latitude`/`longitude` a nivel raíz son del CLIENTE (entrega)** → se mapean a `ActiveOrder.customer`. (Confirmado con el usuario tras un ida y vuelta: no son del restaurante.)
-- **Sin nombre de restaurante en el payload** → la tarjeta titula con `Pedido #<number>` (el backend agregará `shop_name` al WS más adelante; el mapper ya lo soporta defensivamente).
-- **Sin coords del restaurante** → el marcador **A no se puede dibujar** hoy; solo se pintan rider (●) + cliente (B). El pin A queda listo para cuando el backend incluya coords de tienda.
-- El código que llega es `pickup_code` (el que el rider muestra al recoger), no el de entrega.
-- Campos mapeados: `id`, `number`, `status`, `pickupCode`, `methodPayment`, `customer{address,lat,lng}`, `deliveryFee`, `deliveryFeeBs`, `createdAt`.
+- **`shop` y `customer` llegan como objetos propios**, hermanos de `order`, cada uno con sus coords. Esto reemplaza la hipótesis anterior (cliente a nivel raíz de `order`, sin datos de tienda) — se mantiene como *fallback* defensivo en el mapper por si algún mensaje aún llega con el shape viejo.
+- **Ahora sí viene nombre, teléfono, logo y coords del restaurante** (`shop.name`, `shop.phone`, `shop.logo`, `shop.latitude/longitude`) → el marcador **A ya se puede dibujar** y la tarjeta puede titular con el nombre real en vez de `Pedido #<number>` (pendiente de cablear en UI si se quiere aprovechar; el mapper ya expone `shop.name`/`shop.logo`).
+- El cliente (`customer`) por ahora solo trae `address`/`latitude`/`longitude` (sin `name`/`phone` en el payload observado); `mapParty` soporta ambos si el backend los agrega.
+- `batch_id` se mapea a `ActiveOrder.batchId` (agrupa órdenes del mismo lote/viaje; aún sin uso en UI — insumo para un change futuro de agrupación).
+- El código que llega es `pickup_code` (el que el rider muestra al recoger), no el de entrega; no aparece en el payload de ejemplo pero el mapper lo sigue soportando.
+- Campos mapeados: `id`, `number`, `status`, `pickupCode`, `shop{name,phone,logo,address,lat,lng}`, `customer{address,lat,lng}`, `shopId`, `customerId`, `batchId`, `methodPayment`, `deliveryFee`, `deliveryFeeBs`, `createdAt`.
+- **Riesgo abierto:** no está confirmado si un `order_update` de solo cambio de estado (ej. batch ya aceptado) sigue mandando `shop`/`customer` completos o los omite para ahorrar payload. Como `upsertOrder` **reemplaza** la orden completa (no hace merge parcial), si un update llegara sin esos hermanos se perderían nombre/coords ya conocidos. Mitigación actual: ninguna (no confirmado); si se observa en runtime, se resuelve mergeando con la orden previa en el store antes de aplicar el update, sin tocar UI.
 
 ### 3. Store Zustand `features/orders/store/useOrdersStore.ts`
 Un store para el dominio orders: `activeOrders`, `isConnecting`, `isConnected`, `isAvailable`, y acciones `upsertOrder`, `removeOrder`/filtrado de terminales, `setConnected`, `setAvailability`, `reset`. Tipado completo con selectores, según convención del proyecto. La disponibilidad vive aquí (atributo de sesión operativa del rider), no en un store global aparte, para mantener el toggle y las órdenes coherentes en un solo lugar; el change de Perfil lo importará desde `features/orders`.
@@ -100,5 +103,6 @@ Feature nueva, sin datos que migrar. Se instala `react-native-maps` + `expo-loca
 2. **Mecanismo real de `set_availability`** (mensaje WS saliente vs endpoint REST) — aislado tras `setAvailability()`. Aún por confirmar.
 3. ~~¿Vienen coordenadas de cliente?~~ — **RESUELTO**: sí, a nivel raíz del pedido → `customer` (entrega, marcador B).
 4. ~~Strings de estado para riders~~ — **RESUELTO**: mismo vocabulario del cliente (`In Preparation`, `On The Way`, …). Confirmado con datos reales.
-5. **Datos del restaurante (nombre + coords)** — hoy el WS solo trae `shop_id`, sin `shop_name` ni coords. Consecuencia: la tarjeta titula `Pedido #N` y el **marcador A no se dibuja**. Pendiente: que el backend agregue `shop_name`/coords al mensaje (el mapper y el pin A ya lo soportan), o resolver `shop_id → tienda` vía un endpoint de tiendas.
+5. ~~Datos del restaurante (nombre + coords)~~ — **RESUELTO**: el WS manda `shop` como objeto hermano de `order` con `name`, `phone`, `logo`, `address`, `latitude`, `longitude`. El mapper y el pin A ya lo consumen; falta solo cablear el nombre/logo en `ActiveOrderCard` si se quiere reemplazar el título `Pedido #N` (fuera de alcance de este ajuste de tipos).
 6. **`new_order` vs `order_update`** — Inicio muestra ambas por ahora (todo el batch del rider); el filtrado ofrecidas-vs-aceptadas se refina en el change del Overlay (03).
+7. **¿Un `order_update` de solo estado sigue mandando `shop`/`customer` completos?** — sin confirmar; ver riesgo en Decisión 2. Verificar con un mensaje `order_update` real en runtime.

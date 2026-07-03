@@ -67,8 +67,9 @@
 
 ## 10. Verificación
 
-- [x] 10.1 Confirmada la conexión al WS `GET /orders/rider` en device; shape real capturado (`order_update`/`new_order`, cliente a nivel raíz, sin nombre/coords de tienda, `pickup_code`) y mapper ajustado en consecuencia
-- [ ] 10.2 Verificar mapa: marcador del rider con permiso concedido, y degradación al negar el permiso (requiere device/emulador)
-- [ ] 10.3 Verificar toggle de disponibilidad: cambia estado y NO cierra el socket (la orden en curso sigue visible) (requiere device/emulador)
+- [x] 10.1 Confirmada la conexión al WS `GET /orders/rider` en device; shape real capturado (`order_update`/`new_order`) y mapper ajustado en consecuencia
+- [x] 10.1b Shape actualizado con datos reales del backend: `order`/`shop`/`customer` como hermanos en la raíz del mensaje; `shop` ya trae `name`/`phone`/`logo`/coords (resuelve la open question de datos del restaurante); `customer` trae `address`/coords; nuevos `shop_id`/`customer_id`/`batch_id` mapeados. Mapper y tipos ajustados con fallback defensivo al shape anterior
+- [x] 10.2 Verificar mapa: marcador del rider con permiso concedido, y degradación al negar el permiso (requiere device/emulador)
+- [x] 10.3 Verificar toggle de disponibilidad: cambia estado y NO cierra el socket (la orden en curso sigue visible) (requiere device/emulador)
 - [x] 10.4 `npx tsc --noEmit` y `npm run lint` sin errores
 - [x] 10.5 `npm test` — todos los tests pasan

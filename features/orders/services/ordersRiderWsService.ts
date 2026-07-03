@@ -46,7 +46,9 @@ function handleMessage(event: MessageEvent) {
       break;
     case "order_update":
     case "new_order":
-      store.upsertOrder(mapRawOrder(msg.order));
+      // `shop`/`customer` viajan como hermanos de `order` en la raíz del
+      // mensaje, no anidados dentro de él → se pasa `msg` completo al mapper.
+      store.upsertOrder(mapRawOrder(msg));
       break;
     case "orders_snapshot":
       // Lote inicial de órdenes activas al conectar.

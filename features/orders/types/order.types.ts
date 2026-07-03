@@ -27,6 +27,7 @@ export interface OrderParty {
   name: string;
   address?: string;
   phone?: string;
+  logo?: string; // solo el restaurante lo trae hoy
   latitude?: number;
   longitude?: number;
 }
@@ -34,11 +35,14 @@ export interface OrderParty {
 // ── Orden activa (modelo de dominio, normalizado desde el mensaje del WS) ──────
 export interface ActiveOrder {
   id: string;
-  number?: number; // número de pedido legible (el mensaje no trae nombre de tienda)
+  number?: number; // número de pedido legible del batch
   status: OrderStatus;
   pickupCode?: string; // código que el rider muestra al recoger (`pickup_code`)
-  shop: OrderParty; // restaurante (marcador A) — coords/nombre pueden no venir
+  shop: OrderParty; // restaurante (marcador A)
   customer: OrderParty; // cliente / entrega (marcador B)
+  shopId?: string;
+  customerId?: string;
+  batchId?: string; // agrupa órdenes del mismo lote/viaje
   methodPayment?: string; // método de pago (ej. "PagoMovil")
   deliveryFee: number; // comisión del rider (ref, USD)
   deliveryFeeBs?: number; // comisión en bolívares
@@ -47,10 +51,11 @@ export interface ActiveOrder {
 }
 
 // ── Mensajes entrantes del WebSocket GET /orders/rider ────────────────────────
-// Shapes reales observados: connected / order_update / new_order.
+// Shape real confirmado: `order`, `shop` y `customer` viajan como hermanos en
+// la raíz del mensaje (no anidados dentro de `order`).
 export type OrderWsMessage =
   | { type: "connected" }
-  | { type: "order_update"; order: unknown }
-  | { type: "new_order"; order: unknown }
+  | { type: "order_update"; order: unknown; shop?: unknown; customer?: unknown }
+  | { type: "new_order"; order: unknown; shop?: unknown; customer?: unknown }
   | { type: "orders_snapshot"; orders: unknown[] }
   | { type: "error"; message?: string };
