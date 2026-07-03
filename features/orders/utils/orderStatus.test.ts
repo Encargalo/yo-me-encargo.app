@@ -36,6 +36,14 @@ describe("getStatusColor / getStatusLabel", () => {
     expect(getStatusLabel("Ready")).toBe("Recogida pendiente");
     expect(getStatusLabel("On The Way")).toBe("Entregando");
   });
+
+  it("distingue 'Esperando rider' de 'Recogida pendiente' según haya riderId", () => {
+    expect(getStatusLabel("In Preparation", false)).toBe("Esperando rider");
+    expect(getStatusLabel("In Preparation", true)).toBe("Recogida pendiente");
+    // Sin riderId no aplica fuera del bucket "pending": On The Way solo se
+    // llega tras aceptar, así que el matiz no cambia su etiqueta.
+    expect(getStatusLabel("On The Way", false)).toBe("Entregando");
+  });
 });
 
 describe("getStatusPriority", () => {

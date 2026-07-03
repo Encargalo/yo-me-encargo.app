@@ -1,4 +1,9 @@
-import type { ActiveOrder, OrderParty } from "../types/order.types";
+import type {
+  ActiveOrder,
+  OrderItem,
+  OrderItemOption,
+  OrderParty,
+} from "../types/order.types";
 import { normalizeStatus } from "./orderStatus";
 
 // El backend puede enviar el mensaje con nombres de campo alternativos dentro
@@ -28,6 +33,21 @@ interface RawParty {
   long?: number;
 }
 
+interface RawOrderItemOption {
+  id?: string;
+  name?: string;
+  amount?: number;
+}
+
+interface RawOrderItem {
+  id?: string;
+  name?: string;
+  image?: string;
+  amount?: number;
+  flavors?: RawOrderItemOption[];
+  additions?: RawOrderItemOption[];
+}
+
 interface RawOrder {
   id?: string;
   number?: number;
@@ -45,6 +65,9 @@ interface RawOrder {
   delivery_fee_bs?: number;
   distance_km?: number;
   distance?: number;
+  // Productos del pedido — solo viajan en el `order_update` posterior a
+  // aceptar, no en la oferta `new_order`.
+  items?: RawOrderItem[];
   created_at?: string;
   // Fallback defensivo: si algún mensaje aún manda cliente/tienda anidados o a
   // nivel raíz de `order` (shape anterior), se soportan sin romper.
@@ -81,6 +104,30 @@ function mapParty(
   };
 }
 
+function mapItemOption(raw: RawOrderItemOption): OrderItemOption {
+  return {
+    id: raw.id ?? "",
+    name: raw.name ?? "",
+    amount: toNumber(raw.amount) ?? 0,
+  };
+}
+
+function mapItems(raw: RawOrderItem[] | undefined): OrderItem[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((item) => ({
+    id: item.id ?? "",
+    name: item.name ?? "",
+    image: item.image,
+    amount: toNumber(item.amount) ?? 0,
+    flavors: Array.isArray(item.flavors)
+      ? item.flavors.map(mapItemOption)
+      : undefined,
+    additions: Array.isArray(item.additions)
+      ? item.additions.map(mapItemOption)
+      : undefined,
+  }));
+}
+
 export function mapRawOrder(input: unknown): ActiveOrder {
   const raw = (input ?? {}) as RawMessage & RawOrder;
   // Si el input no trae `order` anidado, se asume que el input ES la orden
@@ -110,6 +157,7 @@ export function mapRawOrder(input: unknown): ActiveOrder {
     deliveryFee: toNumber(order.delivery_fee) ?? 0,
     deliveryFeeBs: toNumber(order.delivery_fee_bs),
     distanceKm: toNumber(order.distance_km ?? order.distance),
+    items: mapItems(order.items),
     // Cadena vacía = sin asignar → se normaliza a undefined (oferta disponible).
     riderId: order.rider_id ? order.rider_id : undefined,
     createdAt: order.created_at ?? new Date().toISOString(),

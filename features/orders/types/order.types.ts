@@ -32,6 +32,27 @@ export interface OrderParty {
   longitude?: number;
 }
 
+// ── Producto de una orden ──────────────────────────────────────────────────────
+// Llega solo en el `order_update` posterior a aceptar (la oferta `new_order` no
+// trae items todavía) — `mapRawOrder` mapea con fallback a `[]`.
+export interface OrderItemOption {
+  id: string;
+  name: string;
+  amount: number;
+}
+
+export type OrderItemFlavor = OrderItemOption;
+export type OrderItemAddition = OrderItemOption;
+
+export interface OrderItem {
+  id: string;
+  name: string;
+  image?: string;
+  amount: number;
+  flavors?: OrderItemFlavor[];
+  additions?: OrderItemAddition[];
+}
+
 // ── Orden activa (modelo de dominio, normalizado desde el mensaje del WS) ──────
 export interface ActiveOrder {
   id: string;
@@ -47,11 +68,17 @@ export interface ActiveOrder {
   deliveryFee: number; // comisión del rider (ref, USD)
   deliveryFeeBs?: number; // comisión en bolívares
   distanceKm?: number;
+  items?: OrderItem[]; // productos del pedido (solo tras aceptar)
   // Rider al que quedó asignada. Vacío/ausente = oferta disponible; con valor =
   // ya la tomó algún rider (señal para retirarla de la cola de ofertas).
   riderId?: string;
   createdAt: string; // ISO
 }
+
+// Longitud del código que el rider teclea para confirmar la entrega (OTP del
+// cliente). El backend pasó de 6 a 4 dígitos (2026-07-03) — centralizado acá
+// para que este tipo de cambio sea un edit de una sola línea.
+export const DELIVERY_CODE_LENGTH = 4;
 
 // ── Mensajes entrantes del WebSocket GET /orders/rider ────────────────────────
 // Shape real confirmado: `order`, `shop` y `customer` viajan como hermanos en
@@ -60,5 +87,8 @@ export type OrderWsMessage =
   | { type: "connected" }
   | { type: "order_update"; order: unknown; shop?: unknown; customer?: unknown }
   | { type: "new_order"; order: unknown; shop?: unknown; customer?: unknown }
+  // Respuesta directa a `accept_order`: confirma la aceptación con pickup_code,
+  // riderId e items ya incluidos (mismo shape que `order_update`).
+  | { type: "order_accepted"; order: unknown; shop?: unknown; customer?: unknown }
   | { type: "orders_snapshot"; orders: unknown[] }
   | { type: "error"; message?: string };

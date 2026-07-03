@@ -46,6 +46,15 @@ const COLOR_LABEL: Record<OrderColorKey, string> = {
   error: "Cancelado",
 };
 
+// Dentro del bucket "pending" hay dos situaciones muy distintas para el rider:
+// una orden que YA acepté (tiene riderId, sigo el flujo normal) y una que
+// todavía espera que algún rider la tome (sin riderId — llegó como `new_order`
+// pero puede seguir viéndose en Inicio/Detalle además del overlay). El color
+// se mantiene ámbar en ambos casos (sigue siendo el bucket "pending" de los 4
+// oficiales); solo cambia el texto para no hacer pensar al rider que ya la
+// aceptó cuando en realidad sigue siendo una oferta.
+const UNASSIGNED_PENDING_LABEL = "Esperando rider";
+
 // Prioridad para ordenar la lista: más cerca de entregarse = mayor.
 const COLOR_PRIORITY: Record<OrderColorKey, number> = {
   enroute: 3,
@@ -62,8 +71,16 @@ export function getStatusColor(status: OrderStatus): string {
   return OrderStatusColors[getColorKey(status)];
 }
 
-export function getStatusLabel(status: OrderStatus): string {
-  return COLOR_LABEL[getColorKey(status)];
+// `hasRider` = si la orden ya tiene un rider asignado (`!!order.riderId`).
+// Por defecto `true` para no romper llamadas existentes que no distinguen
+// ofertas sin decidir de órdenes ya tomadas.
+export function getStatusLabel(
+  status: OrderStatus,
+  hasRider: boolean = true,
+): string {
+  const colorKey = getColorKey(status);
+  if (colorKey === "pending" && !hasRider) return UNASSIGNED_PENDING_LABEL;
+  return COLOR_LABEL[colorKey];
 }
 
 export function getStatusPriority(status: OrderStatus): number {

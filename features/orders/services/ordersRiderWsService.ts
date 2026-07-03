@@ -7,13 +7,6 @@ import { mapRawOrder } from "../utils/mapRawOrder";
 const WS_PATH = "/orders/rider";
 const RECONNECT_DELAY_MS = 3000;
 
-// Logging de debug del socket. Poner en `true` para reactivarlo (se deja para
-// verificar cuándo el backend empiece a mandar las DOS coordenadas).
-const DEBUG = false;
-function log(...args: unknown[]) {
-  if (DEBUG) console.log("[ws:rider]", ...args);
-}
-
 function resolveWsUrl(): string {
   const base = process.env.EXPO_PUBLIC_API_URL ?? "";
   const wsBase = base.replace(/^http/, "ws"); // https → wss, http → ws
@@ -38,7 +31,7 @@ let manuallyClosed = false;
 // mía" lea el estado previo de `activeOrders`.
 export function routeToOffers(
   order: ReturnType<typeof mapRawOrder>,
-  type: "order_update" | "new_order",
+  type: "order_update" | "new_order" | "order_accepted",
 ) {
   const offers = useOffersStore.getState();
   if (order.riderId) {
@@ -58,10 +51,6 @@ export function routeToOffers(
 }
 
 function handleMessage(event: MessageEvent) {
-  // DEBUG: descomentar para ver el payload crudo del backend y verificar cuándo
-  // empieza a mandar las DOS coordenadas (restaurante + cliente).
-  // console.log(event.data);
-
   let msg: OrderWsMessage;
   try {
     msg = JSON.parse(event.data as string) as OrderWsMessage;
@@ -77,7 +66,11 @@ function handleMessage(event: MessageEvent) {
       store.setConnecting(false);
       break;
     case "order_update":
-    case "new_order": {
+    case "new_order":
+    case "order_accepted": {
+      // `order_accepted` es la respuesta directa a `accept_order`: mismo shape
+      // que `order_update` (order/shop/customer hermanos), ya con `rider_id`,
+      // `pickup_code` e `items`.
       // `shop`/`customer` viajan como hermanos de `order` en la raíz del
       // mensaje, no anidados dentro de él → se pasa `msg` completo al mapper.
       const order = mapRawOrder(msg);
@@ -107,7 +100,6 @@ function openSocket() {
   store.setConnecting(true);
 
   const url = resolveWsUrl();
-  log("⇨ conectando a", url);
   const ws = new WebSocket(url);
   socket = ws;
 
@@ -116,13 +108,11 @@ function openSocket() {
   ws.onopen = () => {
     // El backend confirma con un mensaje "connected"; esto es un respaldo por si
     // no lo envía, para no quedar atascados en "conectando".
-    log("✓ OPEN");
     store.setConnected(true);
     store.setConnecting(false);
   };
 
-  ws.onclose = (e) => {
-    log("✕ CLOSE code:", e.code, "reason:", e.reason, "wasClean:", e.wasClean);
+  ws.onclose = () => {
     socket = null;
     store.setConnected(false);
     store.setConnecting(false);
@@ -131,9 +121,8 @@ function openSocket() {
     }
   };
 
-  ws.onerror = (e) => {
+  ws.onerror = () => {
     // onclose se dispara a continuación y maneja la reconexión.
-    log("⚠ ERROR:", (e as unknown as { message?: string }).message ?? e);
     ws.close();
   };
 }
@@ -187,10 +176,7 @@ export function subscribeToRiderOrders(): () => void {
 export function setAvailability(available: boolean): void {
   const payload = JSON.stringify({ type: "set_availability", available });
   if (socket && socket.readyState === WebSocket.OPEN) {
-    log("⇨ OUT:", payload);
     socket.send(payload);
-  } else {
-    log("⇨ OUT descartado (socket no abierto):", payload);
   }
 }
 
@@ -201,10 +187,7 @@ export function setAvailability(available: boolean): void {
 function sendOrderDecision(type: "accept_order" | "reject_order", id: string) {
   const payload = JSON.stringify({ type, order_id: id });
   if (socket && socket.readyState === WebSocket.OPEN) {
-    log("⇨ OUT:", payload);
     socket.send(payload);
-  } else {
-    log("⇨ OUT descartado (socket no abierto):", payload);
   }
 }
 

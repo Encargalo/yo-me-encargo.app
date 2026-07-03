@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OrderItemsList expande y muestra productos con sabores y adiciones 1`] = `
+<View
+  className="mt-2 border-t border-hair pt-2.5"
+>
+  <View
+    accessibilityLabel="Ver productos del pedido"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    className="flex-row items-center justify-between"
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+  >
+    <Text
+      className="text-[14px] font-semibold text-ink"
+    >
+      Productos · 
+      2
+    </Text>
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={18}
+      bbWidth={18}
+      fill="none"
+      focusable={false}
+      height={18}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#8d8a81"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 18,
+            "width": 18,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={18}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4287466113,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="m18 15-6-6-6 6"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4287466113,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <View
+    className="mt-3 gap-3"
+  >
+    <View
+      className="gap-0.5"
+    >
+      <Text
+        className="text-[14px] text-body"
+      >
+        7
+        x 
+        Pizza 6 Porciones
+      </Text>
+      <Text
+        className="text-[12px] text-muted"
+      >
+        Sabor: Pollo y Jamón
+      </Text>
+    </View>
+    <View
+      className="gap-0.5"
+    >
+      <Text
+        className="text-[14px] text-body"
+      >
+        4
+        x 
+        Perro Ranchero
+      </Text>
+      <Text
+        className="text-[12px] text-muted"
+      >
+        Adición: Maduro x4
+      </Text>
+    </View>
+  </View>
+</View>
+`;

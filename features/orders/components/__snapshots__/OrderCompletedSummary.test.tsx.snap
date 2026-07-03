@@ -1,0 +1,206 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OrderCompletedSummary muestra el resumen de la entrega completada 1`] = `
+<View
+  className="flex-1 items-center justify-center gap-4 bg-canvas px-8"
+>
+  <View
+    className="h-16 w-16 items-center justify-center rounded-full"
+    style={
+      {
+        "backgroundColor": "#22c55e1f",
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={36}
+      bbWidth={36}
+      fill="none"
+      focusable={false}
+      height={36}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#22c55e"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 36,
+            "width": 36,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={36}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4280468830,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M21.801 10A10 10 0 1 1 17 3.335"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4280468830,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="m9 11 3 3L22 4"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4280468830,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    className="text-center text-[20px] font-bold tracking-[-0.3px] text-ink"
+  >
+    Pedido completado
+  </Text>
+  <View
+    className="w-full gap-2 rounded-[14px] border border-hair bg-white p-4"
+  >
+    <View
+      className="flex-row items-center justify-between"
+    >
+      <Text
+        className="text-[13px] text-muted"
+      >
+        Cliente
+      </Text>
+      <Text
+        className="text-[14px] font-semibold text-ink"
+      >
+        Ruben
+      </Text>
+    </View>
+    <View
+      className="flex-row items-center justify-between"
+    >
+      <Text
+        className="text-[13px] text-muted"
+      >
+        Distancia
+      </Text>
+      <Text
+        className="text-[14px] font-semibold text-ink"
+      >
+        3.1
+         km
+      </Text>
+    </View>
+    <View
+      className="flex-row items-center justify-between"
+    >
+      <Text
+        className="text-[13px] text-muted"
+      >
+        Comisión
+      </Text>
+      <Text
+        className="text-[14px] font-semibold text-ink"
+      >
+        $0.96
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    className="h-[52px] w-full items-center justify-center rounded-[14px] bg-ink"
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+  >
+    <Text
+      className="text-[16px] font-bold text-white"
+    >
+      Volver a Inicio
+    </Text>
+  </View>
+</View>
+`;

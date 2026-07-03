@@ -20,7 +20,7 @@ export function ActiveOrderCard({
   onPress,
 }: ActiveOrderCardProps) {
   const color = getStatusColor(order.status);
-  const label = getStatusLabel(order.status);
+  const label = getStatusLabel(order.status, !!order.riderId);
   const distance = formatDistance(distanceKm ?? order.distanceKm);
   // El mensaje del WS no trae nombre de restaurante (solo shop_id) → fallback.
   const title =

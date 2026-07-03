@@ -122,6 +122,59 @@ describe("mapRawOrder", () => {
     expect(order.distanceKm).toBe(1.1);
   });
 
+  it("mapea items[] con flavors y additions del order_update de aceptación", () => {
+    const order = mapRawOrder({
+      type: "order_update",
+      order: {
+        id: "90b3a878",
+        status: "In Preparation",
+        pickup_code: "4474",
+        rider_id: "99b33691",
+        items: [
+          {
+            id: "e326883f",
+            name: "Pizza 6 Porciones",
+            image: "https://example.com/pizza.jpg",
+            amount: 7,
+            flavors: [{ id: "a67c2dbf", name: "Pollo y Jamón", amount: 1 }],
+          },
+          {
+            id: "454e5b29",
+            name: "Perro Ranchero",
+            amount: 4,
+            additions: [
+              { id: "c93ccc45", name: "Maduro", amount: 4 },
+              { id: "a91a5198", name: "Pollo Desmechado", amount: 4 },
+            ],
+          },
+        ],
+      },
+    });
+
+    expect(order.items).toHaveLength(2);
+    expect(order.items?.[0]).toEqual({
+      id: "e326883f",
+      name: "Pizza 6 Porciones",
+      image: "https://example.com/pizza.jpg",
+      amount: 7,
+      flavors: [{ id: "a67c2dbf", name: "Pollo y Jamón", amount: 1 }],
+      additions: undefined,
+    });
+    expect(order.items?.[1].additions).toEqual([
+      { id: "c93ccc45", name: "Maduro", amount: 4 },
+      { id: "a91a5198", name: "Pollo Desmechado", amount: 4 },
+    ]);
+  });
+
+  it("deja items en [] cuando el mensaje no los trae (oferta new_order)", () => {
+    const offer = mapRawOrder({
+      type: "new_order",
+      order: { id: "offer-3", status: "In Preparation" },
+    });
+
+    expect(offer.items).toEqual([]);
+  });
+
   it("aplica defaults seguros ante un payload vacío", () => {
     const order = mapRawOrder({});
     expect(order.id).toBe("");

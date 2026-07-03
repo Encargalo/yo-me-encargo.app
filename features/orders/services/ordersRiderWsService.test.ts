@@ -53,4 +53,10 @@ describe("routeToOffers", () => {
     routeToOffers(makeOrder("a"), "order_update");
     expect(useOffersStore.getState().queue).toHaveLength(0);
   });
+
+  it("order_accepted (respuesta directa a accept_order) retira la oferta de la cola", () => {
+    useOffersStore.getState().enqueue(makeOrder("a"));
+    routeToOffers(makeOrder("a", { riderId: "me" }), "order_accepted");
+    expect(useOffersStore.getState().queue).toHaveLength(0);
+  });
 });
