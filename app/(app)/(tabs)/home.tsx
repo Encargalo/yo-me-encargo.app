@@ -1,5 +1,6 @@
 import { router } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { useState } from "react";
+import { Modal, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ROUTES } from "@/constants/routes";
@@ -11,21 +12,26 @@ import { useRiderLocation } from "@/features/orders/hooks/useRiderLocation";
 import { useRiderOrders } from "@/features/orders/hooks/useRiderOrders";
 import { useOrdersStore } from "@/features/orders/store/useOrdersStore";
 import type { ActiveOrder } from "@/features/orders/types/order.types";
-import { getFocusedOrder } from "@/features/orders/utils/getFocusedOrder";
+import { getFocusedOrders } from "@/features/orders/utils/getFocusedOrders";
 import { haversineKm } from "@/features/orders/utils/haversine";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
   const { orders } = useRiderOrders();
   const isAvailable = useOrdersStore((s) => s.isAvailable);
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+  // Levantado acá (no vive dentro de `OrdersMap`) para que sobreviva al
+  // remontar el mapa al abrir/cerrar pantalla completa (mapa chico y pantalla
+  // completa son 2 instancias distintas, nunca montadas a la vez).
+  const [isFollowingRider, setIsFollowingRider] = useState(false);
 
   // Sin órdenes o en pausa: el mapa se desactiva por completo (sin GPS, sin
   // MapView montado) para no gastar recursos cuando no hay nada que mostrar.
   const mapEnabled = isAvailable && orders.length > 0;
   const { region, status } = useRiderLocation(mapEnabled);
 
-  // La primera orden ACEPTADA (no una oferta sin decidir) es la que enfoca el mapa.
-  const focusedOrder = getFocusedOrder(orders);
+  // Las órdenes ACEPTADAS (no ofertas sin decidir), hasta 2, son las que enfocan el mapa.
+  const focusedOrders = getFocusedOrders(orders);
 
   function openOrder(id: string) {
     router.push({ pathname: ROUTES.APP.ORDER_DETAIL, params: { id } });
@@ -41,15 +47,44 @@ export default function Home() {
     <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
       <HomeHeader />
 
-      {/* Zona superior (~48%): mapa en tiempo real */}
+      {/* Zona superior (~48%): mapa en tiempo real. El mismo `OrdersMap` se
+          muestra reducido acá o a pantalla completa en el `Modal` de abajo —
+          nunca los dos a la vez, para no montar 2 `MapView` nativos juntos. */}
       <View className="flex-[48]">
-        <OrdersMap
-          region={region}
-          riderStatus={status}
-          focusedOrder={focusedOrder}
-          enabled={mapEnabled}
-        />
+        {!isMapFullscreen && (
+          <OrdersMap
+            region={region}
+            riderStatus={status}
+            focusedOrders={focusedOrders}
+            enabled={mapEnabled}
+            isFullscreen={false}
+            onRequestFullscreen={() => setIsMapFullscreen(true)}
+            onRequestClose={() => setIsMapFullscreen(false)}
+            followEnabled={isFollowingRider}
+            onFollowChange={setIsFollowingRider}
+          />
+        )}
       </View>
+
+      <Modal
+        visible={isMapFullscreen}
+        animationType="slide"
+        onRequestClose={() => setIsMapFullscreen(false)}
+      >
+        <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
+          <OrdersMap
+            region={region}
+            riderStatus={status}
+            focusedOrders={focusedOrders}
+            enabled={mapEnabled}
+            isFullscreen={true}
+            onRequestFullscreen={() => {}}
+            onRequestClose={() => setIsMapFullscreen(false)}
+            followEnabled={isFollowingRider}
+            onFollowChange={setIsFollowingRider}
+          />
+        </View>
+      </Modal>
 
       {/* Zona inferior (~52%): órdenes activas o estado vacío */}
       <View className="flex-[52]">
