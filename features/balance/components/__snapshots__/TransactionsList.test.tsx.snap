@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionsList renderiza una fila por movimiento 1`] = `
+<View
+  className="overflow-hidden rounded-[14px] border border-hair bg-white"
+>
+  <View
+    className="flex-row items-center justify-between px-3.5 py-3 border-b border-canvas"
+  >
+    <View
+      className="flex-1 pr-3"
+    >
+      <Text
+        className="text-[13px] font-semibold text-ink"
+        numberOfLines={1}
+      >
+        Comisión entrega
+      </Text>
+      <Text
+        className="text-[10.5px] text-label"
+        numberOfLines={1}
+      >
+        30 jun
+      </Text>
+    </View>
+    <Text
+      className="text-[14px] font-bold"
+      style={
+        {
+          "color": "#22c55e",
+        }
+      }
+    >
+      +8.5$
+    </Text>
+  </View>
+  <View
+    className="flex-row items-center justify-between px-3.5 py-3 "
+  >
+    <View
+      className="flex-1 pr-3"
+    >
+      <Text
+        className="text-[13px] font-semibold text-ink"
+        numberOfLines={1}
+      >
+        Descuento plataforma
+      </Text>
+      <Text
+        className="text-[10.5px] text-label"
+        numberOfLines={1}
+      >
+        30 jun
+      </Text>
+    </View>
+    <Text
+      className="text-[14px] font-bold"
+      style={
+        {
+          "color": "#ef4444",
+        }
+      }
+    >
+      −1.2$
+    </Text>
+  </View>
+</View>
+`;

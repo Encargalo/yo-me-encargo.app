@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetBalanceCard muestra el saldo positivo, zona y desglose 1`] = `
+<View
+  className="rounded-[18px] border border-hair bg-white p-5"
+>
+  <View
+    className="mb-2.5 flex-row items-start justify-between"
+  >
+    <Text
+      className="font-mono text-[10px] tracking-[1.2px] text-label"
+    >
+      SALDO NETO
+    </Text>
+    <View
+      className="rounded-full border border-hair px-2.5 py-[3px]"
+    >
+      <Text
+        className="text-[10px] font-semibold text-ink"
+      >
+        Zona: 
+        normal
+      </Text>
+    </View>
+  </View>
+  <Text
+    className="text-[38px] font-bold tracking-[-0.4px]"
+    style={
+      {
+        "color": "#22c55e",
+      }
+    }
+  >
+    24.5$
+  </Text>
+  <View
+    className="mt-3 flex-row gap-[18px] border-t border-canvas pt-3"
+  >
+    <View>
+      <Text
+        className="font-mono text-[9px] text-label"
+      >
+        GANADO
+      </Text>
+      <Text
+        className="text-[14px] font-semibold"
+        style={
+          {
+            "color": "#22c55e",
+          }
+        }
+      >
+        +38$
+      </Text>
+    </View>
+    <View>
+      <Text
+        className="font-mono text-[9px] text-label"
+      >
+        DESCONTADO
+      </Text>
+      <Text
+        className="text-[14px] font-semibold"
+        style={
+          {
+            "color": "#ef4444",
+          }
+        }
+      >
+        −13.5$
+      </Text>
+    </View>
+  </View>
+</View>
+`;

@@ -13,6 +13,7 @@ export default function AppLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="orders/[id]" />
+        <Stack.Screen name="withdrawal" />
       </Stack>
       <OrderOfferOverlay />
     </Fragment>
