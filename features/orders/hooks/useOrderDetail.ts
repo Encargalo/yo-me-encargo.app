@@ -30,6 +30,8 @@ export interface CompletedSummary {
   customerName?: string;
   distanceKm?: number;
   deliveryFee: number;
+  orderNumber?: number;
+  shopName?: string;
 }
 
 export interface UseOrderDetailReturn {
@@ -109,6 +111,8 @@ export function useOrderDetail(id: string | undefined): UseOrderDetailReturn {
           customerName: order.customer.name,
           distanceKm,
           deliveryFee: order.deliveryFee,
+          orderNumber: order.number,
+          shopName: order.shop.name,
         });
       } catch (err) {
         const status = (err as AxiosError).response?.status;

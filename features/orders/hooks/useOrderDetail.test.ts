@@ -141,7 +141,9 @@ describe("useOrderDetail", () => {
   it("confirmDelivery exitoso guarda el resumen y sobrevive a que la orden salga del store", async () => {
     useOrdersStore
       .getState()
-      .upsertOrder(makeOrder({ riderId: "me", status: "On The Way" }));
+      .upsertOrder(
+        makeOrder({ riderId: "me", status: "On The Way", number: 128 }),
+      );
     const { result, rerender } = await renderHook(() =>
       useOrderDetail("order-1"),
     );
@@ -160,6 +162,8 @@ describe("useOrderDetail", () => {
       customerName: "Ruben",
       distanceKm: undefined,
       deliveryFee: 0.96,
+      orderNumber: 128,
+      shopName: "Goofy Delicias",
     });
 
     // La orden llega a estado terminal y useOrdersStore la retira — el
