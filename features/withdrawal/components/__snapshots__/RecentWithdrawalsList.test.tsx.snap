@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecentWithdrawalsList lista los retiros recientes 1`] = `
+<View
+  className="overflow-hidden rounded-[14px] border border-hair bg-white"
+>
+  <View
+    className="flex-row items-center justify-between px-3.5 py-3 border-b border-canvas"
+  >
+    <View>
+      <Text
+        className="text-[13px] font-semibold text-ink"
+      >
+        30$
+      </Text>
+      <Text
+        className="text-[10.5px] text-label"
+      >
+        28 jun
+      </Text>
+    </View>
+    <View
+      className="rounded-full border px-2.5 py-[3px]"
+      style={
+        {
+          "borderColor": "#22c55e",
+        }
+      }
+    >
+      <Text
+        className="text-[10px] font-semibold"
+        style={
+          {
+            "color": "#22c55e",
+          }
+        }
+      >
+        Retirado
+      </Text>
+    </View>
+  </View>
+  <View
+    className="flex-row items-center justify-between px-3.5 py-3 "
+  >
+    <View>
+      <Text
+        className="text-[13px] font-semibold text-ink"
+      >
+        18$
+      </Text>
+      <Text
+        className="text-[10.5px] text-label"
+      >
+        30 jun
+      </Text>
+    </View>
+    <View
+      className="rounded-full border px-2.5 py-[3px]"
+      style={
+        {
+          "borderColor": "#f59e0b",
+        }
+      }
+    >
+      <Text
+        className="text-[10px] font-semibold"
+        style={
+          {
+            "color": "#f59e0b",
+          }
+        }
+      >
+        Pendiente
+      </Text>
+    </View>
+  </View>
+</View>
+`;
