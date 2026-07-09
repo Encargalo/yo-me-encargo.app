@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { OrderStatusColors } from "@/constants/theme";
 
@@ -9,6 +9,8 @@ import { getMovementTypeLabel } from "../utils/movementTypeLabel";
 interface TransactionRowProps {
   transaction: Transaction;
   isLast?: boolean;
+  // Opcional y sin efecto en el render si no se pasa — Balance sigue sin tap.
+  onPress?: () => void;
 }
 
 const MONTHS = [
@@ -34,7 +36,11 @@ function formatDate(iso: string): string | null {
   return `${date.getDate()} ${MONTHS[date.getMonth()]}`;
 }
 
-export function TransactionRow({ transaction, isLast }: TransactionRowProps) {
+export function TransactionRow({
+  transaction,
+  isLast,
+  onPress,
+}: TransactionRowProps) {
   const amountColor =
     transaction.amount >= 0
       ? OrderStatusColors.completed
@@ -51,12 +57,8 @@ export function TransactionRow({ transaction, isLast }: TransactionRowProps) {
     .filter(Boolean)
     .join(" · ");
 
-  return (
-    <View
-      className={`flex-row items-center justify-between px-3.5 py-3 ${
-        isLast ? "" : "border-b border-canvas"
-      }`}
-    >
+  const rowContent = (
+    <>
       <View className="flex-1 pr-3">
         <Text className="text-[13px] font-semibold text-ink" numberOfLines={1}>
           {getMovementTypeLabel(transaction.movementType)}
@@ -70,6 +72,20 @@ export function TransactionRow({ transaction, isLast }: TransactionRowProps) {
       <Text className="text-[14px] font-bold" style={{ color: amountColor }}>
         {formatSignedAmount(transaction.amount)}
       </Text>
-    </View>
+    </>
   );
+
+  const className = `flex-row items-center justify-between px-3.5 py-3 ${
+    isLast ? "" : "border-b border-canvas"
+  }`;
+
+  if (onPress) {
+    return (
+      <Pressable onPress={onPress} accessibilityRole="button" className={className}>
+        {rowContent}
+      </Pressable>
+    );
+  }
+
+  return <View className={className}>{rowContent}</View>;
 }

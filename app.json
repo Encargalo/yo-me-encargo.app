@@ -46,7 +46,8 @@
         {
           "locationWhenInUsePermission": "Necesitamos tu ubicación para mostrarte en el mapa y calcular la distancia a los pedidos."
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true

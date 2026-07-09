@@ -1,20 +1,33 @@
-import { FlatList, Pressable, RefreshControl, Text, View } from "react-native";
+import { useState } from "react";
+import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Neutrals } from "@/constants/theme";
 import { TransactionRow } from "@/features/balance/components/TransactionRow";
 import { TransactionsList } from "@/features/balance/components/TransactionsList";
 import type { Transaction } from "@/features/balance/types/balance.types";
-import { HistorialListFooter } from "@/features/historial/components/HistorialListFooter";
+import { HistorialDateFilter } from "@/features/historial/components/HistorialDateFilter";
+import { HistorialPagination } from "@/features/historial/components/HistorialPagination";
 import { HistorialSkeleton } from "@/features/historial/components/HistorialSkeleton";
+import { TransactionDetailModal } from "@/features/historial/components/TransactionDetailModal";
 import { useTransactionHistory } from "@/features/historial/hooks/useTransactionHistory";
 
-// Sin `useFocusEffect` a propósito: a diferencia de Balance, refrescar al
-// recuperar foco descartaría el scroll ya avanzado del rider en la lista.
 export default function Historial() {
   const insets = useSafeAreaInsets();
-  const { transactions, status, loadMore, refresh, retryLoadMore } =
-    useTransactionHistory();
+  const {
+    rows,
+    status,
+    page,
+    totalPages,
+    dateRange,
+    goToPage,
+    setDateRange,
+    retry,
+  } = useTransactionHistory();
+  const [selected, setSelected] = useState<Transaction | null>(null);
+
+  const isInitialLoading = status === "loading";
+  const isInitialError = status === "error";
+  const hasRetriableError = status === "errorPage" || status === "errorFullSet";
 
   return (
     <View
@@ -25,17 +38,25 @@ export default function Historial() {
         Historial
       </Text>
 
-      {status === "loading" ? (
+      {isInitialLoading || isInitialError ? null : (
+        <HistorialDateFilter
+          dateRange={dateRange}
+          onApply={setDateRange}
+          onClear={() => setDateRange(null)}
+        />
+      )}
+
+      {isInitialLoading ? (
         <View className="px-4">
           <HistorialSkeleton />
         </View>
-      ) : status === "error" ? (
+      ) : isInitialError ? (
         <View className="flex-1 items-center justify-center gap-3 px-8">
           <Text className="text-center text-[15px] font-semibold text-body">
             No pudimos cargar tu historial
           </Text>
           <Pressable
-            onPress={refresh}
+            onPress={retry}
             className="h-11 items-center justify-center rounded-[12px] bg-ink px-5"
           >
             <Text className="text-[14px] font-semibold text-white">
@@ -43,42 +64,57 @@ export default function Historial() {
             </Text>
           </Pressable>
         </View>
-      ) : transactions.length === 0 ? (
+      ) : status === "loadingFullSet" ? (
+        <View className="px-4">
+          <HistorialSkeleton label="Cargando historial completo para aplicar el filtro..." />
+        </View>
+      ) : status === "loadingPage" ? (
+        <View className="px-4">
+          <HistorialSkeleton />
+        </View>
+      ) : rows.length === 0 ? (
         <View className="flex-1 px-4">
           <TransactionsList transactions={[]} />
         </View>
       ) : (
-        // El borde/rounding va en este `View` fijo, no en el
-        // `contentContainerStyle` del FlatList: si el rounding creciera con
-        // los datos, el viewport del FlatList (sin overflow-hidden propio)
-        // cortaría la esquina inferior a la mitad apenas el contenido se
-        // acercara a la altura visible.
-        <View className="mx-4 mt-1 flex-1 overflow-hidden rounded-[14px] border border-hair bg-white">
-          <FlatList<Transaction>
-            data={transactions}
-            keyExtractor={(transaction) => transaction.id}
-            renderItem={({ item, index }) => (
+        <>
+          {hasRetriableError ? (
+            <Pressable
+              onPress={retry}
+              className="mx-4 mb-2 flex-row items-center justify-between rounded-[10px] bg-status-error/10 px-3 py-2.5"
+            >
+              <Text className="flex-1 text-[12.5px] font-semibold text-status-error">
+                No pudimos completar la acción
+              </Text>
+              <Text className="text-[12.5px] font-bold text-status-error">
+                Reintentar
+              </Text>
+            </Pressable>
+          ) : null}
+
+          <View className="mx-4 mt-1 overflow-hidden rounded-[14px] border border-hair bg-white">
+            {rows.map((transaction, index) => (
               <TransactionRow
-                transaction={item}
-                isLast={index === transactions.length - 1}
+                key={transaction.id}
+                transaction={transaction}
+                isLast={index === rows.length - 1}
+                onPress={() => setSelected(transaction)}
               />
-            )}
-            showsVerticalScrollIndicator={false}
-            onEndReached={loadMore}
-            onEndReachedThreshold={0.4}
-            ListFooterComponent={
-              <HistorialListFooter status={status} onRetry={retryLoadMore} />
-            }
-            refreshControl={
-              <RefreshControl
-                refreshing={status === "refreshing"}
-                onRefresh={refresh}
-                tintColor={Neutrals.ink}
-              />
-            }
+            ))}
+          </View>
+
+          <HistorialPagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={goToPage}
           />
-        </View>
+        </>
       )}
+
+      <TransactionDetailModal
+        transaction={selected}
+        onClose={() => setSelected(null)}
+      />
     </View>
   );
 }

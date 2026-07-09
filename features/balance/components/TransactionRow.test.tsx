@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react-native";
+import { fireEvent, render } from "@testing-library/react-native";
 
 import type { Transaction } from "../types/balance.types";
 import { TransactionRow } from "./TransactionRow";
@@ -43,5 +43,25 @@ describe("TransactionRow", () => {
     expect(getByText("−1.2$")).toBeTruthy();
     expect(getByText("4 jul")).toBeTruthy();
     expect(queryByText(/km/)).toBeNull();
+  });
+
+  it("no responde a tap cuando no se pasa onPress (uso de Balance)", async () => {
+    const onPress = jest.fn();
+    const { getByText } = await render(
+      <TransactionRow transaction={makeTransaction()} />,
+    );
+
+    fireEvent.press(getByText("Carrera"));
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it("dispara onPress al tocar la fila (uso de Historial)", async () => {
+    const onPress = jest.fn();
+    const { getByText } = await render(
+      <TransactionRow transaction={makeTransaction()} onPress={onPress} />,
+    );
+
+    fireEvent.press(getByText("Carrera"));
+    expect(onPress).toHaveBeenCalledTimes(1);
   });
 });

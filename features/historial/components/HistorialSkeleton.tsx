@@ -1,13 +1,16 @@
 import { useEffect, useRef } from "react";
-import { Animated, View } from "react-native";
+import { Animated, Text, View } from "react-native";
 
 interface HistorialSkeletonProps {
   rows?: number;
+  // Texto explicativo arriba del skeleton — usado cuando la carga es distinta
+  // a "página siguiente" (ej. traer el historial completo para un filtro).
+  label?: string;
 }
 
 // Mismo patrón de pulso (Animated nativo, sin reanimated) que
 // `features/balance/components/BalanceSkeleton.tsx`.
-export function HistorialSkeleton({ rows = 5 }: HistorialSkeletonProps) {
+export function HistorialSkeleton({ rows = 5, label }: HistorialSkeletonProps) {
   const opacity = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -30,19 +33,26 @@ export function HistorialSkeleton({ rows = 5 }: HistorialSkeletonProps) {
   }, [opacity]);
 
   return (
-    <Animated.View
-      style={{ opacity }}
-      testID="historial-skeleton"
-      className="overflow-hidden rounded-[14px]"
-    >
-      {Array.from({ length: rows }).map((_, index) => (
-        <View
-          key={index}
-          className={`h-[52px] bg-hair ${
-            index === rows - 1 ? "" : "border-b border-canvas"
-          }`}
-        />
-      ))}
-    </Animated.View>
+    <View>
+      {label ? (
+        <Text className="mb-2 text-[12.5px] font-semibold text-body">
+          {label}
+        </Text>
+      ) : null}
+      <Animated.View
+        style={{ opacity }}
+        testID="historial-skeleton"
+        className="overflow-hidden rounded-[14px]"
+      >
+        {Array.from({ length: rows }).map((_, index) => (
+          <View
+            key={index}
+            className={`h-[52px] bg-hair ${
+              index === rows - 1 ? "" : "border-b border-canvas"
+            }`}
+          />
+        ))}
+      </Animated.View>
+    </View>
   );
 }

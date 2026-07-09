@@ -54,3 +54,25 @@ export async function getTransactions({
     transactions: data.transactions.map(mapTransaction),
   };
 }
+
+// Máximo permitido por el backend — usado para minimizar la cantidad de
+// requests al traer el historial completo (necesario para filtrar por fecha
+// en el cliente, ver design.md del change historial-filtros-paginacion).
+export const MAX_SERVER_LIMIT = 50;
+
+export async function getAllTransactions(): Promise<Transaction[]> {
+  const all: Transaction[] = [];
+  let page = 1;
+  // Se resuelve con el `total` de la primera respuesta; el chequeo de
+  // `transactions.length === 0` evita un loop infinito si el backend alguna
+  // vez devuelve menos ítems de los que promete `total`.
+  let total = Infinity;
+  while (all.length < total) {
+    const response = await getTransactions({ page, limit: MAX_SERVER_LIMIT });
+    total = response.total;
+    if (response.transactions.length === 0) break;
+    all.push(...response.transactions);
+    page += 1;
+  }
+  return all;
+}

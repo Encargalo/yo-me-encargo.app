@@ -1,8 +1,4 @@
-## Purpose
-
-Pantalla de Historial del rider: tabla con paginación numerada, filtro de rango de fechas (resuelto en cliente) y detalle simple de cada transacción, sobre el historial completo de movimientos desde `GET /riders/transactions`, con sus estados de carga/vacío/error.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Pantalla de Historial lista movimientos paginados
 La pantalla de Historial (tab `Historial`) SHALL obtener y mostrar los movimientos del rider desde `GET /riders/transactions` como una tabla con paginación numerada, usando el mismo formato de fila que la pantalla de Balance (etiqueta legible de `movement_type`, monto con signo, fecha y distancia si está presente; sin `payment_method` ni `order_id`). Cada fila SHALL ser táctil y abrir el detalle simple de esa transacción (ver requirement de detalle).
@@ -14,6 +10,34 @@ La pantalla de Historial (tab `Historial`) SHALL obtener y mostrar los movimient
 #### Scenario: Sin movimientos
 - **WHEN** la página solicitada (con o sin filtro) responde sin transacciones
 - **THEN** la pantalla muestra un estado vacío explicativo en vez de una tabla en blanco
+
+### Requirement: Estados de carga inicial y por cambio de página
+La pantalla SHALL mostrar un skeleton que replica el layout real durante la carga de la primera página, y SHALL mostrar el mismo skeleton al navegar a otra página numerada mientras se espera la respuesta, sin mostrar un spinner genérico. Si hay un filtro de fecha activo que requiere traer el set completo de movimientos por primera vez, la pantalla SHALL mostrar un estado de carga explícito distinto ("cargando historial completo para aplicar el filtro") antes de mostrar la tabla paginada en cliente.
+
+#### Scenario: Carga inicial
+- **WHEN** la pantalla se monta y la petición de la página 1 está en curso
+- **THEN** se muestra el skeleton en vez de contenido vacío o un spinner genérico
+
+#### Scenario: Cambio de página numerada
+- **WHEN** el rider navega a otra página de la tabla (modo sin filtro)
+- **THEN** se muestra el skeleton mientras se espera la respuesta de esa página, reemplazando la tabla al llegar los datos
+
+#### Scenario: Primera carga del set completo para un filtro de fecha
+- **WHEN** el rider activa un filtro de fecha y todavía no se cacheó el set completo de movimientos en esta sesión de pantalla
+- **THEN** se muestra un estado de carga explícito distinto al skeleton de página mientras se agotan todas las páginas del servidor
+
+### Requirement: Errores de red no dejan la pantalla en un estado inconsistente
+Si la petición de una página (con o sin filtro) falla, la pantalla SHALL conservar la última página mostrada con éxito y ofrecer una acción para reintentar la navegación fallida, sin perder la tabla visible. Si falla el fetch del set completo requerido por un filtro de fecha, la pantalla SHALL mantener la vista sin filtrar (o el último filtro aplicado con éxito) y ofrecer una acción para reintentar.
+
+#### Scenario: Falla la carga de una página numerada
+- **WHEN** `GET /riders/transactions` falla al pedir una página específica (con o sin filtro)
+- **THEN** la tabla conserva la última página mostrada con éxito y la pantalla ofrece una forma de reintentar esa navegación
+
+#### Scenario: Falla el fetch del set completo para un filtro de fecha
+- **WHEN** falla alguna de las peticiones necesarias para traer el set completo de movimientos requerido por un filtro de fecha
+- **THEN** la pantalla mantiene la última vista válida (sin filtro o con el filtro previamente aplicado) y ofrece una forma de reintentar
+
+## ADDED Requirements
 
 ### Requirement: Paginación numerada de la tabla
 La pantalla SHALL presentar los movimientos como una tabla con paginación numerada (página actual y total de páginas), permitiendo navegar a una página específica, en vez de acumular movimientos por scroll infinito.
@@ -60,28 +84,12 @@ Al tocar una fila de la tabla, la pantalla SHALL mostrar un detalle simple de es
 - **WHEN** el rider cierra la vista de detalle
 - **THEN** vuelve a la tabla en la misma página en la que estaba
 
-### Requirement: Estados de carga inicial y por cambio de página
-La pantalla SHALL mostrar un skeleton que replica el layout real durante la carga de la primera página, y SHALL mostrar el mismo skeleton al navegar a otra página numerada mientras se espera la respuesta, sin mostrar un spinner genérico. Si hay un filtro de fecha activo que requiere traer el set completo de movimientos por primera vez, la pantalla SHALL mostrar un estado de carga explícito distinto ("cargando historial completo para aplicar el filtro") antes de mostrar la tabla paginada en cliente.
+## REMOVED Requirements
 
-#### Scenario: Carga inicial
-- **WHEN** la pantalla se monta y la petición de la página 1 está en curso
-- **THEN** se muestra el skeleton en vez de contenido vacío o un spinner genérico
+### Requirement: Scroll infinito carga páginas siguientes
+**Reason**: Se reemplaza el modelo de paginación acumulativa por scroll infinito por una tabla con paginación numerada real, requisito del wireframe 08 y necesaria para combinar con el filtro de fecha sin perder ítems.
+**Migration**: Ver requirement "Paginación numerada de la tabla" — la navegación entre páginas ahora es explícita (siguiente/anterior/página N) en vez de disparada por scroll.
 
-#### Scenario: Cambio de página numerada
-- **WHEN** el rider navega a otra página de la tabla (modo sin filtro)
-- **THEN** se muestra el skeleton mientras se espera la respuesta de esa página, reemplazando la tabla al llegar los datos
-
-#### Scenario: Primera carga del set completo para un filtro de fecha
-- **WHEN** el rider activa un filtro de fecha y todavía no se cacheó el set completo de movimientos en esta sesión de pantalla
-- **THEN** se muestra un estado de carga explícito distinto al skeleton de página mientras se agotan todas las páginas del servidor
-
-### Requirement: Errores de red no dejan la pantalla en un estado inconsistente
-Si la petición de una página (con o sin filtro) falla, la pantalla SHALL conservar la última página mostrada con éxito y ofrecer una acción para reintentar la navegación fallida, sin perder la tabla visible. Si falla el fetch del set completo requerido por un filtro de fecha, la pantalla SHALL mantener la vista sin filtrar (o el último filtro aplicado con éxito) y ofrecer una acción para reintentar.
-
-#### Scenario: Falla la carga de una página numerada
-- **WHEN** `GET /riders/transactions` falla al pedir una página específica (con o sin filtro)
-- **THEN** la tabla conserva la última página mostrada con éxito y la pantalla ofrece una forma de reintentar esa navegación
-
-#### Scenario: Falla el fetch del set completo para un filtro de fecha
-- **WHEN** falla alguna de las peticiones necesarias para traer el set completo de movimientos requerido por un filtro de fecha
-- **THEN** la pantalla mantiene la última vista válida (sin filtro o con el filtro previamente aplicado) y ofrece una forma de reintentar
+### Requirement: Pull-to-refresh reinicia la paginación
+**Reason**: El gesto de pull-to-refresh no aplica a una tabla de paginación numerada de tamaño fijo (no hay una lista larga en scroll continuo sobre la que aplicar el gesto).
+**Migration**: Volver a entrar a la página 1 o navegar entre páginas siempre vuelve a pedir datos frescos al servidor en modo sin filtro; no se requiere un gesto de refresh dedicado.
