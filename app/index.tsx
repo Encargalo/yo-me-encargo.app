@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { Image, View } from "react-native";
 
 import { ROUTES } from "@/constants/routes";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
@@ -19,5 +19,13 @@ export default function Index() {
     router.replace(isAuthenticated ? ROUTES.APP.HOME : ROUTES.AUTH.LOGIN);
   }, [isHydrated, isAuthenticated]);
 
-  return <View className="flex-1 bg-white" />;
+  return (
+    <View className="flex-1 items-center justify-center bg-white">
+      <Image
+        source={require("@/assets/images/splash-icon.png")}
+        resizeMode="contain"
+        style={{ width: 200, height: 200 }}
+      />
+    </View>
+  );
 }
