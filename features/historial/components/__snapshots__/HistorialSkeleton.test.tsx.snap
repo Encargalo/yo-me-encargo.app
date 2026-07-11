@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HistorialSkeleton renderiza 1 sola fila cuando se pide 1`] = `
+<View>
+  <View
+    className="overflow-hidden rounded-[14px]"
+    collapsable={false}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+    testID="historial-skeleton"
+  >
+    <View
+      className="h-[52px] bg-hair "
+    />
+  </View>
+</View>
+`;
+
+exports[`HistorialSkeleton renderiza 5 filas por defecto 1`] = `
+<View>
+  <View
+    className="overflow-hidden rounded-[14px]"
+    collapsable={false}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+    testID="historial-skeleton"
+  >
+    <View
+      className="h-[52px] bg-hair border-b border-canvas"
+    />
+    <View
+      className="h-[52px] bg-hair border-b border-canvas"
+    />
+    <View
+      className="h-[52px] bg-hair border-b border-canvas"
+    />
+    <View
+      className="h-[52px] bg-hair border-b border-canvas"
+    />
+    <View
+      className="h-[52px] bg-hair "
+    />
+  </View>
+</View>
+`;

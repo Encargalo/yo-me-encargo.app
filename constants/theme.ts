@@ -24,6 +24,23 @@ export const Colors = {
 
 export const Primary = "#fc6b2b";
 
+// Paleta neutra del sistema visual de los wireframes de riders
+// (docs/wireframes/). Grises cálidos sobre papel; el color se reserva para el
+// estado de la orden (OrderStatusColors). Reutilizar en todas las pantallas.
+export const Neutrals = {
+  ink: "#2a2a2a", // texto principal, botón primario, marcador rider
+  textMedium: "#6b685f", // cuerpo, notas
+  textMuted: "#8d8a81", // subtítulos, direcciones
+  labelGray: "#9b988f", // eyebrows mono
+  placeholder: "#a9a69d", // texto de placeholder / ítem inactivo
+  borderInput: "#cbc8c0", // bordes de campos y pastillas
+  borderCard: "#d8d5cd", // bordes de tarjetas/paneles
+  cardBg: "#fbfbf9", // superficie de tarjeta / marco
+  block: "#f2f0ea", // cajas destacadas neutras
+  canvas: "#faf9f5", // fondo de pantalla (papel cálido)
+  white: "#ffffff",
+} as const;
+
 // Equivalen a status.pending/enroute/completed/error en tailwind.config.js
 // (para usos que no pueden usar className, ej. iconos de mapa más adelante)
 export const OrderStatusColors = {

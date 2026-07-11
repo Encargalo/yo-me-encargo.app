@@ -1,0 +1,23 @@
+node_modules
+dist
+web-build
+.expo
+android
+ios
+*.lock
+package-lock.json
+
+# Assets (JSON de animaciones Lottie, no formatear)
+assets/**/*.json
+
+# Contenido gestionado por herramientas/flujos propios, no tocar formato
+openspec/
+docs/
+memory/
+.claude/
+CLAUDE.md
+AGENTS.md
+
+# Config con arrays/formato intencional
+tsconfig.json
+

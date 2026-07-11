@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BalanceSkeleton renderiza el layout de skeleton 1`] = `
+<View
+  collapsable={false}
+  style={
+    {
+      "opacity": 1,
+    }
+  }
+  testID="balance-skeleton"
+>
+  <View
+    className="h-[170px] rounded-[18px] bg-hair"
+  />
+  <View
+    className="mt-3.5 h-4 w-32 rounded-full bg-hair"
+  />
+  <View
+    className="mt-2.5 overflow-hidden rounded-[14px]"
+  >
+    <View
+      className="h-[52px] border-b border-canvas bg-hair"
+    />
+    <View
+      className="h-[52px] border-b border-canvas bg-hair"
+    />
+    <View
+      className="h-[52px] bg-hair"
+    />
+  </View>
+</View>
+`;

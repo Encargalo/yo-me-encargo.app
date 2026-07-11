@@ -1,0 +1,2 @@
+- [Device verification safety](feedback_device_verification.md) — never adb-tap the user's personal phone without live confirmation it's free
+- [Rider transactions display rules](project_rider_transactions_display.md) — movement_type is a raw slug, payment_method must not be shown; applies to Balance and future Historial

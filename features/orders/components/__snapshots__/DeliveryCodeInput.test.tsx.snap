@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeliveryCodeInput deshabilita confirmar hasta completar los dígitos y muestra el error inline 1`] = `
+<View
+  className="gap-3"
+>
+  <Text
+    className="font-mono text-[11px] tracking-[1.4px] text-label"
+  >
+    CÓDIGO DEL CLIENTE
+  </Text>
+  <View
+    style={
+      {
+        "position": "relative",
+      }
+    }
+  >
+    <View
+      className="flex-row gap-2"
+      pointerEvents="none"
+    >
+      <View
+        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
+        style={
+          {
+            "borderColor": "#ef4444",
+          }
+        }
+      >
+        <Text
+          className="text-[20px] font-bold text-ink"
+        >
+          4
+        </Text>
+      </View>
+      <View
+        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
+        style={
+          {
+            "borderColor": "#ef4444",
+          }
+        }
+      >
+        <Text
+          className="text-[20px] font-bold text-ink"
+        >
+          8
+        </Text>
+      </View>
+      <View
+        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
+        style={
+          {
+            "borderColor": "#ef4444",
+          }
+        }
+      >
+        <Text
+          className="text-[20px] font-bold text-ink"
+        >
+          2
+        </Text>
+      </View>
+      <View
+        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
+        style={
+          {
+            "borderColor": "#ef4444",
+          }
+        }
+      >
+        <Text
+          className="text-[20px] font-bold text-ink"
+        >
+          9
+        </Text>
+      </View>
+    </View>
+    <TextInput
+      accessibilityLabel="Ingresar código de entrega"
+      autoFocus={true}
+      keyboardType="number-pad"
+      maxLength={4}
+      onChangeText={[Function]}
+      style={
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "opacity": 0,
+          },
+        ]
+      }
+      value="4829"
+    />
+  </View>
+  <Text
+    className="text-[13px] font-medium"
+    style={
+      {
+        "color": "#ef4444",
+      }
+    }
+  >
+    Código inválido
+  </Text>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    className="h-[56px] items-center justify-center rounded-[14px]"
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "backgroundColor": "#3b82f6",
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      className="text-[16px] font-bold text-white"
+    >
+      Confirmar entrega
+    </Text>
+  </View>
+</View>
+`;
