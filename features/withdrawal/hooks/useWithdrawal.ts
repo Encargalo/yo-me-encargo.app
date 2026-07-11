@@ -1,10 +1,7 @@
 import { useCallback, useState } from "react";
 import type { AxiosError } from "axios";
 
-import {
-  getMockRecentWithdrawals,
-  requestWithdrawal,
-} from "../services/withdrawal.service";
+import { getMockRecentWithdrawals, requestWithdrawal } from "../services/withdrawal.service";
 import type { RecentWithdrawal } from "../types/withdrawal.types";
 import { getWithdrawalErrorMessage } from "../utils/withdrawalErrorMessage";
 
@@ -28,9 +25,7 @@ export function useWithdrawal(): UseWithdrawalReturn {
   const [status, setStatus] = useState<WithdrawalStatus>("idle");
   const [amountWithdrawn, setAmountWithdrawn] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [recentWithdrawals] = useState<RecentWithdrawal[]>(() =>
-    getMockRecentWithdrawals(),
-  );
+  const [recentWithdrawals] = useState<RecentWithdrawal[]>(() => getMockRecentWithdrawals());
 
   const submit = useCallback(() => {
     setStatus("submitting");

@@ -33,9 +33,7 @@ function mapTransaction(raw: RawTransaction): Transaction {
 // Errores tipados como AxiosError: no se capturan acá, el hook orquestador
 // (`useBalance`) lee `error.response?.status` para decidir el mensaje de error.
 export async function getBalance(): Promise<RiderBalanceResponse> {
-  const { data } = await apiClient.get<RawRiderBalanceResponse>(
-    "/riders/balance",
-  );
+  const { data } = await apiClient.get<RawRiderBalanceResponse>("/riders/balance");
   return {
     balance: data.balance,
     zone: data.zone,

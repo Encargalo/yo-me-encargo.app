@@ -43,10 +43,9 @@ export async function getTransactions({
   page,
   limit,
 }: GetTransactionsParams): Promise<TransactionHistoryResponse> {
-  const { data } = await apiClient.get<RawTransactionHistoryResponse>(
-    "/riders/transactions",
-    { params: { page, limit } },
-  );
+  const { data } = await apiClient.get<RawTransactionHistoryResponse>("/riders/transactions", {
+    params: { page, limit },
+  });
   return {
     page: data.page,
     limit: data.limit,

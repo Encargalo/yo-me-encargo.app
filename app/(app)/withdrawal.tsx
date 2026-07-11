@@ -17,12 +17,7 @@ import { MIN_WITHDRAWAL_BALANCE } from "@/features/withdrawal/types/withdrawal.t
 // dejado por `balance-screen`. Ver design.md del change `withdrawal-screen`.
 export default function Withdrawal() {
   const insets = useSafeAreaInsets();
-  const {
-    balance,
-    status: balanceStatus,
-    hasLoadedOnce,
-    refetch: refetchBalance,
-  } = useBalance();
+  const { balance, status: balanceStatus, hasLoadedOnce, refetch: refetchBalance } = useBalance();
   const {
     status: withdrawalStatus,
     amountWithdrawn,
@@ -34,10 +29,7 @@ export default function Withdrawal() {
   if (withdrawalStatus === "success" && amountWithdrawn != null) {
     return (
       <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
-        <WithdrawalSuccess
-          amountWithdrawn={amountWithdrawn}
-          onDismiss={() => router.back()}
-        />
+        <WithdrawalSuccess amountWithdrawn={amountWithdrawn} onDismiss={() => router.back()} />
       </View>
     );
   }
@@ -55,9 +47,7 @@ export default function Withdrawal() {
         >
           <ChevronLeft size={20} color={Neutrals.ink} />
         </Pressable>
-        <Text className="text-[15px] font-semibold text-ink">
-          Solicitar retiro
-        </Text>
+        <Text className="text-[15px] font-semibold text-ink">Solicitar retiro</Text>
       </View>
 
       {balanceStatus === "loading" ? (
@@ -77,9 +67,7 @@ export default function Withdrawal() {
             onPress={refetchBalance}
             className="h-11 items-center justify-center rounded-[12px] bg-ink px-5"
           >
-            <Text className="text-[14px] font-semibold text-white">
-              Reintentar
-            </Text>
+            <Text className="text-[14px] font-semibold text-white">Reintentar</Text>
           </Pressable>
         </View>
       ) : (
@@ -141,9 +129,7 @@ export default function Withdrawal() {
               {isSubmitting ? (
                 <ActivityIndicator color={Neutrals.white} />
               ) : (
-                <Text className="text-[15px] font-bold text-white">
-                  Solicitar retiro
-                </Text>
+                <Text className="text-[15px] font-bold text-white">Solicitar retiro</Text>
               )}
             </Pressable>
           </View>

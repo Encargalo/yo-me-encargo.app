@@ -1,15 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AppState } from "react-native";
 
-import {
-  acceptOrder,
-  rejectOrder,
-} from "../services/ordersRiderWsService";
-import {
-  isSuspended,
-  OFFER_TIMEOUT_SECONDS,
-  useOffersStore,
-} from "../store/useOffersStore";
+import { acceptOrder, rejectOrder } from "../services/ordersRiderWsService";
+import { isSuspended, OFFER_TIMEOUT_SECONDS, useOffersStore } from "../store/useOffersStore";
 import type { ActiveOrder } from "../types/order.types";
 import { haversineKm } from "../utils/haversine";
 import { useRiderLocation } from "./useRiderLocation";

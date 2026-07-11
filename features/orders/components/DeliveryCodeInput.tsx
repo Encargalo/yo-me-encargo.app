@@ -28,10 +28,7 @@ export function DeliveryCodeInput({
   color,
 }: DeliveryCodeInputProps) {
   const inputRef = useRef<TextInput>(null);
-  const digits = Array.from(
-    { length: DELIVERY_CODE_LENGTH },
-    (_, i) => code[i] ?? "",
-  );
+  const digits = Array.from({ length: DELIVERY_CODE_LENGTH }, (_, i) => code[i] ?? "");
   const complete = code.length === DELIVERY_CODE_LENGTH;
 
   function handleChange(text: string) {
@@ -40,9 +37,7 @@ export function DeliveryCodeInput({
 
   return (
     <View className="gap-3">
-      <Text className="font-mono text-[11px] tracking-[1.4px] text-label">
-        CÓDIGO DEL CLIENTE
-      </Text>
+      <Text className="font-mono text-[11px] tracking-[1.4px] text-label">CÓDIGO DEL CLIENTE</Text>
 
       {/* El TextInput real cubre exactamente las casillas (mismo tamaño,
           opacidad 0) — el toque cae directo sobre el input nativo, así el
@@ -56,9 +51,7 @@ export function DeliveryCodeInput({
               key={i}
               className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
               style={{
-                borderColor: error
-                  ? OrderStatusColors.error
-                  : Neutrals.borderInput,
+                borderColor: error ? OrderStatusColors.error : Neutrals.borderInput,
               }}
             >
               <Text className="text-[20px] font-bold text-ink">{digit}</Text>
@@ -79,10 +72,7 @@ export function DeliveryCodeInput({
       </View>
 
       {error ? (
-        <Text
-          className="text-[13px] font-medium"
-          style={{ color: OrderStatusColors.error }}
-        >
+        <Text className="text-[13px] font-medium" style={{ color: OrderStatusColors.error }}>
           {error}
         </Text>
       ) : null}
@@ -96,9 +86,7 @@ export function DeliveryCodeInput({
           opacity: !complete || submitting ? 0.5 : 1,
         }}
       >
-        <Text className="text-[16px] font-bold text-white">
-          Confirmar entrega
-        </Text>
+        <Text className="text-[16px] font-bold text-white">Confirmar entrega</Text>
       </Pressable>
     </View>
   );

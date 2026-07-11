@@ -34,11 +34,7 @@ export function HistorialSkeleton({ rows = 5, label }: HistorialSkeletonProps) {
 
   return (
     <View>
-      {label ? (
-        <Text className="mb-2 text-[12.5px] font-semibold text-body">
-          {label}
-        </Text>
-      ) : null}
+      {label ? <Text className="mb-2 text-[12.5px] font-semibold text-body">{label}</Text> : null}
       <Animated.View
         style={{ opacity }}
         testID="historial-skeleton"
@@ -47,9 +43,7 @@ export function HistorialSkeleton({ rows = 5, label }: HistorialSkeletonProps) {
         {Array.from({ length: rows }).map((_, index) => (
           <View
             key={index}
-            className={`h-[52px] bg-hair ${
-              index === rows - 1 ? "" : "border-b border-canvas"
-            }`}
+            className={`h-[52px] bg-hair ${index === rows - 1 ? "" : "border-b border-canvas"}`}
           />
         ))}
       </Animated.View>

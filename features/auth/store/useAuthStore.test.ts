@@ -16,9 +16,7 @@ const SecureStore = jest.requireMock("expo-secure-store") as {
   deleteItemAsync: jest.Mock;
 };
 
-const mockedSignInRider = signInRider as jest.MockedFunction<
-  typeof signInRider
->;
+const mockedSignInRider = signInRider as jest.MockedFunction<typeof signInRider>;
 
 beforeEach(() => {
   jest.clearAllMocks();

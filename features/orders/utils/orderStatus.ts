@@ -74,10 +74,7 @@ export function getStatusColor(status: OrderStatus): string {
 // `hasRider` = si la orden ya tiene un rider asignado (`!!order.riderId`).
 // Por defecto `true` para no romper llamadas existentes que no distinguen
 // ofertas sin decidir de órdenes ya tomadas.
-export function getStatusLabel(
-  status: OrderStatus,
-  hasRider: boolean = true,
-): string {
+export function getStatusLabel(status: OrderStatus, hasRider: boolean = true): string {
   const colorKey = getColorKey(status);
   if (colorKey === "pending" && !hasRider) return UNASSIGNED_PENDING_LABEL;
   return COLOR_LABEL[colorKey];

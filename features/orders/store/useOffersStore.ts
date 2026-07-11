@@ -55,60 +55,56 @@ const initialState: OffersState = {
   suspendedUntil: null,
 };
 
-export const useOffersStore = create<OffersState & OffersActions>(
-  (set, get) => ({
-    ...initialState,
+export const useOffersStore = create<OffersState & OffersActions>((set, get) => ({
+  ...initialState,
 
-    enqueue: (order) => {
-      if (!order.id) return;
-      const state = get();
-      if (isSuspended(state)) return; // en suspensión: se ignoran nuevas ofertas
-      if (state.decidedIds[order.id]) return; // ya decidida (dedupe)
-      if (state.queue.some((o) => o.id === order.id)) return; // ya en cola
+  enqueue: (order) => {
+    if (!order.id) return;
+    const state = get();
+    if (isSuspended(state)) return; // en suspensión: se ignoran nuevas ofertas
+    if (state.decidedIds[order.id]) return; // ya decidida (dedupe)
+    if (state.queue.some((o) => o.id === order.id)) return; // ya en cola
 
-      set({ queue: [...state.queue, order] });
-    },
+    set({ queue: [...state.queue, order] });
+  },
 
-    resolveCurrent: (reason) =>
-      set((state) => {
-        const current = state.queue[0];
-        if (!current) return state;
+  resolveCurrent: (reason) =>
+    set((state) => {
+      const current = state.queue[0];
+      if (!current) return state;
 
-        const queue = state.queue.slice(1);
-        const decidedIds = { ...state.decidedIds, [current.id]: true as const };
+      const queue = state.queue.slice(1);
+      const decidedIds = { ...state.decidedIds, [current.id]: true as const };
 
-        if (reason === "accept") {
-          return { queue, decidedIds, rejectStreak: 0, suspendedUntil: null };
-        }
-        if (reason === "reject") {
-          const rejectStreak = state.rejectStreak + 1;
-          const suspendedUntil =
-            rejectStreak >= REJECT_STREAK_LIMIT
-              ? Date.now() + SUSPENSION_MS
-              : state.suspendedUntil;
-          return { queue, decidedIds, rejectStreak, suspendedUntil };
-        }
-        // expire: rechazo implícito, no afecta la racha.
-        return { queue, decidedIds };
-      }),
+      if (reason === "accept") {
+        return { queue, decidedIds, rejectStreak: 0, suspendedUntil: null };
+      }
+      if (reason === "reject") {
+        const rejectStreak = state.rejectStreak + 1;
+        const suspendedUntil =
+          rejectStreak >= REJECT_STREAK_LIMIT ? Date.now() + SUSPENSION_MS : state.suspendedUntil;
+        return { queue, decidedIds, rejectStreak, suspendedUntil };
+      }
+      // expire: rechazo implícito, no afecta la racha.
+      return { queue, decidedIds };
+    }),
 
-    dropFromQueue: (id) =>
-      set((state) => {
-        if (!state.queue.some((o) => o.id === id)) return state;
-        return {
-          queue: state.queue.filter((o) => o.id !== id),
-          decidedIds: { ...state.decidedIds, [id]: true as const },
-        };
-      }),
-
-    markDecided: (id) =>
-      set((state) => ({
+  dropFromQueue: (id) =>
+    set((state) => {
+      if (!state.queue.some((o) => o.id === id)) return state;
+      return {
         queue: state.queue.filter((o) => o.id !== id),
         decidedIds: { ...state.decidedIds, [id]: true as const },
-      })),
+      };
+    }),
 
-    clearSuspension: () => set({ suspendedUntil: null, rejectStreak: 0 }),
+  markDecided: (id) =>
+    set((state) => ({
+      queue: state.queue.filter((o) => o.id !== id),
+      decidedIds: { ...state.decidedIds, [id]: true as const },
+    })),
 
-    reset: () => set({ ...initialState }),
-  }),
-);
+  clearSuspension: () => set({ suspendedUntil: null, rejectStreak: 0 }),
+
+  reset: () => set({ ...initialState }),
+}));

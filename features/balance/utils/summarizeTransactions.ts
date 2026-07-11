@@ -8,9 +8,7 @@ export interface TransactionsSummary {
 // Desglose Ganado/Descontado calculado sobre los movimientos ya visibles en
 // pantalla (el endpoint no expone un total histórico separado — ver design.md
 // Riesgos: no es un total de todo el tiempo, solo de estos movimientos).
-export function summarizeTransactions(
-  transactions: Transaction[],
-): TransactionsSummary {
+export function summarizeTransactions(transactions: Transaction[]): TransactionsSummary {
   return transactions.reduce<TransactionsSummary>(
     (summary, tx) => {
       if (tx.amount > 0) {

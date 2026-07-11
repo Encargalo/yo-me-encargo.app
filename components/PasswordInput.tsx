@@ -34,11 +34,7 @@ export function PasswordInput({
           style={styles.toggle}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          {visible ? (
-            <EyeOff size={20} color="#9ca3af" />
-          ) : (
-            <Eye size={20} color="#9ca3af" />
-          )}
+          {visible ? <EyeOff size={20} color="#9ca3af" /> : <Eye size={20} color="#9ca3af" />}
         </TouchableOpacity>
       </View>
       {error ? <Text style={styles.errorText}>{error}</Text> : null}

@@ -42,9 +42,7 @@ export function OrderOfferModal({
     setSubmitting(false);
   }, [offer.id]);
 
-  const title =
-    offer.shop.name ||
-    (offer.number != null ? `Pedido #${offer.number}` : "Pedido");
+  const title = offer.shop.name || (offer.number != null ? `Pedido #${offer.number}` : "Pedido");
   const address = offer.customer.address ?? offer.shop.address;
   const distanceEta = formatDistanceEta(distanceKm ?? offer.distanceKm);
 
@@ -73,20 +71,14 @@ export function OrderOfferModal({
         <View className="rounded-t-[28px] bg-card px-6 pb-9 pt-5">
           {/* Temporizador regresivo */}
           <View className="items-center">
-            <CountdownRing
-              secondsLeft={secondsLeft}
-              totalSeconds={OFFER_TIMEOUT_SECONDS}
-            />
+            <CountdownRing secondsLeft={secondsLeft} totalSeconds={OFFER_TIMEOUT_SECONDS} />
           </View>
 
           {/* Restaurante */}
           <Text className="mt-4 font-mono text-[11px] tracking-[1.4px] text-label">
             RESTAURANTE
           </Text>
-          <Text
-            className="mt-1 text-[24px] font-bold tracking-[-0.5px] text-ink"
-            numberOfLines={2}
-          >
+          <Text className="mt-1 text-[24px] font-bold tracking-[-0.5px] text-ink" numberOfLines={2}>
             {title}
           </Text>
 
@@ -108,9 +100,7 @@ export function OrderOfferModal({
                   {address}
                 </Text>
                 {distanceEta ? (
-                  <Text className="mt-0.5 font-mono text-[12px] text-muted">
-                    {distanceEta}
-                  </Text>
+                  <Text className="mt-0.5 font-mono text-[12px] text-muted">{distanceEta}</Text>
                 ) : null}
               </View>
             </View>
@@ -132,9 +122,7 @@ export function OrderOfferModal({
               className="h-[56px] flex-1 items-center justify-center rounded-[14px] border-[1.5px] border-line bg-white"
               style={submitting ? { opacity: 0.5 } : undefined}
             >
-              <Text className="text-[16px] font-semibold text-body">
-                Rechazar
-              </Text>
+              <Text className="text-[16px] font-semibold text-body">Rechazar</Text>
             </Pressable>
             <Pressable
               onPress={handleAccept}

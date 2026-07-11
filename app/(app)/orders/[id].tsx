@@ -1,13 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ROUTES } from "@/constants/routes";
@@ -19,10 +12,7 @@ import { OrderPartyBlock } from "@/features/orders/components/OrderPartyBlock";
 import { PickupCodeCard } from "@/features/orders/components/PickupCodeCard";
 import { useIsKeyboardVisible } from "@/features/orders/hooks/useIsKeyboardVisible";
 import { useOrderDetail } from "@/features/orders/hooks/useOrderDetail";
-import {
-  getStatusColor,
-  getStatusLabel,
-} from "@/features/orders/utils/orderStatus";
+import { getStatusColor, getStatusLabel } from "@/features/orders/utils/orderStatus";
 
 function formatUsd(fee: number): string {
   return `$${fee.toFixed(2)}`;
@@ -67,17 +57,13 @@ export default function OrderDetail() {
           onPress={() => router.replace(ROUTES.APP.HOME)}
           className="h-11 items-center justify-center rounded-[12px] bg-ink px-5"
         >
-          <Text className="text-[14px] font-semibold text-white">
-            Volver a Inicio
-          </Text>
+          <Text className="text-[14px] font-semibold text-white">Volver a Inicio</Text>
         </Pressable>
       </View>
     );
   }
 
-  const title =
-    order.shop.name ||
-    (order.number != null ? `Pedido #${order.number}` : "Pedido");
+  const title = order.shop.name || (order.number != null ? `Pedido #${order.number}` : "Pedido");
   const statusColor = getStatusColor(order.status);
   const statusLabel = getStatusLabel(order.status, !!order.riderId);
   const items = order.items ?? [];
@@ -99,24 +85,14 @@ export default function OrderDetail() {
         >
           <ChevronLeft size={20} color={Neutrals.ink} />
         </Pressable>
-        <View
-          className="rounded-[20px] px-2.5 py-[3px]"
-          style={{ backgroundColor: statusColor }}
-        >
-          <Text className="text-[11px] font-semibold text-white">
-            {statusLabel}
-          </Text>
+        <View className="rounded-[20px] px-2.5 py-[3px]" style={{ backgroundColor: statusColor }}>
+          <Text className="text-[11px] font-semibold text-white">{statusLabel}</Text>
         </View>
-        <Text
-          className="ml-1 flex-1 text-[15px] font-semibold text-ink"
-          numberOfLines={1}
-        >
+        <Text className="ml-1 flex-1 text-[15px] font-semibold text-ink" numberOfLines={1}>
           {title}
         </Text>
         {order.number != null ? (
-          <Text className="font-mono text-[11px] tracking-[0.5px] text-label">
-            #{order.number}
-          </Text>
+          <Text className="font-mono text-[11px] tracking-[0.5px] text-label">#{order.number}</Text>
         ) : null}
       </View>
 
@@ -155,9 +131,7 @@ export default function OrderDetail() {
         ) : null}
 
         <View className="flex-row items-center justify-between rounded-[14px] bg-block px-4 py-4">
-          <Text className="text-[15px] font-semibold text-body">
-            Comisión
-          </Text>
+          <Text className="text-[15px] font-semibold text-body">Comisión</Text>
           <Text className="text-[24px] font-bold tracking-[-0.4px] text-ink">
             {formatUsd(order.deliveryFee)}
           </Text>
@@ -167,9 +141,7 @@ export default function OrderDetail() {
       <View
         className="border-t border-hair bg-white px-4 pt-3"
         style={{
-          paddingBottom: keyboardVisible
-            ? 10
-            : Math.max(insets.bottom, 16) + 12,
+          paddingBottom: keyboardVisible ? 10 : Math.max(insets.bottom, 16) + 12,
         }}
       >
         {stage === "offer" ? (

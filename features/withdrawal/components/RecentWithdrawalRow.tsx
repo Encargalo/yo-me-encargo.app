@@ -10,10 +10,7 @@ interface RecentWithdrawalRowProps {
   isLast?: boolean;
 }
 
-const MONTHS = [
-  "ene", "feb", "mar", "abr", "may", "jun",
-  "jul", "ago", "sep", "oct", "nov", "dic",
-];
+const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 
 // Mismo criterio que TransactionRow (features/balance): formato manual de
 // fecha, sin Intl.DateTimeFormat, para no depender de datos de locale
@@ -34,10 +31,7 @@ const STATUS_COLOR: Record<RecentWithdrawal["status"], string> = {
   processed: OrderStatusColors.completed,
 };
 
-export function RecentWithdrawalRow({
-  withdrawal,
-  isLast,
-}: RecentWithdrawalRowProps) {
+export function RecentWithdrawalRow({ withdrawal, isLast }: RecentWithdrawalRowProps) {
   const date = formatDate(withdrawal.date);
 
   return (
@@ -50,9 +44,7 @@ export function RecentWithdrawalRow({
         <Text className="text-[13px] font-semibold text-ink">
           {formatAmount(withdrawal.amount)}
         </Text>
-        {date ? (
-          <Text className="text-[10.5px] text-label">{date}</Text>
-        ) : null}
+        {date ? <Text className="text-[10.5px] text-label">{date}</Text> : null}
       </View>
       <View
         className="rounded-full border px-2.5 py-[3px]"

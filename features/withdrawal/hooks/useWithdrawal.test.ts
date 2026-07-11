@@ -1,10 +1,7 @@
 import { act, renderHook } from "@testing-library/react-native";
 import type { AxiosError } from "axios";
 
-import {
-  getMockRecentWithdrawals,
-  requestWithdrawal,
-} from "../services/withdrawal.service";
+import { getMockRecentWithdrawals, requestWithdrawal } from "../services/withdrawal.service";
 import { useWithdrawal } from "./useWithdrawal";
 
 jest.mock("../services/withdrawal.service", () => ({
@@ -13,12 +10,9 @@ jest.mock("../services/withdrawal.service", () => ({
 }));
 
 const mockedRequestWithdrawal = requestWithdrawal as jest.Mock;
-const mockedGetMockRecentWithdrawals =
-  getMockRecentWithdrawals as jest.Mock;
+const mockedGetMockRecentWithdrawals = getMockRecentWithdrawals as jest.Mock;
 
-const sampleRecent = [
-  { amount: 30, date: "2026-06-28T00:00:00Z", status: "processed" as const },
-];
+const sampleRecent = [{ amount: 30, date: "2026-06-28T00:00:00Z", status: "processed" as const }];
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -70,9 +64,7 @@ describe("useWithdrawal", () => {
     });
 
     expect(result.current.status).toBe("error");
-    expect(result.current.errorMessage).toBe(
-      "Tu saldo es insuficiente para retirar.",
-    );
+    expect(result.current.errorMessage).toBe("Tu saldo es insuficiente para retirar.");
   });
 
   it("error 401 → mensaje de sesión expirada", async () => {
@@ -88,9 +80,7 @@ describe("useWithdrawal", () => {
       result.current.submit();
     });
 
-    expect(result.current.errorMessage).toBe(
-      "Tu sesión expiró. Vuelve a iniciar sesión.",
-    );
+    expect(result.current.errorMessage).toBe("Tu sesión expiró. Vuelve a iniciar sesión.");
   });
 
   it("error genérico/red → mensaje genérico de reintento", async () => {
@@ -103,8 +93,6 @@ describe("useWithdrawal", () => {
       result.current.submit();
     });
 
-    expect(result.current.errorMessage).toBe(
-      "No pudimos procesar tu retiro. Intenta de nuevo.",
-    );
+    expect(result.current.errorMessage).toBe("No pudimos procesar tu retiro. Intenta de nuevo.");
   });
 });

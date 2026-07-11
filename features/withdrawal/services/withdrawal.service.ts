@@ -9,9 +9,7 @@ interface RawWithdrawalResponse {
 // Errores tipados como AxiosError: no se capturan acá, el hook orquestador
 // (`useWithdrawal`) lee `error.response?.status` para decidir el mensaje.
 export async function requestWithdrawal(): Promise<WithdrawalResponse> {
-  const { data } = await apiClient.post<RawWithdrawalResponse>(
-    "/riders/withdrawal",
-  );
+  const { data } = await apiClient.post<RawWithdrawalResponse>("/riders/withdrawal");
   return { amountWithdrawn: data.amount_withdrawn };
 }
 

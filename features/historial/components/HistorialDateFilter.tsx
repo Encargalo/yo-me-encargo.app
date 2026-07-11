@@ -13,10 +13,7 @@ interface HistorialDateFilterProps {
   onClear: () => void;
 }
 
-const MONTHS = [
-  "ene", "feb", "mar", "abr", "may", "jun",
-  "jul", "ago", "sep", "oct", "nov", "dic",
-];
+const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 
 function formatDate(date: Date): string {
   return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
@@ -24,17 +21,9 @@ function formatDate(date: Date): string {
 
 type OpenPicker = "from" | "to" | null;
 
-export function HistorialDateFilter({
-  dateRange,
-  onApply,
-  onClear,
-}: HistorialDateFilterProps) {
-  const [pendingFrom, setPendingFrom] = useState<Date | null>(
-    dateRange?.from ?? null,
-  );
-  const [pendingTo, setPendingTo] = useState<Date | null>(
-    dateRange?.to ?? null,
-  );
+export function HistorialDateFilter({ dateRange, onApply, onClear }: HistorialDateFilterProps) {
+  const [pendingFrom, setPendingFrom] = useState<Date | null>(dateRange?.from ?? null);
+  const [pendingTo, setPendingTo] = useState<Date | null>(dateRange?.to ?? null);
   const [openPicker, setOpenPicker] = useState<OpenPicker>(null);
 
   const canApply = pendingFrom !== null && pendingTo !== null;
@@ -55,9 +44,7 @@ export function HistorialDateFilter({
           }`}
         >
           <Text
-            className={`text-[12.5px] font-semibold ${
-              pendingFrom ? "text-primary" : "text-ink"
-            }`}
+            className={`text-[12.5px] font-semibold ${pendingFrom ? "text-primary" : "text-ink"}`}
           >
             {pendingFrom ? formatDate(pendingFrom) : "Desde"}
           </Text>
@@ -69,9 +56,7 @@ export function HistorialDateFilter({
           }`}
         >
           <Text
-            className={`text-[12.5px] font-semibold ${
-              pendingTo ? "text-primary" : "text-ink"
-            }`}
+            className={`text-[12.5px] font-semibold ${pendingTo ? "text-primary" : "text-ink"}`}
           >
             {pendingTo ? formatDate(pendingTo) : "Hasta"}
           </Text>
@@ -83,9 +68,7 @@ export function HistorialDateFilter({
             canApply ? "" : "opacity-40"
           }`}
         >
-          <Text className="text-[12.5px] font-semibold text-white">
-            Aplicar
-          </Text>
+          <Text className="text-[12.5px] font-semibold text-white">Aplicar</Text>
         </Pressable>
       </View>
 
@@ -95,18 +78,14 @@ export function HistorialDateFilter({
           className="mt-3 flex-row items-center gap-1 self-start rounded-full border border-primary px-3 py-1.5"
         >
           <X size={13} color={Primary} />
-          <Text className="text-[12px] font-bold text-primary">
-            Limpiar filtro
-          </Text>
+          <Text className="text-[12px] font-bold text-primary">Limpiar filtro</Text>
         </Pressable>
       ) : null}
 
       {openPicker ? (
         <DateTimePicker
           testID="historial-date-picker"
-          value={
-            (openPicker === "from" ? pendingFrom : pendingTo) ?? new Date()
-          }
+          value={(openPicker === "from" ? pendingFrom : pendingTo) ?? new Date()}
           mode="date"
           onChange={(_event, selectedDate) => {
             setOpenPicker(null);

@@ -65,9 +65,7 @@ export function useOrderDetail(id: string | undefined): UseOrderDetailReturn {
   const [otpCode, setOtpCode] = useState("");
   const [confirming, setConfirming] = useState(false);
   const [deliveryError, setDeliveryError] = useState<string | undefined>();
-  const [completedSummary, setCompletedSummary] = useState<
-    CompletedSummary | undefined
-  >();
+  const [completedSummary, setCompletedSummary] = useState<CompletedSummary | undefined>();
 
   const isMine = !!order?.riderId && (hadRiderIdOnMount || acceptedLocally);
   const takenByOther = !!order?.riderId && !isMine;
@@ -117,8 +115,7 @@ export function useOrderDetail(id: string | undefined): UseOrderDetailReturn {
       } catch (err) {
         const status = (err as AxiosError).response?.status;
         setDeliveryError(
-          (status !== undefined && DELIVERY_ERROR_MESSAGES[status]) ||
-            DEFAULT_DELIVERY_ERROR,
+          (status !== undefined && DELIVERY_ERROR_MESSAGES[status]) || DEFAULT_DELIVERY_ERROR,
         );
         if (status === 400) setOtpCode("");
       } finally {

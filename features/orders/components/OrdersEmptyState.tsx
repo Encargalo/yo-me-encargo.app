@@ -10,9 +10,7 @@ export function OrdersEmptyState() {
       <View className="mb-3 h-[52px] w-[52px] items-center justify-center rounded-full bg-block">
         <Package size={24} color={Neutrals.placeholder} />
       </View>
-      <Text className="text-[15px] font-semibold text-body">
-        Sin órdenes activas
-      </Text>
+      <Text className="text-[15px] font-semibold text-body">Sin órdenes activas</Text>
       <Text className="mt-1 text-center text-[13px] text-muted">
         Cuando recibas un pedido, aparecerá aquí.
       </Text>

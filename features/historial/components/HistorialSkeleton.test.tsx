@@ -17,8 +17,6 @@ describe("HistorialSkeleton", () => {
     const { getByText } = await render(
       <HistorialSkeleton label="Cargando historial completo para aplicar el filtro..." />,
     );
-    expect(
-      getByText("Cargando historial completo para aplicar el filtro..."),
-    ).toBeTruthy();
+    expect(getByText("Cargando historial completo para aplicar el filtro...")).toBeTruthy();
   });
 });

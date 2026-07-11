@@ -13,8 +13,7 @@ export function lightenColor(hex: string, ratio: number): string {
   const g = (num >> 8) & 0xff;
   const b = num & 0xff;
 
-  const mix = (channel: number) =>
-    Math.round(channel + (255 - channel) * clampedRatio);
+  const mix = (channel: number) => Math.round(channel + (255 - channel) * clampedRatio);
 
   const toHex = (channel: number) => channel.toString(16).padStart(2, "0");
 

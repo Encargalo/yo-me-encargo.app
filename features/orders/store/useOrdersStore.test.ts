@@ -1,10 +1,7 @@
 import type { ActiveOrder } from "../types/order.types";
 import { useOrdersStore } from "./useOrdersStore";
 
-function makeOrder(
-  id: string,
-  status: ActiveOrder["status"],
-): ActiveOrder {
+function makeOrder(id: string, status: ActiveOrder["status"]): ActiveOrder {
   return {
     id,
     status,

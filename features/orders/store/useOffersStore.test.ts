@@ -1,10 +1,5 @@
 import type { ActiveOrder } from "../types/order.types";
-import {
-  isSuspended,
-  REJECT_STREAK_LIMIT,
-  SUSPENSION_MS,
-  useOffersStore,
-} from "./useOffersStore";
+import { isSuspended, REJECT_STREAK_LIMIT, SUSPENSION_MS, useOffersStore } from "./useOffersStore";
 
 function makeOffer(id: string): ActiveOrder {
   return {
@@ -89,8 +84,7 @@ describe("useOffersStore.resolveCurrent", () => {
 
 describe("useOffersStore.dropFromQueue", () => {
   it("retira una oferta tomada por otro sin tocar la racha", () => {
-    const { enqueue, resolveCurrent, dropFromQueue } =
-      useOffersStore.getState();
+    const { enqueue, resolveCurrent, dropFromQueue } = useOffersStore.getState();
     enqueue(makeOffer("a"));
     resolveCurrent("reject"); // racha = 1
     enqueue(makeOffer("b"));

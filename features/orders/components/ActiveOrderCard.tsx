@@ -14,18 +14,12 @@ function formatDistance(km?: number): string | null {
   return `${km.toFixed(1)} km`;
 }
 
-export function ActiveOrderCard({
-  order,
-  distanceKm,
-  onPress,
-}: ActiveOrderCardProps) {
+export function ActiveOrderCard({ order, distanceKm, onPress }: ActiveOrderCardProps) {
   const color = getStatusColor(order.status);
   const label = getStatusLabel(order.status, !!order.riderId);
   const distance = formatDistance(distanceKm ?? order.distanceKm);
   // El mensaje del WS no trae nombre de restaurante (solo shop_id) → fallback.
-  const title =
-    order.shop.name ||
-    (order.number != null ? `Pedido #${order.number}` : "Pedido");
+  const title = order.shop.name || (order.number != null ? `Pedido #${order.number}` : "Pedido");
   // La dirección/coords del mensaje son del cliente (entrega).
   const address = order.customer.address ?? order.shop.address;
 
@@ -36,21 +30,13 @@ export function ActiveOrderCard({
       android_ripple={{ color: "#0000000a" }}
     >
       <View className="flex-row items-center justify-between">
-        <View
-          className="rounded-[20px] px-2.5 py-[3px]"
-          style={{ backgroundColor: color }}
-        >
+        <View className="rounded-[20px] px-2.5 py-[3px]" style={{ backgroundColor: color }}>
           <Text className="text-[11px] font-semibold text-white">{label}</Text>
         </View>
-        {distance ? (
-          <Text className="font-mono text-xs text-muted">{distance}</Text>
-        ) : null}
+        {distance ? <Text className="font-mono text-xs text-muted">{distance}</Text> : null}
       </View>
 
-      <Text
-        className="text-[15px] font-semibold tracking-[-0.2px] text-ink"
-        numberOfLines={1}
-      >
+      <Text className="text-[15px] font-semibold tracking-[-0.2px] text-ink" numberOfLines={1}>
         {title}
       </Text>
 

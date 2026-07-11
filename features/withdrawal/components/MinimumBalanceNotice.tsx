@@ -13,10 +13,8 @@ export function MinimumBalanceNotice() {
       <Text className="text-[14px]">ⓘ</Text>
       <Text className="flex-1 text-[12px] leading-[17px] text-body">
         Disponible para retiro a partir de{" "}
-        <Text className="font-bold">
-          {formatAmount(MIN_WITHDRAWAL_BALANCE)}
-        </Text>
-        . Por debajo de ese monto el botón permanece deshabilitado.
+        <Text className="font-bold">{formatAmount(MIN_WITHDRAWAL_BALANCE)}</Text>. Por debajo de ese
+        monto el botón permanece deshabilitado.
       </Text>
     </View>
   );

@@ -91,12 +91,7 @@ describe("OrdersMap", () => {
   it("en recogida pendiente muestra la tienda a opacidad normal y el cliente atenuado", async () => {
     const order = makeOrder({ status: "Ready" });
     const { getByTestId } = await render(
-      <OrdersMap
-        region={REGION}
-        riderStatus="granted"
-        enabled={true}
-        focusedOrders={[order]}
-      />,
+      <OrdersMap region={REGION} riderStatus="granted" enabled={true} focusedOrders={[order]} />,
     );
 
     expect(getByTestId("pin-shop-order-1").props.style.opacity).toBe(1);
@@ -106,12 +101,7 @@ describe("OrdersMap", () => {
   it("en camino muestra el cliente a opacidad normal y la tienda atenuada", async () => {
     const order = makeOrder({ status: "On The Way" });
     const { getByTestId } = await render(
-      <OrdersMap
-        region={REGION}
-        riderStatus="granted"
-        enabled={true}
-        focusedOrders={[order]}
-      />,
+      <OrdersMap region={REGION} riderStatus="granted" enabled={true} focusedOrders={[order]} />,
     );
 
     expect(getByTestId("pin-shop-order-1").props.style.opacity).toBe(0.35);
@@ -150,9 +140,7 @@ describe("OrdersMap", () => {
 
     // La ruta "En camino" es la prioritaria (color normal); la de recogida
     // pendiente, secundaria, usa una variante clarificada del mismo ámbar.
-    expect(getByTestId("route-order-enroute").props.strokeColor).toBe(
-      OrderStatusColors.enroute,
-    );
+    expect(getByTestId("route-order-enroute").props.strokeColor).toBe(OrderStatusColors.enroute);
     expect(getByTestId("route-order-pending").props.strokeColor).toBe(
       lightenColor(OrderStatusColors.pending, SECONDARY_ROUTE_LIGHTEN_RATIO),
     );
@@ -184,9 +172,7 @@ describe("OrdersMap", () => {
       expect(getByTestId("route-order-far")).toBeTruthy();
     });
 
-    expect(getByTestId("route-order-near").props.strokeColor).toBe(
-      OrderStatusColors.enroute,
-    );
+    expect(getByTestId("route-order-near").props.strokeColor).toBe(OrderStatusColors.enroute);
     expect(getByTestId("route-order-far").props.strokeColor).toBe(
       lightenColor(OrderStatusColors.enroute, SECONDARY_ROUTE_LIGHTEN_RATIO),
     );
@@ -222,12 +208,7 @@ describe("OrdersMap", () => {
 
     const order = makeOrder({ status: "Ready" }); // recogida pendiente → destino = tienda
     const { getByTestId } = await render(
-      <OrdersMap
-        region={REGION}
-        riderStatus="granted"
-        enabled={true}
-        focusedOrders={[order]}
-      />,
+      <OrdersMap region={REGION} riderStatus="granted" enabled={true} focusedOrders={[order]} />,
     );
 
     await act(async () => {
@@ -409,18 +390,11 @@ describe("OrdersMap", () => {
     const fitToCoordinates = jest
       .spyOn(MapView.prototype, "fitToCoordinates")
       .mockImplementation(() => {});
-    jest
-      .spyOn(MapView.prototype, "animateToRegion")
-      .mockImplementation(() => {});
+    jest.spyOn(MapView.prototype, "animateToRegion").mockImplementation(() => {});
 
     const order = makeOrder({ status: "Ready" });
     const { getByTestId } = await render(
-      <OrdersMap
-        region={REGION}
-        riderStatus="granted"
-        enabled={true}
-        focusedOrders={[order]}
-      />,
+      <OrdersMap region={REGION} riderStatus="granted" enabled={true} focusedOrders={[order]} />,
     );
 
     await act(async () => {

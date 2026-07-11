@@ -10,10 +10,7 @@ interface TransactionDetailModalProps {
   onClose: () => void;
 }
 
-const MONTHS = [
-  "ene", "feb", "mar", "abr", "may", "jun",
-  "jul", "ago", "sep", "oct", "nov", "dic",
-];
+const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 
 // Duplica el formato de fecha de `TransactionRow` a propósito — mismo criterio
 // que `historial.service.ts` (no compartir helpers triviales entre features).
@@ -46,16 +43,11 @@ function DetailRow({ label, value, valueColor }: DetailRowProps) {
 // Detalle de solo lectura (wireframe 08) — mismos campos ya visibles en la
 // fila, sin fetch adicional. `payment_method` sigue oculto (Decisión 8 de
 // balance-screen).
-export function TransactionDetailModal({
-  transaction,
-  onClose,
-}: TransactionDetailModalProps) {
+export function TransactionDetailModal({ transaction, onClose }: TransactionDetailModalProps) {
   if (!transaction) return null;
 
   const amountColor =
-    transaction.amount >= 0
-      ? OrderStatusColors.completed
-      : OrderStatusColors.error;
+    transaction.amount >= 0 ? OrderStatusColors.completed : OrderStatusColors.error;
   const date = formatDate(transaction.createdAt);
 
   return (
@@ -69,9 +61,7 @@ export function TransactionDetailModal({
           className="rounded-t-[28px] bg-card px-6 pb-9 pt-5"
           onPress={(event) => event.stopPropagation()}
         >
-          <Text className="font-mono text-[11px] tracking-[1.4px] text-label">
-            MOVIMIENTO
-          </Text>
+          <Text className="font-mono text-[11px] tracking-[1.4px] text-label">MOVIMIENTO</Text>
           <Text className="mt-1 text-[20px] font-bold text-ink">
             {getMovementTypeLabel(transaction.movementType)}
           </Text>
@@ -84,10 +74,7 @@ export function TransactionDetailModal({
             />
             {date ? <DetailRow label="Fecha" value={date} /> : null}
             {typeof transaction.distanceKm === "number" ? (
-              <DetailRow
-                label="Distancia"
-                value={`${transaction.distanceKm.toFixed(1)} km`}
-              />
+              <DetailRow label="Distancia" value={`${transaction.distanceKm.toFixed(1)} km`} />
             ) : null}
           </View>
 
@@ -95,9 +82,7 @@ export function TransactionDetailModal({
             onPress={onClose}
             className="mt-6 h-12 items-center justify-center rounded-[14px] bg-primary"
           >
-            <Text className="text-[14px] font-semibold text-white">
-              Cerrar
-            </Text>
+            <Text className="text-[14px] font-semibold text-white">Cerrar</Text>
           </Pressable>
         </Pressable>
       </Pressable>

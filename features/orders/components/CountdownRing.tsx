@@ -11,18 +11,11 @@ interface CountdownRingProps {
 
 // Aro circular regresivo: el arco ámbar restante se consume a gris a medida que
 // baja el tiempo. Ámbar = estado "recogida pendiente" (OrderStatusColors.pending).
-export function CountdownRing({
-  secondsLeft,
-  totalSeconds,
-  size = 54,
-}: CountdownRingProps) {
+export function CountdownRing({ secondsLeft, totalSeconds, size = 54 }: CountdownRingProps) {
   const stroke = 4;
   const r = (size - stroke) / 2;
   const circumference = 2 * Math.PI * r;
-  const progress =
-    totalSeconds > 0
-      ? Math.max(0, Math.min(1, secondsLeft / totalSeconds))
-      : 0;
+  const progress = totalSeconds > 0 ? Math.max(0, Math.min(1, secondsLeft / totalSeconds)) : 0;
   const offset = circumference * (1 - progress);
 
   return (
@@ -59,9 +52,7 @@ export function CountdownRing({
           strokeLinecap="round"
         />
       </Svg>
-      <Text style={{ fontSize: 18, fontWeight: "700", color: Neutrals.ink }}>
-        {secondsLeft}
-      </Text>
+      <Text style={{ fontSize: 18, fontWeight: "700", color: Neutrals.ink }}>{secondsLeft}</Text>
     </View>
   );
 }

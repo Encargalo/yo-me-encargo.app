@@ -22,8 +22,7 @@ describe("useLiveRiderLocation", () => {
   });
 
   it("al pasar a enabled=true, observa la posición y se actualiza con cada callback", async () => {
-    let emit: (location: { coords: { latitude: number; longitude: number } }) => void =
-      () => {};
+    let emit: (location: { coords: { latitude: number; longitude: number } }) => void = () => {};
     mockedLocation.watchPositionAsync.mockImplementation(
       (_options: unknown, callback: typeof emit) => {
         emit = callback;

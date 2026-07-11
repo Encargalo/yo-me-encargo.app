@@ -47,9 +47,7 @@ describe("TransactionRow", () => {
 
   it("no responde a tap cuando no se pasa onPress (uso de Balance)", async () => {
     const onPress = jest.fn();
-    const { getByText } = await render(
-      <TransactionRow transaction={makeTransaction()} />,
-    );
+    const { getByText } = await render(<TransactionRow transaction={makeTransaction()} />);
 
     fireEvent.press(getByText("Carrera"));
     expect(onPress).not.toHaveBeenCalled();

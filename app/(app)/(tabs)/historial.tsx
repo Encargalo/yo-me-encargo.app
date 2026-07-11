@@ -13,16 +13,8 @@ import { useTransactionHistory } from "@/features/historial/hooks/useTransaction
 
 export default function Historial() {
   const insets = useSafeAreaInsets();
-  const {
-    rows,
-    status,
-    page,
-    totalPages,
-    dateRange,
-    goToPage,
-    setDateRange,
-    retry,
-  } = useTransactionHistory();
+  const { rows, status, page, totalPages, dateRange, goToPage, setDateRange, retry } =
+    useTransactionHistory();
   const [selected, setSelected] = useState<Transaction | null>(null);
 
   const isInitialLoading = status === "loading";
@@ -30,13 +22,8 @@ export default function Historial() {
   const hasRetriableError = status === "errorPage" || status === "errorFullSet";
 
   return (
-    <View
-      className="flex-1 bg-canvas"
-      style={{ paddingTop: insets.top, paddingBottom: 16 }}
-    >
-      <Text className="px-4 pb-2 pt-3 text-[18px] font-bold text-ink">
-        Historial
-      </Text>
+    <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top, paddingBottom: 16 }}>
+      <Text className="px-4 pb-2 pt-3 text-[18px] font-bold text-ink">Historial</Text>
 
       {isInitialLoading || isInitialError ? null : (
         <HistorialDateFilter
@@ -59,9 +46,7 @@ export default function Historial() {
             onPress={retry}
             className="h-11 items-center justify-center rounded-[12px] bg-ink px-5"
           >
-            <Text className="text-[14px] font-semibold text-white">
-              Reintentar
-            </Text>
+            <Text className="text-[14px] font-semibold text-white">Reintentar</Text>
           </Pressable>
         </View>
       ) : status === "loadingFullSet" ? (
@@ -86,9 +71,7 @@ export default function Historial() {
               <Text className="flex-1 text-[12.5px] font-semibold text-status-error">
                 No pudimos completar la acción
               </Text>
-              <Text className="text-[12.5px] font-bold text-status-error">
-                Reintentar
-              </Text>
+              <Text className="text-[12.5px] font-bold text-status-error">Reintentar</Text>
             </Pressable>
           ) : null}
 
@@ -103,18 +86,11 @@ export default function Historial() {
             ))}
           </View>
 
-          <HistorialPagination
-            page={page}
-            totalPages={totalPages}
-            onPageChange={goToPage}
-          />
+          <HistorialPagination page={page} totalPages={totalPages} onPageChange={goToPage} />
         </>
       )}
 
-      <TransactionDetailModal
-        transaction={selected}
-        onClose={() => setSelected(null)}
-      />
+      <TransactionDetailModal transaction={selected} onClose={() => setSelected(null)} />
     </View>
   );
 }

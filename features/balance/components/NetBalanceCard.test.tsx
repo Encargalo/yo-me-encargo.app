@@ -5,11 +5,7 @@ import { NetBalanceCard } from "./NetBalanceCard";
 describe("NetBalanceCard", () => {
   it("muestra el saldo positivo, zona y desglose", async () => {
     const { getByText, toJSON } = await render(
-      <NetBalanceCard
-        balance={24.5}
-        zone="normal"
-        summary={{ earned: 38, deducted: 13.5 }}
-      />,
+      <NetBalanceCard balance={24.5} zone="normal" summary={{ earned: 38, deducted: 13.5 }} />,
     );
 
     expect(getByText("24.5$")).toBeTruthy();
@@ -21,11 +17,7 @@ describe("NetBalanceCard", () => {
 
   it("muestra el saldo negativo", async () => {
     const { getByText } = await render(
-      <NetBalanceCard
-        balance={-5}
-        zone="normal"
-        summary={{ earned: 0, deducted: 5 }}
-      />,
+      <NetBalanceCard balance={-5} zone="normal" summary={{ earned: 0, deducted: 5 }} />,
     );
 
     expect(getByText("-5$")).toBeTruthy();

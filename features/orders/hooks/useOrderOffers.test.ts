@@ -88,12 +88,10 @@ describe("useOrderOffers", () => {
 
   it("levanta la suspensión cuando la app vuelve a primer plano", async () => {
     let appStateCb: ((s: string) => void) | undefined;
-    jest
-      .spyOn(AppState, "addEventListener")
-      .mockImplementation((_event, cb) => {
-        appStateCb = cb as (s: string) => void;
-        return { remove: jest.fn() } as never;
-      });
+    jest.spyOn(AppState, "addEventListener").mockImplementation((_event, cb) => {
+      appStateCb = cb as (s: string) => void;
+      return { remove: jest.fn() } as never;
+    });
 
     useOffersStore.setState({
       suspendedUntil: Date.now() + SUSPENSION_MS,

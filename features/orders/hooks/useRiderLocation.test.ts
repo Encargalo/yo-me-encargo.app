@@ -41,9 +41,7 @@ describe("useRiderLocation", () => {
       rerender({ enabled: true });
     });
 
-    expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(result.current.status).toBe("granted");
     expect(result.current.region?.latitude).toBe(10.48);
   });

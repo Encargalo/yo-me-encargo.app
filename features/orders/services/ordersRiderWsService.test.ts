@@ -3,10 +3,7 @@ import { useOrdersStore } from "../store/useOrdersStore";
 import type { ActiveOrder } from "../types/order.types";
 import { routeToOffers } from "./ordersRiderWsService";
 
-function makeOrder(
-  id: string,
-  overrides: Partial<ActiveOrder> = {},
-): ActiveOrder {
+function makeOrder(id: string, overrides: Partial<ActiveOrder> = {}): ActiveOrder {
   return {
     id,
     status: "In Preparation",

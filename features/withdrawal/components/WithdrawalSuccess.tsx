@@ -12,10 +12,7 @@ interface WithdrawalSuccessProps {
 // Swap de estado dentro de la misma pantalla (no ruta/modal nueva), mismo
 // patrón que OrderCompletedSummary (order-completed-polish) — ver design.md,
 // Decisión 7. Reutiliza el mismo asset Lottie de éxito ya integrado ahí.
-export function WithdrawalSuccess({
-  amountWithdrawn,
-  onDismiss,
-}: WithdrawalSuccessProps) {
+export function WithdrawalSuccess({ amountWithdrawn, onDismiss }: WithdrawalSuccessProps) {
   return (
     <Animated.View
       entering={FadeIn.duration(350)}
@@ -38,12 +35,8 @@ export function WithdrawalSuccess({
       </View>
 
       <View className="w-full items-center rounded-[14px] bg-block p-4">
-        <Text className="font-mono text-[10px] text-label">
-          MONTO RETIRADO
-        </Text>
-        <Text className="text-[28px] font-bold text-ink">
-          {formatAmount(amountWithdrawn)}
-        </Text>
+        <Text className="font-mono text-[10px] text-label">MONTO RETIRADO</Text>
+        <Text className="text-[28px] font-bold text-ink">{formatAmount(amountWithdrawn)}</Text>
       </View>
 
       <Pressable

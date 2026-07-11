@@ -61,9 +61,7 @@ export function getRouteStageInfo(status: OrderStatus): RouteStageInfo | null {
 function destinationCoordFor(order: ActiveOrder): LatLng | null {
   const stageInfo = getRouteStageInfo(order.status);
   if (!stageInfo) return null;
-  return stageInfo.destination === "shop"
-    ? partyCoord(order.shop)
-    : partyCoord(order.customer);
+  return stageInfo.destination === "shop" ? partyCoord(order.shop) : partyCoord(order.customer);
 }
 
 /**

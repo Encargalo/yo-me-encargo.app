@@ -13,20 +13,7 @@ interface TransactionRowProps {
   onPress?: () => void;
 }
 
-const MONTHS = [
-  "ene",
-  "feb",
-  "mar",
-  "abr",
-  "may",
-  "jun",
-  "jul",
-  "ago",
-  "sep",
-  "oct",
-  "nov",
-  "dic",
-];
+const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 
 // Manual en vez de Intl.DateTimeFormat: evita depender de datos de locale
 // completos en Hermes para un formato de solo día + mes abreviado.
@@ -36,23 +23,15 @@ function formatDate(iso: string): string | null {
   return `${date.getDate()} ${MONTHS[date.getMonth()]}`;
 }
 
-export function TransactionRow({
-  transaction,
-  isLast,
-  onPress,
-}: TransactionRowProps) {
+export function TransactionRow({ transaction, isLast, onPress }: TransactionRowProps) {
   const amountColor =
-    transaction.amount >= 0
-      ? OrderStatusColors.completed
-      : OrderStatusColors.error;
+    transaction.amount >= 0 ? OrderStatusColors.completed : OrderStatusColors.error;
 
   // El método de pago no se muestra al rider — decisión del usuario tras ver
   // datos reales de staging (ver design.md, Decisión 8).
   const meta = [
     formatDate(transaction.createdAt),
-    typeof transaction.distanceKm === "number"
-      ? `${transaction.distanceKm.toFixed(1)} km`
-      : null,
+    typeof transaction.distanceKm === "number" ? `${transaction.distanceKm.toFixed(1)} km` : null,
   ]
     .filter(Boolean)
     .join(" · ");

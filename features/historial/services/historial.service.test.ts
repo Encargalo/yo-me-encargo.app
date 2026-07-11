@@ -81,9 +81,7 @@ describe("getTransactions", () => {
     } as AxiosError;
     mockedGet.mockRejectedValueOnce(axiosError);
 
-    await expect(getTransactions({ page: 1, limit: 20 })).rejects.toBe(
-      axiosError,
-    );
+    await expect(getTransactions({ page: 1, limit: 20 })).rejects.toBe(axiosError);
   });
 });
 
@@ -104,9 +102,7 @@ describe("getAllTransactions", () => {
           page: 1,
           limit: 50,
           total: 120,
-          transactions: Array.from({ length: 50 }, (_, i) =>
-            rawTransaction(`tx-${i}`),
-          ),
+          transactions: Array.from({ length: 50 }, (_, i) => rawTransaction(`tx-${i}`)),
         },
       })
       .mockResolvedValueOnce({
@@ -114,9 +110,7 @@ describe("getAllTransactions", () => {
           page: 2,
           limit: 50,
           total: 120,
-          transactions: Array.from({ length: 50 }, (_, i) =>
-            rawTransaction(`tx-${50 + i}`),
-          ),
+          transactions: Array.from({ length: 50 }, (_, i) => rawTransaction(`tx-${50 + i}`)),
         },
       })
       .mockResolvedValueOnce({
@@ -124,9 +118,7 @@ describe("getAllTransactions", () => {
           page: 3,
           limit: 50,
           total: 120,
-          transactions: Array.from({ length: 20 }, (_, i) =>
-            rawTransaction(`tx-${100 + i}`),
-          ),
+          transactions: Array.from({ length: 20 }, (_, i) => rawTransaction(`tx-${100 + i}`)),
         },
       });
 
@@ -149,9 +141,7 @@ describe("getAllTransactions", () => {
           page: 1,
           limit: 50,
           total: 60,
-          transactions: Array.from({ length: 50 }, (_, i) =>
-            rawTransaction(`tx-${i}`),
-          ),
+          transactions: Array.from({ length: 50 }, (_, i) => rawTransaction(`tx-${i}`)),
         },
       })
       .mockRejectedValueOnce(new Error("network"));

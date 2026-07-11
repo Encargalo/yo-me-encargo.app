@@ -1,9 +1,4 @@
-import type {
-  ActiveOrder,
-  OrderItem,
-  OrderItemOption,
-  OrderParty,
-} from "../types/order.types";
+import type { ActiveOrder, OrderItem, OrderItemOption, OrderParty } from "../types/order.types";
 import { normalizeStatus } from "./orderStatus";
 
 // El backend puede enviar el mensaje con nombres de campo alternativos dentro
@@ -89,18 +84,14 @@ function toNumber(value: unknown): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
-function mapParty(
-  raw: RawParty | undefined,
-  fallback: Partial<OrderParty>,
-): OrderParty {
+function mapParty(raw: RawParty | undefined, fallback: Partial<OrderParty>): OrderParty {
   return {
     name: raw?.name ?? fallback.name ?? "",
     address: raw?.address ?? fallback.address,
     phone: raw?.phone ?? raw?.phone_number ?? fallback.phone,
     logo: raw?.logo ?? fallback.logo,
     latitude: toNumber(raw?.latitude ?? raw?.lat) ?? fallback.latitude,
-    longitude:
-      toNumber(raw?.longitude ?? raw?.lng ?? raw?.long) ?? fallback.longitude,
+    longitude: toNumber(raw?.longitude ?? raw?.lng ?? raw?.long) ?? fallback.longitude,
   };
 }
 
@@ -119,12 +110,8 @@ function mapItems(raw: RawOrderItem[] | undefined): OrderItem[] {
     name: item.name ?? "",
     image: item.image,
     amount: toNumber(item.amount) ?? 0,
-    flavors: Array.isArray(item.flavors)
-      ? item.flavors.map(mapItemOption)
-      : undefined,
-    additions: Array.isArray(item.additions)
-      ? item.additions.map(mapItemOption)
-      : undefined,
+    flavors: Array.isArray(item.flavors) ? item.flavors.map(mapItemOption) : undefined,
+    additions: Array.isArray(item.additions) ? item.additions.map(mapItemOption) : undefined,
   }));
 }
 

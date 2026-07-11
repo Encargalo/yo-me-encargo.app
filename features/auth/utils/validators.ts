@@ -1,7 +1,4 @@
-import type {
-  PasswordValidationResult,
-  PhoneValidationResult,
-} from "../types/auth.types";
+import type { PasswordValidationResult, PhoneValidationResult } from "../types/auth.types";
 
 const E164_REGEX = /^\+[1-9]\d{7,14}$/;
 

@@ -21,10 +21,7 @@ describe("confirmDelivery", () => {
 
     await confirmDelivery("order-1", "482913");
 
-    expect(mockedPost).toHaveBeenCalledWith(
-      "/orders/order-1/confirm-delivery",
-      { code: "482913" },
-    );
+    expect(mockedPost).toHaveBeenCalledWith("/orders/order-1/confirm-delivery", { code: "482913" });
   });
 
   it("propaga el error como AxiosError sin capturarlo", async () => {
@@ -34,8 +31,6 @@ describe("confirmDelivery", () => {
     } as AxiosError;
     mockedPost.mockRejectedValueOnce(axiosError);
 
-    await expect(confirmDelivery("order-1", "000000")).rejects.toBe(
-      axiosError,
-    );
+    await expect(confirmDelivery("order-1", "000000")).rejects.toBe(axiosError);
   });
 });

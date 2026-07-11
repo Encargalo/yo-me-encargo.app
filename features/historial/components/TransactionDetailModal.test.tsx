@@ -26,10 +26,7 @@ describe("TransactionDetailModal", () => {
 
   it("muestra los campos de la transacción, sin payment_method", async () => {
     const { getByText, queryByText } = await render(
-      <TransactionDetailModal
-        transaction={makeTransaction()}
-        onClose={jest.fn()}
-      />,
+      <TransactionDetailModal transaction={makeTransaction()} onClose={jest.fn()} />,
     );
 
     expect(getByText("Carrera")).toBeTruthy();

@@ -47,20 +47,14 @@ export function OrderCompletedSummary({ summary }: OrderCompletedSummaryProps) {
           <Text className="text-center text-[20px] font-bold tracking-[-0.3px] text-ink">
             Pedido completado
           </Text>
-          {subtitle ? (
-            <Text className="text-center text-[12px] text-muted">
-              {subtitle}
-            </Text>
-          ) : null}
+          {subtitle ? <Text className="text-center text-[12px] text-muted">{subtitle}</Text> : null}
         </View>
 
         <View className="w-full gap-[18px] rounded-[14px] border border-hair bg-white p-4">
           {summary.customerName ? (
             <View className="flex-row items-center justify-between">
               <Text className="text-[13px] text-muted">Cliente</Text>
-              <Text className="text-[14px] font-semibold text-ink">
-                {summary.customerName}
-              </Text>
+              <Text className="text-[14px] font-semibold text-ink">{summary.customerName}</Text>
             </View>
           ) : null}
           {typeof summary.distanceKm === "number" ? (
@@ -88,9 +82,7 @@ export function OrderCompletedSummary({ summary }: OrderCompletedSummaryProps) {
           onPress={() => router.replace(ROUTES.APP.HOME)}
           className="h-[52px] w-full items-center justify-center rounded-[14px] bg-ink"
         >
-          <Text className="text-[16px] font-bold text-white">
-            Volver a Inicio
-          </Text>
+          <Text className="text-[16px] font-bold text-white">Volver a Inicio</Text>
         </Pressable>
       </View>
     </View>

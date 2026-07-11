@@ -31,21 +31,14 @@ describe("OrderPartyBlock", () => {
     await act(async () => {
       fireEvent.press(getByLabelText("Navegar a Goofy Delicias"));
     });
-    expect(Linking.openURL).toHaveBeenCalledWith(
-      expect.stringContaining("10.179249,-66.815325"),
-    );
+    expect(Linking.openURL).toHaveBeenCalledWith(expect.stringContaining("10.179249,-66.815325"));
 
     expect(toJSON()).toMatchSnapshot();
   });
 
   it("oculta llamar cuando no hay teléfono", async () => {
     const { queryByLabelText } = await render(
-      <OrderPartyBlock
-        eyebrow="CLIENTE"
-        role="customer"
-        pinColor="#3b82f6"
-        name="Ruben"
-      />,
+      <OrderPartyBlock eyebrow="CLIENTE" role="customer" pinColor="#3b82f6" name="Ruben" />,
     );
 
     expect(queryByLabelText("Llamar a Ruben")).toBeNull();

@@ -159,9 +159,7 @@ describe("useTransactionHistory", () => {
     });
     const { result } = await renderHook(() => useTransactionHistory());
 
-    mockedGetAllTransactions.mockResolvedValueOnce([
-      makeTransaction("a", "2026-06-15T00:00:00Z"),
-    ]);
+    mockedGetAllTransactions.mockResolvedValueOnce([makeTransaction("a", "2026-06-15T00:00:00Z")]);
     await act(async () => {
       result.current.setDateRange({
         from: new Date("2026-06-01T00:00:00Z"),
@@ -253,9 +251,7 @@ describe("useTransactionHistory", () => {
     expect(result.current.status).toBe("errorFullSet");
     expect(result.current.rows.map((t) => t.id)).toEqual(["1"]);
 
-    mockedGetAllTransactions.mockResolvedValueOnce([
-      makeTransaction("a", "2026-06-15T00:00:00Z"),
-    ]);
+    mockedGetAllTransactions.mockResolvedValueOnce([makeTransaction("a", "2026-06-15T00:00:00Z")]);
     await act(async () => {
       result.current.retry();
     });

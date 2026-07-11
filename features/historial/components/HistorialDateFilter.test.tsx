@@ -25,18 +25,11 @@ jest.mock("@react-native-community/datetimepicker", () => {
   };
 });
 
-type Getters = Pick<
-  Awaited<ReturnType<typeof render>>,
-  "getByText" | "getByTestId"
->;
+type Getters = Pick<Awaited<ReturnType<typeof render>>, "getByText" | "getByTestId">;
 
 // Cada interacción se envuelve en su propio `act()` — encadenarlas en un solo
 // bloque produce "overlapping act() calls" con el scheduler de React 19.
-async function pickDate(
-  { getByText, getByTestId }: Getters,
-  label: "Desde" | "Hasta",
-  date: Date,
-) {
+async function pickDate({ getByText, getByTestId }: Getters, label: "Desde" | "Hasta", date: Date) {
   await act(async () => {
     fireEvent.press(getByText(label));
   });

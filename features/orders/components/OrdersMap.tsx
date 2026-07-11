@@ -1,11 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import {
-  type GestureResponderEvent,
-  Image,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { type GestureResponderEvent, Image, Pressable, Text, View } from "react-native";
 import MapView, { Marker, type Region } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 
@@ -90,9 +84,7 @@ export const FOLLOW_ZOOM_DELTA = 0.00176;
 function MapDisabledPlaceholder() {
   return (
     <View className="flex-1 items-center justify-center bg-block px-8">
-      <Text className="text-center text-[13px] text-muted">
-        Actívate para ver el mapa
-      </Text>
+      <Text className="text-center text-[13px] text-muted">Actívate para ver el mapa</Text>
     </View>
   );
 }
@@ -102,9 +94,7 @@ function MapDisabledPlaceholder() {
 function destinationCoord(order: ActiveOrder): LatLng | null {
   const stageInfo = getRouteStageInfo(order.status);
   if (!stageInfo) return null;
-  return stageInfo.destination === "shop"
-    ? partyCoord(order.shop)
-    : partyCoord(order.customer);
+  return stageInfo.destination === "shop" ? partyCoord(order.shop) : partyCoord(order.customer);
 }
 
 export function OrdersMap({
@@ -131,16 +121,12 @@ export function OrdersMap({
     onFollowChange?.(next);
     if (followEnabledProp === undefined) setInternalFollowEnabled(next);
   }
-  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(
-    null,
-  );
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
 
   const riderLat = region?.latitude;
   const riderLng = region?.longitude;
   const riderCoord: LatLng | null =
-    riderLat != null && riderLng != null
-      ? { latitude: riderLat, longitude: riderLng }
-      : null;
+    riderLat != null && riderLng != null ? { latitude: riderLat, longitude: riderLng } : null;
 
   // Posición en vivo del rider — solo se obtiene mientras el seguimiento está
   // activo (ver `useLiveRiderLocation`). El marcador del rider usa esta
@@ -148,8 +134,7 @@ export function OrdersMap({
   // sigue usando `riderCoord` (lectura única): la ruta se recalcula solo por
   // transición de etapa, no de forma continua mientras el rider se mueve.
   const liveRiderCoord = useLiveRiderLocation(followEnabled);
-  const effectiveRiderCoord =
-    followEnabled && liveRiderCoord ? liveRiderCoord : riderCoord;
+  const effectiveRiderCoord = followEnabled && liveRiderCoord ? liveRiderCoord : riderCoord;
 
   // Orden de prioridad visual entre rutas simultáneas: el primer elemento es
   // el prioritario (color normal), el segundo (si existe) el secundario
@@ -208,10 +193,7 @@ export function OrdersMap({
 
     if (points.length === 0) return;
     if (points.length === 1) {
-      map.animateToRegion(
-        { ...points[0], latitudeDelta: 0.02, longitudeDelta: 0.02 },
-        500,
-      );
+      map.animateToRegion({ ...points[0], latitudeDelta: 0.02, longitudeDelta: 0.02 }, 500);
     } else {
       map.fitToCoordinates(points, {
         edgePadding: { top: 70, right: 70, bottom: 70, left: 70 },
@@ -307,14 +289,10 @@ export function OrdersMap({
                 const customerCoord = partyCoord(order.customer);
                 const stageInfo = getRouteStageInfo(order.status);
                 const destCoord = destinationCoord(order);
-                const isSecondary =
-                  hasSecondaryOrder && order.id !== primaryOrderId;
+                const isSecondary = hasSecondaryOrder && order.id !== primaryOrderId;
                 const strokeColor = stageInfo
                   ? isSecondary
-                    ? lightenColor(
-                        stageInfo.strokeColor,
-                        SECONDARY_ROUTE_LIGHTEN_RATIO,
-                      )
+                    ? lightenColor(stageInfo.strokeColor, SECONDARY_ROUTE_LIGHTEN_RATIO)
                     : stageInfo.strokeColor
                   : undefined;
 
@@ -389,10 +367,7 @@ export function OrdersMap({
                         // documenta que el fallo se contiene acá y no rompe el resto del
                         // mapa (pines y demás siguen intactos sin la línea de ruta).
                         onError={(errorMessage: string) =>
-                          console.warn(
-                            "[OrdersMap] No se pudo trazar la ruta:",
-                            errorMessage,
-                          )
+                          console.warn("[OrdersMap] No se pudo trazar la ruta:", errorMessage)
                         }
                       />
                     )}
@@ -411,9 +386,7 @@ export function OrdersMap({
               onPress={onRequestClose}
               className="absolute left-2.5 top-2.5 rounded-md bg-white/85 px-3 py-1.5"
             >
-              <Text className="font-mono text-[12px] tracking-[1px] text-label">
-                ✕ Cerrar
-              </Text>
+              <Text className="font-mono text-[12px] tracking-[1px] text-label">✕ Cerrar</Text>
             </Pressable>
           ) : (
             <View

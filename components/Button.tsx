@@ -21,17 +21,9 @@ export function Button({
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
-      style={[
-        styles.base,
-        styles[type],
-        (disabled || loading) && styles.disabled,
-      ]}
+      style={[styles.base, styles[type], (disabled || loading) && styles.disabled]}
     >
-      {loading ? (
-        <ActivityIndicator color="#FFFFFF" />
-      ) : (
-        <Text style={styles.label}>{label}</Text>
-      )}
+      {loading ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.label}>{label}</Text>}
     </Pressable>
   );
 }

@@ -48,26 +48,20 @@ describe("useOrderDetail", () => {
   });
 
   it("stage 'pending-pickup' para una orden que ya era mía al entrar", async () => {
-    useOrdersStore
-      .getState()
-      .upsertOrder(makeOrder({ riderId: "me", pickupCode: "4474" }));
+    useOrdersStore.getState().upsertOrder(makeOrder({ riderId: "me", pickupCode: "4474" }));
     const { result } = await renderHook(() => useOrderDetail("order-1"));
     expect(result.current.stage).toBe("pending-pickup");
   });
 
   it("stage 'on-the-way' cuando la orden mía pasa a En camino", async () => {
-    useOrdersStore
-      .getState()
-      .upsertOrder(makeOrder({ riderId: "me", status: "On The Way" }));
+    useOrdersStore.getState().upsertOrder(makeOrder({ riderId: "me", status: "On The Way" }));
     const { result } = await renderHook(() => useOrderDetail("order-1"));
     expect(result.current.stage).toBe("on-the-way");
   });
 
   it("stage 'taken' cuando otro rider toma la orden mientras se ve el Detalle (sin haberla aceptado)", async () => {
     useOrdersStore.getState().upsertOrder(makeOrder());
-    const { result, rerender } = await renderHook(() =>
-      useOrderDetail("order-1"),
-    );
+    const { result, rerender } = await renderHook(() => useOrderDetail("order-1"));
     expect(result.current.stage).toBe("offer");
 
     await act(async () => {
@@ -80,9 +74,7 @@ describe("useOrderDetail", () => {
 
   it("accept() llama acceptOrder y deja de esperar cuando llega el riderId", async () => {
     useOrdersStore.getState().upsertOrder(makeOrder());
-    const { result, rerender } = await renderHook(() =>
-      useOrderDetail("order-1"),
-    );
+    const { result, rerender } = await renderHook(() => useOrderDetail("order-1"));
 
     await act(async () => {
       result.current.accept();
@@ -91,9 +83,7 @@ describe("useOrderDetail", () => {
     expect(result.current.accepting).toBe(true);
 
     await act(async () => {
-      useOrdersStore
-        .getState()
-        .upsertOrder(makeOrder({ riderId: "me", pickupCode: "4474" }));
+      useOrdersStore.getState().upsertOrder(makeOrder({ riderId: "me", pickupCode: "4474" }));
     });
     await rerender({});
 
@@ -102,12 +92,8 @@ describe("useOrderDetail", () => {
   });
 
   it("confirmDelivery mapea cada código de error a su mensaje y vacía el código en 400", async () => {
-    useOrdersStore
-      .getState()
-      .upsertOrder(makeOrder({ riderId: "me", status: "On The Way" }));
-    const { result, rerender } = await renderHook(() =>
-      useOrderDetail("order-1"),
-    );
+    useOrdersStore.getState().upsertOrder(makeOrder({ riderId: "me", status: "On The Way" }));
+    const { result, rerender } = await renderHook(() => useOrderDetail("order-1"));
 
     const cases: [number, string][] = [
       [400, "Código inválido"],
@@ -141,12 +127,8 @@ describe("useOrderDetail", () => {
   it("confirmDelivery exitoso guarda el resumen y sobrevive a que la orden salga del store", async () => {
     useOrdersStore
       .getState()
-      .upsertOrder(
-        makeOrder({ riderId: "me", status: "On The Way", number: 128 }),
-      );
-    const { result, rerender } = await renderHook(() =>
-      useOrderDetail("order-1"),
-    );
+      .upsertOrder(makeOrder({ riderId: "me", status: "On The Way", number: 128 }));
+    const { result, rerender } = await renderHook(() => useOrderDetail("order-1"));
 
     confirmDelivery.mockResolvedValueOnce(undefined);
     await act(async () => {
@@ -169,9 +151,7 @@ describe("useOrderDetail", () => {
     // La orden llega a estado terminal y useOrdersStore la retira — el
     // resumen debe seguir visible (no depende de que siga en el store).
     await act(async () => {
-      useOrdersStore
-        .getState()
-        .upsertOrder(makeOrder({ riderId: "me", status: "Completed" }));
+      useOrdersStore.getState().upsertOrder(makeOrder({ riderId: "me", status: "Completed" }));
     });
     await rerender({});
 

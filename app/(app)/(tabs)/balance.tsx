@@ -11,22 +11,12 @@ import { useBalance } from "@/features/balance/hooks/useBalance";
 
 export default function Balance() {
   const insets = useSafeAreaInsets();
-  const {
-    balance,
-    zone,
-    transactions,
-    summary,
-    status,
-    hasLoadedOnce,
-    refetch,
-    refresh,
-  } = useBalance();
+  const { balance, zone, transactions, summary, status, hasLoadedOnce, refetch, refresh } =
+    useBalance();
 
   return (
     <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
-      <Text className="px-4 pb-2 pt-3 text-[18px] font-bold text-ink">
-        Balance
-      </Text>
+      <Text className="px-4 pb-2 pt-3 text-[18px] font-bold text-ink">Balance</Text>
 
       {status === "loading" ? (
         <ScrollView
@@ -45,9 +35,7 @@ export default function Balance() {
             onPress={refetch}
             className="h-11 items-center justify-center rounded-[12px] bg-ink px-5"
           >
-            <Text className="text-[14px] font-semibold text-white">
-              Reintentar
-            </Text>
+            <Text className="text-[14px] font-semibold text-white">Reintentar</Text>
           </Pressable>
         </View>
       ) : (
@@ -75,10 +63,7 @@ export default function Balance() {
               >
                 No pudimos actualizar tu balance
               </Text>
-              <Text
-                className="text-[12.5px] font-bold"
-                style={{ color: OrderStatusColors.error }}
-              >
+              <Text className="text-[12.5px] font-bold" style={{ color: OrderStatusColors.error }}>
                 Reintentar
               </Text>
             </Pressable>
@@ -87,9 +72,7 @@ export default function Balance() {
           <NetBalanceCard balance={balance} zone={zone} summary={summary} />
 
           <View className="flex-row items-center justify-between">
-            <Text className="text-[13px] font-semibold text-ink">
-              Últimos movimientos
-            </Text>
+            <Text className="text-[13px] font-semibold text-ink">Últimos movimientos</Text>
             <Text className="font-mono text-[10px] text-label">
               {transactions.length} recientes
             </Text>
@@ -113,9 +96,7 @@ export default function Balance() {
           onPress={() => router.push(ROUTES.APP.WITHDRAWAL)}
           className="h-[52px] items-center justify-center rounded-[13px] bg-ink"
         >
-          <Text className="text-[15px] font-bold text-white">
-            Solicitar retiro
-          </Text>
+          <Text className="text-[15px] font-bold text-white">Solicitar retiro</Text>
         </Pressable>
       </View>
     </View>

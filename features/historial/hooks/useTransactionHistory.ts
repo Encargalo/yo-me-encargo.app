@@ -11,13 +11,7 @@ import { getAllTransactions, getTransactions } from "../services/historial.servi
 export const HISTORIAL_PAGE_SIZE = 10;
 
 export type HistorialStatus =
-  | "loading"
-  | "loadingPage"
-  | "loadingFullSet"
-  | "error"
-  | "errorPage"
-  | "errorFullSet"
-  | "success";
+  "loading" | "loadingPage" | "loadingFullSet" | "error" | "errorPage" | "errorFullSet" | "success";
 
 export interface DateRange {
   from: Date;
@@ -54,9 +48,7 @@ export function useTransactionHistory(): UseTransactionHistoryReturn {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [rows, setRows] = useState<Transaction[]>([]);
-  const [dateRangeState, setDateRangeState] = useState<DateRange | null>(
-    null,
-  );
+  const [dateRangeState, setDateRangeState] = useState<DateRange | null>(null);
 
   const modeRef = useRef<"server" | "client-filtered">("server");
   // Evita fetches simultáneos (navegación de página + filtro a la vez, etc.).
@@ -71,22 +63,19 @@ export function useTransactionHistory(): UseTransactionHistoryReturn {
   // filtro de fecha en esta sesión de pantalla. Null = todavía no se trajo.
   const fullSetRef = useRef<Transaction[] | null>(null);
 
-  const applyClientFilter = useCallback(
-    (range: DateRange, targetPage: number) => {
-      const fullSet = fullSetRef.current;
-      if (!fullSet) return;
-      const filtered = fullSet.filter((t) => isWithinRange(t.createdAt, range));
-      const newTotalPages = totalPagesFor(filtered.length);
-      const clampedPage = Math.min(targetPage, newTotalPages);
-      modeRef.current = "client-filtered";
-      everLoadedRef.current = true;
-      setPage(clampedPage);
-      setTotalPages(newTotalPages);
-      setRows(paginate(filtered, clampedPage));
-      setStatus("success");
-    },
-    [],
-  );
+  const applyClientFilter = useCallback((range: DateRange, targetPage: number) => {
+    const fullSet = fullSetRef.current;
+    if (!fullSet) return;
+    const filtered = fullSet.filter((t) => isWithinRange(t.createdAt, range));
+    const newTotalPages = totalPagesFor(filtered.length);
+    const clampedPage = Math.min(targetPage, newTotalPages);
+    modeRef.current = "client-filtered";
+    everLoadedRef.current = true;
+    setPage(clampedPage);
+    setTotalPages(newTotalPages);
+    setRows(paginate(filtered, clampedPage));
+    setStatus("success");
+  }, []);
 
   const applyServerPage = useCallback(async (targetPage: number) => {
     isFetchingRef.current = true;

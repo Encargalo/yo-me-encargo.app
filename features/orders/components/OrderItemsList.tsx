@@ -12,9 +12,7 @@ interface OrderItemsListProps {
 
 function formatOptions(label: string, options?: OrderItemOption[]): string | null {
   if (!options || options.length === 0) return null;
-  const parts = options.map((o) =>
-    o.amount > 1 ? `${o.name} x${o.amount}` : o.name,
-  );
+  const parts = options.map((o) => (o.amount > 1 ? `${o.name} x${o.amount}` : o.name));
   return `${label}: ${parts.join(", ")}`;
 }
 
@@ -37,9 +35,7 @@ export function OrderItemsList({ items }: OrderItemsListProps) {
         accessibilityRole="button"
         accessibilityLabel="Ver productos del pedido"
       >
-        <Text className="text-[14px] font-semibold text-ink">
-          Productos · {items.length}
-        </Text>
+        <Text className="text-[14px] font-semibold text-ink">Productos · {items.length}</Text>
         {expanded ? (
           <ChevronUp size={18} color={Neutrals.textMuted} />
         ) : (
@@ -57,12 +53,8 @@ export function OrderItemsList({ items }: OrderItemsListProps) {
                 <Text className="text-[14px] text-body">
                   {item.amount}x {item.name}
                 </Text>
-                {flavors ? (
-                  <Text className="text-[12px] text-muted">{flavors}</Text>
-                ) : null}
-                {additions ? (
-                  <Text className="text-[12px] text-muted">{additions}</Text>
-                ) : null}
+                {flavors ? <Text className="text-[12px] text-muted">{flavors}</Text> : null}
+                {additions ? <Text className="text-[12px] text-muted">{additions}</Text> : null}
               </View>
             );
           })}

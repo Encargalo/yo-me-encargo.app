@@ -56,15 +56,10 @@ export function OrderPartyBlock({
         >
           <Icon size={16} color={pinColor} />
         </View>
-        <Text className="font-mono text-[11px] tracking-[1.2px] text-label">
-          {eyebrow}
-        </Text>
+        <Text className="font-mono text-[11px] tracking-[1.2px] text-label">{eyebrow}</Text>
       </View>
 
-      <Text
-        className="text-[16px] font-semibold tracking-[-0.2px] text-ink"
-        numberOfLines={1}
-      >
+      <Text className="text-[16px] font-semibold tracking-[-0.2px] text-ink" numberOfLines={1}>
         {name}
       </Text>
 

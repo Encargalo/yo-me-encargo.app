@@ -9,9 +9,7 @@ const testMetrics = {
 };
 
 function renderWithSafeArea(ui: React.ReactElement) {
-  return render(
-    <SafeAreaProvider initialMetrics={testMetrics}>{ui}</SafeAreaProvider>,
-  );
+  return render(<SafeAreaProvider initialMetrics={testMetrics}>{ui}</SafeAreaProvider>);
 }
 
 describe("OrderCompletedSummary", () => {

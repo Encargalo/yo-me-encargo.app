@@ -27,10 +27,7 @@ interface OrdersActions {
   reset: () => void;
 }
 
-function withoutKey(
-  map: Record<string, number>,
-  key: string,
-): Record<string, number> {
+function withoutKey(map: Record<string, number>, key: string): Record<string, number> {
   const { [key]: _removed, ...rest } = map;
   return rest;
 }

@@ -1,11 +1,7 @@
 import { OrderStatusColors } from "@/constants/theme";
 
 import type { ActiveOrder } from "../types/order.types";
-import {
-  DIMMED_PIN_OPACITY,
-  getRouteStageInfo,
-  rankOrdersByPriority,
-} from "./routeStage";
+import { DIMMED_PIN_OPACITY, getRouteStageInfo, rankOrdersByPriority } from "./routeStage";
 
 function makeOrder(overrides: Partial<ActiveOrder> = {}): ActiveOrder {
   return {
@@ -61,9 +57,10 @@ describe("rankOrdersByPriority", () => {
       shop: { name: "Tienda", latitude: 0.001, longitude: 0.001 }, // cerca
     });
 
-    expect(
-      rankOrdersByPriority([pending, enroute], riderCoord).map((o) => o.id),
-    ).toEqual(["enroute", "pending"]);
+    expect(rankOrdersByPriority([pending, enroute], riderCoord).map((o) => o.id)).toEqual([
+      "enroute",
+      "pending",
+    ]);
   });
 
   it("en la misma etapa, prioriza el destino más cercano al rider", () => {
@@ -78,16 +75,12 @@ describe("rankOrdersByPriority", () => {
       customer: { name: "Cliente", latitude: 0.001, longitude: 0.001 },
     });
 
-    expect(
-      rankOrdersByPriority([far, near], riderCoord).map((o) => o.id),
-    ).toEqual(["near", "far"]);
+    expect(rankOrdersByPriority([far, near], riderCoord).map((o) => o.id)).toEqual(["near", "far"]);
   });
 
   it("devuelve la única orden sin comparar cuando hay 1 sola", () => {
     const order = makeOrder({ id: "solo", status: "On The Way" });
-    expect(rankOrdersByPriority([order], riderCoord).map((o) => o.id)).toEqual([
-      "solo",
-    ]);
+    expect(rankOrdersByPriority([order], riderCoord).map((o) => o.id)).toEqual(["solo"]);
   });
 
   it("es vacío con la lista vacía", () => {

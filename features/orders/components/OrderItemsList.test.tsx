@@ -25,9 +25,7 @@ describe("OrderItemsList", () => {
   });
 
   it("expande y muestra productos con sabores y adiciones", async () => {
-    const { getByText, queryByText, toJSON } = await render(
-      <OrderItemsList items={items} />,
-    );
+    const { getByText, queryByText, toJSON } = await render(<OrderItemsList items={items} />);
 
     expect(getByText("Productos · 2")).toBeTruthy();
     expect(queryByText("7x Pizza 6 Porciones")).toBeNull();

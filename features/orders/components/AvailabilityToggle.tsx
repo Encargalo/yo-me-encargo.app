@@ -29,9 +29,7 @@ export function AvailabilityToggle() {
         }`}
       >
         <View
-          className={`h-5 w-5 rounded-full bg-white ${
-            isAvailable ? "self-end" : "self-start"
-          }`}
+          className={`h-5 w-5 rounded-full bg-white ${isAvailable ? "self-end" : "self-start"}`}
         />
       </View>
 

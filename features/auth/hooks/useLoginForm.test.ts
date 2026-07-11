@@ -11,9 +11,7 @@ jest.mock("expo-secure-store", () => ({
   deleteItemAsync: jest.fn(),
 }));
 
-const mockedSignInRider = signInRider as jest.MockedFunction<
-  typeof signInRider
->;
+const mockedSignInRider = signInRider as jest.MockedFunction<typeof signInRider>;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -36,9 +34,7 @@ it("does not call the auth store when the fields are invalid", async () => {
   });
 
   expect(mockedSignInRider).not.toHaveBeenCalled();
-  expect(result.current.errors.phone).toBe(
-    "Ingresa un número de teléfono válido",
-  );
+  expect(result.current.errors.phone).toBe("Ingresa un número de teléfono válido");
   expect(result.current.errors.password).toBe("Ingresa tu contraseña");
 });
 
@@ -48,9 +44,7 @@ it("marks the phone as valid reactively and clears a previous error as the user 
   await act(async () => {
     await result.current.onSubmit();
   });
-  expect(result.current.errors.phone).toBe(
-    "Ingresa un número de teléfono válido",
-  );
+  expect(result.current.errors.phone).toBe("Ingresa un número de teléfono válido");
 
   await act(() => {
     result.current.setLocalPhone("3001112233");

@@ -1,11 +1,6 @@
 import { OrderStatusColors } from "@/constants/theme";
 
-import {
-  getStatusColor,
-  getStatusLabel,
-  getStatusPriority,
-  normalizeStatus,
-} from "./orderStatus";
+import { getStatusColor, getStatusLabel, getStatusPriority, normalizeStatus } from "./orderStatus";
 
 describe("normalizeStatus", () => {
   it("normaliza variantes sin espacio y con distinta capitalización", () => {
@@ -48,8 +43,6 @@ describe("getStatusColor / getStatusLabel", () => {
 
 describe("getStatusPriority", () => {
   it("prioriza 'On The Way' sobre los estados de recogida pendiente", () => {
-    expect(getStatusPriority("On The Way")).toBeGreaterThan(
-      getStatusPriority("Ready"),
-    );
+    expect(getStatusPriority("On The Way")).toBeGreaterThan(getStatusPriority("Ready"));
   });
 });

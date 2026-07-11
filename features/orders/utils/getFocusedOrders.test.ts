@@ -20,14 +20,8 @@ describe("getFocusedOrders", () => {
   });
 
   it("devuelve las 2 órdenes aceptadas en el orden de la lista priorizada", () => {
-    const orders = [
-      makeOrder("mine-a", "rider-1"),
-      makeOrder("mine-b", "rider-1"),
-    ];
-    expect(getFocusedOrders(orders).map((o) => o.id)).toEqual([
-      "mine-a",
-      "mine-b",
-    ]);
+    const orders = [makeOrder("mine-a", "rider-1"), makeOrder("mine-b", "rider-1")];
+    expect(getFocusedOrders(orders).map((o) => o.id)).toEqual(["mine-a", "mine-b"]);
   });
 
   it("recorta a 2 aunque lleguen más de 2 órdenes aceptadas (caso defensivo)", () => {
@@ -36,10 +30,7 @@ describe("getFocusedOrders", () => {
       makeOrder("mine-b", "rider-1"),
       makeOrder("mine-c", "rider-1"),
     ];
-    expect(getFocusedOrders(orders).map((o) => o.id)).toEqual([
-      "mine-a",
-      "mine-b",
-    ]);
+    expect(getFocusedOrders(orders).map((o) => o.id)).toEqual(["mine-a", "mine-b"]);
   });
 
   it("es vacío cuando solo hay ofertas sin decidir", () => {

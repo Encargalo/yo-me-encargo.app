@@ -31,8 +31,7 @@ export function useRiderLocation(enabled: boolean = true): RiderLocation {
 
     async function resolve() {
       try {
-        const { status: perm } =
-          await Location.requestForegroundPermissionsAsync();
+        const { status: perm } = await Location.requestForegroundPermissionsAsync();
         if (perm !== "granted") {
           if (!cancelled) setStatus("denied");
           return;

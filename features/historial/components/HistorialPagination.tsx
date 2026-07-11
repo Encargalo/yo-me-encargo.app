@@ -6,11 +6,7 @@ interface HistorialPaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export function HistorialPagination({
-  page,
-  totalPages,
-  onPageChange,
-}: HistorialPaginationProps) {
+export function HistorialPagination({ page, totalPages, onPageChange }: HistorialPaginationProps) {
   const isFirst = page <= 1;
   const isLast = page >= totalPages;
 
@@ -23,9 +19,7 @@ export function HistorialPagination({
           isFirst ? "opacity-40" : ""
         }`}
       >
-        <Text className="text-[12.5px] font-semibold text-white">
-          Anterior
-        </Text>
+        <Text className="text-[12.5px] font-semibold text-white">Anterior</Text>
       </Pressable>
       <Text className="text-[12.5px] font-semibold text-body">
         Página {page} de {totalPages}
@@ -37,9 +31,7 @@ export function HistorialPagination({
           isLast ? "opacity-50" : ""
         }`}
       >
-        <Text className="text-[12.5px] font-semibold text-white">
-          Siguiente
-        </Text>
+        <Text className="text-[12.5px] font-semibold text-white">Siguiente</Text>
       </Pressable>
     </View>
   );
