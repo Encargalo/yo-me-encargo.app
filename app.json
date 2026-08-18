@@ -13,6 +13,7 @@
       "bundleIdentifier": "com.yomeencargo.app"
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#fc6b2b",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -23,8 +24,7 @@
       "package": "com.yomeencargo.app"
     },
     "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "output": "static"
     },
     "plugins": [
       "expo-router",
