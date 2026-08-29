@@ -11,8 +11,17 @@ import { useBalance } from "@/features/balance/hooks/useBalance";
 
 export default function Balance() {
   const insets = useSafeAreaInsets();
-  const { balance, zone, transactions, summary, status, hasLoadedOnce, refetch, refresh } =
-    useBalance();
+  const {
+    balanceBs,
+    balanceUsd,
+    zone,
+    transactions,
+    summary,
+    status,
+    hasLoadedOnce,
+    refetch,
+    refresh,
+  } = useBalance();
 
   return (
     <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
@@ -69,7 +78,12 @@ export default function Balance() {
             </Pressable>
           ) : null}
 
-          <NetBalanceCard balance={balance} zone={zone} summary={summary} />
+          <NetBalanceCard
+            balanceBs={balanceBs}
+            balanceUsd={balanceUsd}
+            zone={zone}
+            summary={summary}
+          />
 
           <View className="flex-row items-center justify-between">
             <Text className="text-[13px] font-semibold text-ink">Últimos movimientos</Text>

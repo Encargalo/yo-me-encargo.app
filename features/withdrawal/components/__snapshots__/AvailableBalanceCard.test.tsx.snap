@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AvailableBalanceCard muestra el saldo disponible formateado 1`] = `
+exports[`AvailableBalanceCard muestra el saldo disponible en Bs con el USD referencial 1`] = `
 <View
   className="items-center rounded-[16px] border border-hair bg-white p-[18px]"
 >
@@ -12,7 +12,12 @@ exports[`AvailableBalanceCard muestra el saldo disponible formateado 1`] = `
   <Text
     className="mt-1.5 text-[34px] font-bold tracking-[-0.4px] text-ink"
   >
-    24.5$
+    3.200Bs
+  </Text>
+  <Text
+    className="mt-0.5 text-[12px] font-semibold text-label"
+  >
+    Ref. 80$
   </Text>
 </View>
 `;

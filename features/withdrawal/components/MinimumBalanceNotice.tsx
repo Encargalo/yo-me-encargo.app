@@ -1,20 +1,41 @@
 import { Text, View } from "react-native";
 
-import { formatAmount } from "@/features/balance/utils/formatAmount";
+import { formatBs } from "@/features/balance/utils/formatAmount";
 
-import { MIN_WITHDRAWAL_BALANCE } from "../types/withdrawal.types";
+interface MinimumBalanceNoticeProps {
+  // Mínimo de retiro vigente en Bs (dinámico, del backend). Puede faltar si la
+  // respuesta de balance no lo trae — en ese caso se muestra el aviso genérico.
+  withdrawalMinBs?: number;
+  balanceBs: number;
+}
 
-// El copy usa MIN_WITHDRAWAL_BALANCE + formatAmount en vez de un número
-// hardcodeado, para que la constante sea la única fuente de verdad (ver
-// design.md, Decisión 4).
-export function MinimumBalanceNotice() {
+// El copy usa `withdrawal_min_bs` del backend, nunca un número hardcodeado
+// (ver design.md, Decisión 5). Cuando el saldo está por debajo del mínimo,
+// añade cuánto falta.
+export function MinimumBalanceNotice({ withdrawalMinBs, balanceBs }: MinimumBalanceNoticeProps) {
+  const missing =
+    typeof withdrawalMinBs === "number" && balanceBs < withdrawalMinBs
+      ? withdrawalMinBs - balanceBs
+      : null;
+
   return (
     <View className="flex-row items-start gap-2 rounded-[12px] border border-hair bg-block px-3.5 py-3">
       <Text className="text-[14px]">ⓘ</Text>
       <Text className="flex-1 text-[12px] leading-[17px] text-body">
-        Disponible para retiro a partir de{" "}
-        <Text className="font-bold">{formatAmount(MIN_WITHDRAWAL_BALANCE)}</Text>. Por debajo de ese
-        monto el botón permanece deshabilitado.
+        {typeof withdrawalMinBs === "number" ? (
+          <>
+            Disponible para retiro a partir de{" "}
+            <Text className="font-bold">{formatBs(withdrawalMinBs)}</Text>.
+          </>
+        ) : (
+          <>El retiro se habilita al alcanzar el mínimo vigente.</>
+        )}
+        {missing != null ? (
+          <>
+            {" "}
+            Te faltan <Text className="font-bold">{formatBs(missing)}</Text>.
+          </>
+        ) : null}
       </Text>
     </View>
   );

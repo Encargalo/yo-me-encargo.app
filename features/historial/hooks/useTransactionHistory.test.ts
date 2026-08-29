@@ -14,7 +14,8 @@ const mockedGetAllTransactions = getAllTransactions as jest.Mock;
 function makeTransaction(id: string, createdAt = "2026-06-30T14:20:00Z") {
   return {
     id,
-    amount: 8.5,
+    amountBs: 340,
+    amountUsd: 8.5,
     createdAt,
     distanceKm: 3.1,
     movementType: "ride_bank",

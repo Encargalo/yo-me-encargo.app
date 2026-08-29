@@ -5,6 +5,12 @@ describe("getWithdrawalErrorMessage", () => {
     expect(getWithdrawalErrorMessage(422)).toBe("Tu saldo es insuficiente para retirar.");
   });
 
+  it("503 → tasa BCV no disponible, mensaje específico", () => {
+    expect(getWithdrawalErrorMessage(503)).toBe(
+      "La tasa BCV no está disponible ahora. Intenta en unos minutos.",
+    );
+  });
+
   it("401 → sesión expirada", () => {
     expect(getWithdrawalErrorMessage(401)).toBe("Tu sesión expiró. Vuelve a iniciar sesión.");
   });

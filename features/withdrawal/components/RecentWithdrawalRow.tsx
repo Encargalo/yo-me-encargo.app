@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 
 import { OrderStatusColors } from "@/constants/theme";
-import { formatAmount } from "@/features/balance/utils/formatAmount";
+import { formatBs } from "@/features/balance/utils/formatAmount";
 
 import type { RecentWithdrawal } from "../types/withdrawal.types";
 
@@ -41,9 +41,7 @@ export function RecentWithdrawalRow({ withdrawal, isLast }: RecentWithdrawalRowP
       }`}
     >
       <View>
-        <Text className="text-[13px] font-semibold text-ink">
-          {formatAmount(withdrawal.amount)}
-        </Text>
+        <Text className="text-[13px] font-semibold text-ink">{formatBs(withdrawal.amount)}</Text>
         {date ? <Text className="text-[10.5px] text-label">{date}</Text> : null}
       </View>
       <View

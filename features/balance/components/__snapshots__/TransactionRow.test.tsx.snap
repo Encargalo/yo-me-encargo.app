@@ -28,7 +28,7 @@ exports[`TransactionRow mapea movementType a una etiqueta legible y muestra mont
       }
     }
   >
-    +0.64$
+    +26Bs
   </Text>
 </View>
 `;

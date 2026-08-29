@@ -11,13 +11,20 @@ import { MinimumBalanceNotice } from "@/features/withdrawal/components/MinimumBa
 import { RecentWithdrawalsList } from "@/features/withdrawal/components/RecentWithdrawalsList";
 import { WithdrawalSuccess } from "@/features/withdrawal/components/WithdrawalSuccess";
 import { useWithdrawal } from "@/features/withdrawal/hooks/useWithdrawal";
-import { MIN_WITHDRAWAL_BALANCE } from "@/features/withdrawal/types/withdrawal.types";
 
 // Pantalla real de Solicitud de retiro (wireframe 07/07b), reemplaza el stub
 // dejado por `balance-screen`. Ver design.md del change `withdrawal-screen`.
 export default function Withdrawal() {
   const insets = useSafeAreaInsets();
-  const { balance, status: balanceStatus, hasLoadedOnce, refetch: refetchBalance } = useBalance();
+  const {
+    balanceBs,
+    balanceUsd,
+    zone,
+    withdrawalMinBs,
+    status: balanceStatus,
+    hasLoadedOnce,
+    refetch: refetchBalance,
+  } = useBalance();
   const {
     status: withdrawalStatus,
     amountWithdrawn,
@@ -34,7 +41,7 @@ export default function Withdrawal() {
     );
   }
 
-  const canWithdraw = balance >= MIN_WITHDRAWAL_BALANCE;
+  const canWithdraw = zone === "withdrawal_available";
   const isSubmitting = withdrawalStatus === "submitting";
 
   return (
@@ -98,8 +105,8 @@ export default function Withdrawal() {
               </Pressable>
             ) : null}
 
-            <AvailableBalanceCard balance={balance} />
-            <MinimumBalanceNotice />
+            <AvailableBalanceCard balanceBs={balanceBs} balanceUsd={balanceUsd} />
+            <MinimumBalanceNotice withdrawalMinBs={withdrawalMinBs} balanceBs={balanceBs} />
 
             <Text className="font-mono text-[10px] tracking-[1px] text-label">
               RETIROS RECIENTES

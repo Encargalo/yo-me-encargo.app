@@ -1,8 +1,4 @@
-## Purpose
-
-Pantalla de Solicitud de retiro del rider: muestra el saldo disponible en bolívares (mismo dato que Balance), habilita el retiro según la zona del rider (`zone`) y el mínimo dinámico (`withdrawal_min_bs`), ejecuta `POST /riders/withdrawal` y maneja sus estados de envío, éxito y error, además de una sección de retiros recientes.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Pantalla de Solicitud de retiro muestra el saldo disponible
 La pantalla de Solicitud de retiro SHALL obtener y mostrar el saldo disponible para retiro reutilizando el mismo dato que la pantalla de Balance (`GET /riders/balance`), presentando `balance_bs` en bolívares como cifra destacada con `balance_usd` como subtítulo referencial (`Ref. N$`), con sus propios estados de carga y error mientras ese dato no esté disponible.
@@ -33,13 +29,6 @@ El botón "Solicitar retiro" SHALL habilitarse únicamente cuando `zone === "wit
 #### Scenario: Aviso del mínimo vigente
 - **WHEN** la pantalla se muestra
 - **THEN** el aviso del mínimo de retiro usa el valor de `withdrawal_min_bs` del backend, nunca un número hardcodeado
-
-### Requirement: Solicitud de retiro
-Al tocar "Solicitar retiro" con el botón habilitado, la pantalla SHALL invocar `POST /riders/withdrawal` y SHALL mostrar un indicador de envío en el propio botón mientras la petición está en curso, sin bloquear el resto de la pantalla con un estado de carga genérico.
-
-#### Scenario: Envío en curso
-- **WHEN** el rider toca "Solicitar retiro" y la petición está en curso
-- **THEN** el botón muestra un indicador de carga en vez de su texto, y permanece deshabilitado hasta que la petición resuelva
 
 ### Requirement: Confirmación de éxito con el monto retirado
 Cuando `POST /riders/withdrawal` responde `200`, la pantalla SHALL mostrar una confirmación de éxito con el monto retirado (`amount_withdrawn`) en bolívares, como un cambio de contenido dentro de la misma pantalla, sin navegar a una ruta nueva. Un botón "Entendido" SHALL volver a la pantalla de Balance.

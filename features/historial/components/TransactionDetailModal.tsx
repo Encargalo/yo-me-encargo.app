@@ -1,7 +1,7 @@
 import { Modal, Pressable, Text, View } from "react-native";
 
 import { OrderStatusColors } from "@/constants/theme";
-import { formatSignedAmount } from "@/features/balance/utils/formatAmount";
+import { formatSignedBs } from "@/features/balance/utils/formatAmount";
 import { getMovementTypeLabel } from "@/features/balance/utils/movementTypeLabel";
 import type { Transaction } from "@/features/balance/types/balance.types";
 
@@ -47,7 +47,7 @@ export function TransactionDetailModal({ transaction, onClose }: TransactionDeta
   if (!transaction) return null;
 
   const amountColor =
-    transaction.amount >= 0 ? OrderStatusColors.completed : OrderStatusColors.error;
+    transaction.amountBs >= 0 ? OrderStatusColors.completed : OrderStatusColors.error;
   const date = formatDate(transaction.createdAt);
 
   return (
@@ -69,12 +69,15 @@ export function TransactionDetailModal({ transaction, onClose }: TransactionDeta
           <View className="mt-4">
             <DetailRow
               label="Monto"
-              value={formatSignedAmount(transaction.amount)}
+              value={formatSignedBs(transaction.amountBs)}
               valueColor={amountColor}
             />
             {date ? <DetailRow label="Fecha" value={date} /> : null}
             {typeof transaction.distanceKm === "number" ? (
               <DetailRow label="Distancia" value={`${transaction.distanceKm.toFixed(1)} km`} />
+            ) : null}
+            {typeof transaction.bcvRate === "number" ? (
+              <DetailRow label="Tasa BCV" value={`${transaction.bcvRate} Bs/$`} />
             ) : null}
           </View>
 

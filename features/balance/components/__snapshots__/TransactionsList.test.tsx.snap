@@ -31,7 +31,7 @@ exports[`TransactionsList renderiza una fila por movimiento 1`] = `
         }
       }
     >
-      +8.5$
+      +340Bs
     </Text>
   </View>
   <View
@@ -61,7 +61,7 @@ exports[`TransactionsList renderiza una fila por movimiento 1`] = `
         }
       }
     >
-      −1.2$
+      −48Bs
     </Text>
   </View>
 </View>

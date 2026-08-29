@@ -1,8 +1,4 @@
-## Purpose
-
-Pantalla de Balance del rider: obtención y presentación del saldo neto, la zona del rider y los últimos movimientos desde `GET /riders/balance`, con sus estados de carga/vacío/error y accesos a Solicitud de retiro e Historial.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Pantalla de Balance muestra el saldo neto y la zona del rider
 La pantalla de Balance SHALL obtener los datos de `GET /riders/balance` y presentar el saldo neto en bolívares (`balance_bs`) en tamaño grande, con el equivalente en dólares (`balance_usd`) como subtítulo referencial (formato `Ref. N$`), junto a un badge de la zona del rider (`zone`). El color del saldo SHALL decidirse sobre `balance_bs`: verde (`OrderStatusColors.completed`) cuando sea mayor o igual a cero, rojo (`OrderStatusColors.error`) cuando sea negativo. El saldo en Bs SHALL NOT mostrarse con el símbolo `$`.
