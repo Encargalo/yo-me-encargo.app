@@ -3,7 +3,7 @@ import { Navigation, Phone, ReceiptText, Store } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
 
-import { Neutrals } from "@/constants/theme";
+import { Colors } from "@/constants/theme";
 
 interface OrderPartyBlockProps {
   eyebrow: string; // "RESTAURANTE" | "CLIENTE"
@@ -48,7 +48,7 @@ export function OrderPartyBlock({
   const Icon = role === "shop" ? Store : ReceiptText;
 
   return (
-    <View className="gap-2 rounded-[14px] border border-hair bg-white p-3.5">
+    <View className="gap-2 rounded-[14px] border border-borde-suave bg-superficie p-3.5">
       <View className="flex-row items-center gap-2">
         <View
           className="h-8 w-8 items-center justify-center rounded-full"
@@ -56,15 +56,18 @@ export function OrderPartyBlock({
         >
           <Icon size={16} color={pinColor} />
         </View>
-        <Text className="font-mono text-[11px] tracking-[1.2px] text-label">{eyebrow}</Text>
+        <Text className="font-mono text-[11px] tracking-[1.2px] text-texto-suave">{eyebrow}</Text>
       </View>
 
-      <Text className="text-[16px] font-semibold tracking-[-0.2px] text-ink" numberOfLines={1}>
+      <Text
+        className="text-[16px] font-heading-semibold tracking-[-0.2px] text-texto"
+        numberOfLines={1}
+      >
         {name}
       </Text>
 
       {address ? (
-        <Text className="text-[13px] text-muted" numberOfLines={2}>
+        <Text className="font-body text-[13px] text-texto-suave" numberOfLines={2}>
           {address}
         </Text>
       ) : null}
@@ -74,19 +77,19 @@ export function OrderPartyBlock({
           {hasCoords ? (
             <Pressable
               onPress={() => openNavigation(latitude, longitude, name)}
-              className="h-9 w-9 items-center justify-center rounded-full border border-line bg-white"
+              className="h-9 w-9 items-center justify-center rounded-full border border-borde bg-superficie"
               accessibilityLabel={`Navegar a ${name}`}
             >
-              <Navigation size={16} color={Neutrals.ink} />
+              <Navigation size={16} color={Colors.texto} />
             </Pressable>
           ) : null}
           {phone ? (
             <Pressable
               onPress={() => callPhone(phone)}
-              className="h-9 w-9 items-center justify-center rounded-full border border-line bg-white"
+              className="h-9 w-9 items-center justify-center rounded-full border border-borde bg-superficie"
               accessibilityLabel={`Llamar a ${name}`}
             >
-              <Phone size={16} color={Neutrals.ink} />
+              <Phone size={16} color={Colors.texto} />
             </Pressable>
           ) : null}
         </View>

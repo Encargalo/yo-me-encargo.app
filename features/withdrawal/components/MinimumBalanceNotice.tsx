@@ -19,13 +19,13 @@ export function MinimumBalanceNotice({ withdrawalMinBs, balanceBs }: MinimumBala
       : null;
 
   return (
-    <View className="flex-row items-start gap-2 rounded-[12px] border border-hair bg-block px-3.5 py-3">
-      <Text className="text-[14px]">ⓘ</Text>
-      <Text className="flex-1 text-[12px] leading-[17px] text-body">
+    <View className="flex-row items-start gap-2 rounded-[12px] border border-borde-suave bg-fondo px-3.5 py-3">
+      <Text className="font-body text-[14px]">ⓘ</Text>
+      <Text className="font-body flex-1 text-[12px] leading-[17px] text-texto-suave">
         {typeof withdrawalMinBs === "number" ? (
           <>
             Disponible para retiro a partir de{" "}
-            <Text className="font-bold">{formatBs(withdrawalMinBs)}</Text>.
+            <Text className="font-heading-bold">{formatBs(withdrawalMinBs)}</Text>.
           </>
         ) : (
           <>El retiro se habilita al alcanzar el mínimo vigente.</>
@@ -33,7 +33,7 @@ export function MinimumBalanceNotice({ withdrawalMinBs, balanceBs }: MinimumBala
         {missing != null ? (
           <>
             {" "}
-            Te faltan <Text className="font-bold">{formatBs(missing)}</Text>.
+            Te faltan <Text className="font-heading-bold">{formatBs(missing)}</Text>.
           </>
         ) : null}
       </Text>

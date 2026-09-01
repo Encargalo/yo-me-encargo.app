@@ -39,23 +39,23 @@ export function TransactionRow({ transaction, isLast, onPress }: TransactionRowP
   const rowContent = (
     <>
       <View className="flex-1 pr-3">
-        <Text className="text-[13px] font-semibold text-ink" numberOfLines={1}>
+        <Text className="text-[13px] font-heading-semibold text-texto" numberOfLines={1}>
           {getMovementTypeLabel(transaction.movementType)}
         </Text>
         {meta ? (
-          <Text className="text-[10.5px] text-label" numberOfLines={1}>
+          <Text className="font-body text-[10.5px] text-texto-suave" numberOfLines={1}>
             {meta}
           </Text>
         ) : null}
       </View>
-      <Text className="text-[14px] font-bold" style={{ color: amountColor }}>
+      <Text className="text-[14px] font-heading-bold" style={{ color: amountColor }}>
         {formatSignedBs(transaction.amountBs)}
       </Text>
     </>
   );
 
   const className = `flex-row items-center justify-between px-3.5 py-3 ${
-    isLast ? "" : "border-b border-canvas"
+    isLast ? "" : "border-b border-borde-suave"
   }`;
 
   if (onPress) {

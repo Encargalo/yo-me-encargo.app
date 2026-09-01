@@ -4,7 +4,7 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } fro
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ROUTES } from "@/constants/routes";
-import { Neutrals, OrderStatusColors } from "@/constants/theme";
+import { Colors, OrderStatusColors } from "@/constants/theme";
 import { DeliveryCodeInput } from "@/features/orders/components/DeliveryCodeInput";
 import { OrderCompletedSummary } from "@/features/orders/components/OrderCompletedSummary";
 import { OrderItemsList } from "@/features/orders/components/OrderItemsList";
@@ -45,19 +45,19 @@ export default function OrderDetail() {
   if (stage === "not-found" || stage === "taken" || !order) {
     return (
       <View
-        className="flex-1 items-center justify-center gap-3 bg-canvas px-8"
+        className="flex-1 items-center justify-center gap-3 bg-fondo px-8"
         style={{ paddingTop: insets.top }}
       >
-        <Text className="text-center text-[15px] font-semibold text-body">
+        <Text className="text-center text-[15px] font-heading-semibold text-texto-suave">
           {stage === "taken"
             ? "Esta orden ya fue tomada por otro rider"
             : "No encontramos esta orden"}
         </Text>
         <Pressable
           onPress={() => router.replace(ROUTES.APP.HOME)}
-          className="h-11 items-center justify-center rounded-[12px] bg-ink px-5"
+          className="h-11 items-center justify-center rounded-[12px] bg-marca px-5"
         >
-          <Text className="text-[14px] font-semibold text-white">Volver a Inicio</Text>
+          <Text className="text-[14px] font-heading-semibold text-white">Volver a Inicio</Text>
         </Pressable>
       </View>
     );
@@ -74,25 +74,30 @@ export default function OrderDetail() {
     // el mismo patrón, con StyleSheet plano, funcionando en encargalo-mobile-v2
     // con el mismo edgeToEdgeEnabled).
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: Neutrals.canvas, paddingTop: insets.top }}
+      style={{ flex: 1, backgroundColor: Colors.fondo, paddingTop: insets.top }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View className="flex-row items-center gap-2 border-b border-hair bg-canvas px-2 py-3">
+      <View className="flex-row items-center gap-2 border-b border-borde-suave bg-fondo px-2 py-3">
         <Pressable
           onPress={() => router.back()}
           className="h-9 w-9 items-center justify-center rounded-full"
           accessibilityLabel="Volver"
         >
-          <ChevronLeft size={20} color={Neutrals.ink} />
+          <ChevronLeft size={20} color={Colors.texto} />
         </Pressable>
         <View className="rounded-[20px] px-2.5 py-[3px]" style={{ backgroundColor: statusColor }}>
-          <Text className="text-[11px] font-semibold text-white">{statusLabel}</Text>
+          <Text className="text-[11px] font-heading-semibold text-white">{statusLabel}</Text>
         </View>
-        <Text className="ml-1 flex-1 text-[15px] font-semibold text-ink" numberOfLines={1}>
+        <Text
+          className="ml-1 flex-1 text-[15px] font-heading-semibold text-texto"
+          numberOfLines={1}
+        >
           {title}
         </Text>
         {order.number != null ? (
-          <Text className="font-mono text-[11px] tracking-[0.5px] text-label">#{order.number}</Text>
+          <Text className="font-mono text-[11px] tracking-[0.5px] text-texto-suave">
+            #{order.number}
+          </Text>
         ) : null}
       </View>
 
@@ -130,16 +135,16 @@ export default function OrderDetail() {
           <PickupCodeCard code={order.pickupCode} />
         ) : null}
 
-        <View className="flex-row items-center justify-between rounded-[14px] bg-block px-4 py-4">
-          <Text className="text-[15px] font-semibold text-body">Comisión</Text>
-          <Text className="text-[24px] font-bold tracking-[-0.4px] text-ink">
+        <View className="flex-row items-center justify-between rounded-[14px] bg-fondo px-4 py-4">
+          <Text className="text-[15px] font-heading-semibold text-texto-suave">Comisión</Text>
+          <Text className="text-[24px] font-heading-bold tracking-[-0.4px] text-texto">
             {formatUsd(order.deliveryFee)}
           </Text>
         </View>
       </ScrollView>
 
       <View
-        className="border-t border-hair bg-white px-4 pt-3"
+        className="border-t border-borde-suave bg-superficie px-4 pt-3"
         style={{
           paddingBottom: keyboardVisible ? 10 : Math.max(insets.bottom, 16) + 12,
         }}
@@ -154,14 +159,14 @@ export default function OrderDetail() {
               opacity: accepting ? 0.5 : 1,
             }}
           >
-            <Text className="text-[16px] font-bold text-white">
+            <Text className="text-[16px] font-heading-bold text-white">
               {accepting ? "Aceptando…" : "Aceptar orden"}
             </Text>
           </Pressable>
         ) : null}
 
         {stage === "pending-pickup" ? (
-          <Text className="py-2 text-center text-[13px] text-muted">
+          <Text className="font-body py-2 text-center text-[13px] text-texto-suave">
             Muestra este código en el negocio para recoger el pedido
           </Text>
         ) : null}

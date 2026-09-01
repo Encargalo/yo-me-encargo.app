@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
-import { Neutrals, OrderStatusColors } from "@/constants/theme";
+import { Colors, FontFamilies, OrderStatusColors } from "@/constants/theme";
 
 interface CountdownRingProps {
   secondsLeft: number;
@@ -36,7 +36,7 @@ export function CountdownRing({ secondsLeft, totalSeconds, size = 54 }: Countdow
           cx={size / 2}
           cy={size / 2}
           r={r}
-          stroke={Neutrals.borderInput}
+          stroke={Colors.borde}
           strokeWidth={stroke}
           fill="none"
         />
@@ -52,7 +52,9 @@ export function CountdownRing({ secondsLeft, totalSeconds, size = 54 }: Countdow
           strokeLinecap="round"
         />
       </Svg>
-      <Text style={{ fontSize: 18, fontWeight: "700", color: Neutrals.ink }}>{secondsLeft}</Text>
+      <Text style={{ fontFamily: FontFamilies.headingBold, fontSize: 18, color: Colors.texto }}>
+        {secondsLeft}
+      </Text>
     </View>
   );
 }

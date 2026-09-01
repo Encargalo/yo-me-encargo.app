@@ -1,6 +1,6 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
 
-import { Primary } from "@/constants/theme";
+import { Colors, FontFamilies } from "@/constants/theme";
 
 interface ButtonProps {
   label: string;
@@ -23,7 +23,11 @@ export function Button({
       disabled={disabled || loading}
       style={[styles.base, styles[type], (disabled || loading) && styles.disabled]}
     >
-      {loading ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.label}>{label}</Text>}
+      {loading ? (
+        <ActivityIndicator color={Colors.superficie} />
+      ) : (
+        <Text style={styles.label}>{label}</Text>
+      )}
     </Pressable>
   );
 }
@@ -37,15 +41,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   primary: {
-    backgroundColor: Primary,
+    backgroundColor: Colors.marca,
   },
   disabled: {
     opacity: 0.5,
   },
   label: {
-    color: "#FFFFFF",
+    color: Colors.superficie,
+    fontFamily: FontFamilies.headingSemiBold,
     fontSize: 16,
-    fontWeight: "600",
     textAlign: "center",
   },
 });

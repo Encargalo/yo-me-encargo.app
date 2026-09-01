@@ -5,26 +5,26 @@ exports[`PickupCodeCard muestra el código de recogida 1`] = `
   className="items-center gap-1.5 rounded-[14px] border px-4 py-4"
   style={
     {
-      "backgroundColor": "#f59e0b14",
-      "borderColor": "#f59e0b40",
+      "backgroundColor": "#f7aa2814",
+      "borderColor": "#f7aa2840",
     }
   }
 >
   <Text
-    className="font-mono text-[11px] font-semibold tracking-[1.4px]"
+    className="font-mono text-[11px] font-heading-semibold tracking-[1.4px]"
     style={
       {
-        "color": "#f59e0b",
+        "color": "#f7aa28",
       }
     }
   >
     CÓDIGO DE RECOGIDA
   </Text>
   <Text
-    className="font-mono text-[34px] font-bold"
+    className="font-mono text-[34px] font-heading-bold"
     style={
       {
-        "color": "#f59e0b",
+        "color": "#f7aa28",
         "letterSpacing": 6,
       }
     }

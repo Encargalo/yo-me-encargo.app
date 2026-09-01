@@ -34,7 +34,7 @@ export default function Login() {
 
   return (
     <View className="flex-1 justify-center bg-white px-6">
-      <Text className="text-primary mb-10 text-center text-3xl font-bold">YoMeEncargo</Text>
+      <Text className="text-primary mb-10 text-center text-3xl font-heading-bold">YoMeEncargo</Text>
 
       <View className="gap-4">
         <PhoneInput
@@ -50,7 +50,7 @@ export default function Login() {
       </View>
 
       {generalError ? (
-        <Text className="text-status-error mt-4 text-center text-sm">{generalError}</Text>
+        <Text className="font-body text-status-error mt-4 text-center text-sm">{generalError}</Text>
       ) : null}
 
       <View className="mt-8">

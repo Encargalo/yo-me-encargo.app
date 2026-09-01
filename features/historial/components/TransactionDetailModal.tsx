@@ -28,10 +28,10 @@ interface DetailRowProps {
 
 function DetailRow({ label, value, valueColor }: DetailRowProps) {
   return (
-    <View className="flex-row items-center justify-between border-b border-canvas py-2.5">
-      <Text className="text-[13px] text-body">{label}</Text>
+    <View className="flex-row items-center justify-between border-b border-borde-suave py-2.5">
+      <Text className="font-body text-[13px] text-texto-suave">{label}</Text>
       <Text
-        className="text-[14px] font-semibold text-ink"
+        className="text-[14px] font-heading-semibold text-texto"
         style={valueColor ? { color: valueColor } : undefined}
       >
         {value}
@@ -58,11 +58,13 @@ export function TransactionDetailModal({ transaction, onClose }: TransactionDeta
         testID="transaction-detail-backdrop"
       >
         <Pressable
-          className="rounded-t-[28px] bg-card px-6 pb-9 pt-5"
+          className="rounded-t-[28px] bg-superficie px-6 pb-9 pt-5"
           onPress={(event) => event.stopPropagation()}
         >
-          <Text className="font-mono text-[11px] tracking-[1.4px] text-label">MOVIMIENTO</Text>
-          <Text className="mt-1 text-[20px] font-bold text-ink">
+          <Text className="font-mono text-[11px] tracking-[1.4px] text-texto-suave">
+            MOVIMIENTO
+          </Text>
+          <Text className="mt-1 text-[20px] font-heading-bold text-texto">
             {getMovementTypeLabel(transaction.movementType)}
           </Text>
 
@@ -85,7 +87,7 @@ export function TransactionDetailModal({ transaction, onClose }: TransactionDeta
             onPress={onClose}
             className="mt-6 h-12 items-center justify-center rounded-[14px] bg-primary"
           >
-            <Text className="text-[14px] font-semibold text-white">Cerrar</Text>
+            <Text className="text-[14px] font-heading-semibold text-white">Cerrar</Text>
           </Pressable>
         </Pressable>
       </Pressable>

@@ -2,7 +2,7 @@
 
 exports[`OrderItemsList expande y muestra productos con sabores y adiciones 1`] = `
 <View
-  className="mt-2 border-t border-hair pt-2.5"
+  className="mt-2 border-t border-borde-suave pt-2.5"
 >
   <View
     accessibilityLabel="Ver productos del pedido"
@@ -39,7 +39,7 @@ exports[`OrderItemsList expande y muestra productos con sabores y adiciones 1`] 
     onStartShouldSetResponder={[Function]}
   >
     <Text
-      className="text-[14px] font-semibold text-ink"
+      className="text-[14px] font-heading-semibold text-texto"
     >
       Productos · 
       2
@@ -54,7 +54,7 @@ exports[`OrderItemsList expande y muestra productos con sabores y adiciones 1`] 
       meetOrSlice={0}
       minX={0}
       minY={0}
-      stroke="#8d8a81"
+      stroke="#707070"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
@@ -89,7 +89,7 @@ exports[`OrderItemsList expande y muestra productos con sabores y adiciones 1`] 
         }
         stroke={
           {
-            "payload": 4287466113,
+            "payload": 4285558896,
             "type": 0,
           }
         }
@@ -111,7 +111,7 @@ exports[`OrderItemsList expande y muestra productos con sabores y adiciones 1`] 
           }
           stroke={
             {
-              "payload": 4287466113,
+              "payload": 4285558896,
               "type": 0,
             }
           }
@@ -129,14 +129,14 @@ exports[`OrderItemsList expande y muestra productos con sabores y adiciones 1`] 
       className="gap-0.5"
     >
       <Text
-        className="text-[14px] text-body"
+        className="font-body text-[14px] text-texto-suave"
       >
         7
         x 
         Pizza 6 Porciones
       </Text>
       <Text
-        className="text-[12px] text-muted"
+        className="font-body text-[12px] text-texto-suave"
       >
         Sabor: Pollo y Jamón
       </Text>
@@ -145,14 +145,14 @@ exports[`OrderItemsList expande y muestra productos con sabores y adiciones 1`] 
       className="gap-0.5"
     >
       <Text
-        className="text-[14px] text-body"
+        className="font-body text-[14px] text-texto-suave"
       >
         4
         x 
         Perro Ranchero
       </Text>
       <Text
-        className="text-[12px] text-muted"
+        className="font-body text-[12px] text-texto-suave"
       >
         Adición: Maduro x4
       </Text>

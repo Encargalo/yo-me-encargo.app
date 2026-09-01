@@ -25,19 +25,19 @@ export function AvailabilityToggle() {
     >
       <View
         className={`h-6 w-[42px] justify-center rounded-[14px] px-0.5 ${
-          isAvailable ? "bg-status-completed" : "bg-line"
+          isAvailable ? "bg-status-completed" : "bg-borde"
         }`}
       >
         <View
-          className={`h-5 w-5 rounded-full bg-white ${isAvailable ? "self-end" : "self-start"}`}
+          className={`h-5 w-5 rounded-full bg-superficie ${isAvailable ? "self-end" : "self-start"}`}
         />
       </View>
 
       <View>
-        <Text className="text-sm font-semibold tracking-[-0.2px] text-ink">
+        <Text className="text-sm font-heading-semibold tracking-[-0.2px] text-texto">
           {isAvailable ? "Disponible" : "No disponible"}
         </Text>
-        <Text className="mt-px font-mono text-[9px] tracking-[1px] text-label">
+        <Text className="mt-px font-mono text-[9px] tracking-[1px] text-texto-suave">
           {isAvailable ? "RECIBIENDO ÓRDENES" : "EN PAUSA"}
         </Text>
       </View>

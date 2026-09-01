@@ -13,7 +13,7 @@ exports[`HistorialSkeleton renderiza 1 sola fila cuando se pide 1`] = `
     testID="historial-skeleton"
   >
     <View
-      className="h-[52px] bg-hair "
+      className="h-[52px] bg-borde-suave "
     />
   </View>
 </View>
@@ -32,19 +32,19 @@ exports[`HistorialSkeleton renderiza 5 filas por defecto 1`] = `
     testID="historial-skeleton"
   >
     <View
-      className="h-[52px] bg-hair border-b border-canvas"
+      className="h-[52px] bg-borde-suave border-b border-borde-suave"
     />
     <View
-      className="h-[52px] bg-hair border-b border-canvas"
+      className="h-[52px] bg-borde-suave border-b border-borde-suave"
     />
     <View
-      className="h-[52px] bg-hair border-b border-canvas"
+      className="h-[52px] bg-borde-suave border-b border-borde-suave"
     />
     <View
-      className="h-[52px] bg-hair border-b border-canvas"
+      className="h-[52px] bg-borde-suave border-b border-borde-suave"
     />
     <View
-      className="h-[52px] bg-hair "
+      className="h-[52px] bg-borde-suave "
     />
   </View>
 </View>

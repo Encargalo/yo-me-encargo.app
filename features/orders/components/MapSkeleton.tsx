@@ -29,5 +29,5 @@ export function MapSkeleton({ style }: MapSkeletonProps) {
     return () => loop.stop();
   }, [opacity]);
 
-  return <Animated.View className="flex-1 bg-hair" style={[{ opacity }, style]} />;
+  return <Animated.View className="flex-1 bg-borde-suave" style={[{ opacity }, style]} />;
 }

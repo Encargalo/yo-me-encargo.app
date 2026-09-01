@@ -88,12 +88,14 @@ utils/            → utilidades puras
 
 ## Colores de estado — obligatorio
 
-La app usa colores de estado consistentes para identificar el estado de una orden (ver `docs/wireframes/`):
+La app usa colores de estado consistentes para identificar el estado de una orden, derivados del System Design de YoMeEncargo en Figma:
 
-- 🟠 Ámbar (`status.pending` / `OrderStatusColors.pending` = `#f59e0b`) — Recogida pendiente
-- 🔵 Azul (`status.enroute` / `OrderStatusColors.enroute` = `#3b82f6`) — En camino / Entregando
-- 🟢 Verde (`status.completed` / `OrderStatusColors.completed` = `#22c55e`) — Completado
-- 🔴 Rojo (`status.error` / `OrderStatusColors.error` = `#ef4444`) — Error / deuda
+- 🟠 Ámbar (`status.pending` / `OrderStatusColors.pending` = `#F7AA28`) — Recogida pendiente
+- 🔵 Azul Intenso (`status.enroute` / `OrderStatusColors.enroute` = `#1D4ED8`) — En camino / Entregando
+- 🟢 Verde (`status.completed` / `OrderStatusColors.completed` = `#09E55B`) — Completado
+- 🔴 Rojo (`status.error` / `OrderStatusColors.error` = `#DC2626`) — Error / deuda
+
+El azul de estado (`#1D4ED8`) es distinto del azul de marca (`Colors.marca` = `#2563EB`) a propósito: ningún elemento de marca (tab bar, botones) debe poder confundirse con un indicador de estado de orden.
 
 Usar siempre estas constantes (definidas en `tailwind.config.js` y `constants/theme.ts`) — nunca hardcodear otro hex para representar estado de orden.
 
@@ -152,7 +154,7 @@ Regla universal: cada cambio incluye tests — happy path + al menos un caso de 
 
 ## Pendiente de diseño
 
-El branding final (logotipo, splash, favicon de YoMeEncargo) está pendiente de diseño gráfico. Los assets actuales en `assets/images/` son el placeholder genérico del template de Expo — reemplazar en un change de OpenSpec dedicado cuando el arte final esté listo. La paleta de color (`primary #fc6b2b`, `tint #0a7ea4`) y los colores de estado sí están definidos y son estables.
+El branding final (logotipo, splash, favicon de YoMeEncargo) está pendiente de diseño gráfico. Los assets actuales en `assets/images/` son el placeholder genérico del template de Expo — reemplazar en un change de OpenSpec dedicado cuando el arte final esté listo. La paleta de color (marca `#2563EB`, ver `constants/theme.ts`) y los colores de estado sí están definidos y son estables — derivados del System Design de YoMeEncargo en Figma.
 
 ## Archivos y carpetas que Claude NUNCA debe eliminar
 

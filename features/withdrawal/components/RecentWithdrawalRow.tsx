@@ -37,19 +37,21 @@ export function RecentWithdrawalRow({ withdrawal, isLast }: RecentWithdrawalRowP
   return (
     <View
       className={`flex-row items-center justify-between px-3.5 py-3 ${
-        isLast ? "" : "border-b border-canvas"
+        isLast ? "" : "border-b border-borde-suave"
       }`}
     >
       <View>
-        <Text className="text-[13px] font-semibold text-ink">{formatBs(withdrawal.amount)}</Text>
-        {date ? <Text className="text-[10.5px] text-label">{date}</Text> : null}
+        <Text className="text-[13px] font-heading-semibold text-texto">
+          {formatBs(withdrawal.amount)}
+        </Text>
+        {date ? <Text className="font-body text-[10.5px] text-texto-suave">{date}</Text> : null}
       </View>
       <View
         className="rounded-full border px-2.5 py-[3px]"
         style={{ borderColor: STATUS_COLOR[withdrawal.status] }}
       >
         <Text
-          className="text-[10px] font-semibold"
+          className="text-[10px] font-heading-semibold"
           style={{ color: STATUS_COLOR[withdrawal.status] }}
         >
           {STATUS_LABEL[withdrawal.status]}

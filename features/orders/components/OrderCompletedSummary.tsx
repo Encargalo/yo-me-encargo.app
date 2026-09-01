@@ -31,7 +31,7 @@ export function OrderCompletedSummary({ summary }: OrderCompletedSummaryProps) {
     .join(" · ");
 
   return (
-    <View className="flex-1 bg-canvas">
+    <View className="flex-1 bg-fondo">
       <Animated.View
         entering={FadeInDown.duration(380)}
         className="flex-1 items-center justify-center gap-4 px-8"
@@ -44,30 +44,34 @@ export function OrderCompletedSummary({ summary }: OrderCompletedSummaryProps) {
         />
 
         <View className="items-center gap-1">
-          <Text className="text-center text-[20px] font-bold tracking-[-0.3px] text-ink">
+          <Text className="text-center text-[20px] font-heading-bold tracking-[-0.3px] text-texto">
             Pedido completado
           </Text>
-          {subtitle ? <Text className="text-center text-[12px] text-muted">{subtitle}</Text> : null}
+          {subtitle ? (
+            <Text className="font-body text-center text-[12px] text-texto-suave">{subtitle}</Text>
+          ) : null}
         </View>
 
-        <View className="w-full gap-[18px] rounded-[14px] border border-hair bg-white p-4">
+        <View className="w-full gap-[18px] rounded-[14px] border border-borde-suave bg-superficie p-4">
           {summary.customerName ? (
             <View className="flex-row items-center justify-between">
-              <Text className="text-[13px] text-muted">Cliente</Text>
-              <Text className="text-[14px] font-semibold text-ink">{summary.customerName}</Text>
+              <Text className="font-body text-[13px] text-texto-suave">Cliente</Text>
+              <Text className="text-[14px] font-heading-semibold text-texto">
+                {summary.customerName}
+              </Text>
             </View>
           ) : null}
           {typeof summary.distanceKm === "number" ? (
             <View className="flex-row items-center justify-between">
-              <Text className="text-[13px] text-muted">Distancia</Text>
-              <Text className="text-[14px] font-semibold text-ink">
+              <Text className="font-body text-[13px] text-texto-suave">Distancia</Text>
+              <Text className="text-[14px] font-heading-semibold text-texto">
                 {summary.distanceKm.toFixed(1)} km
               </Text>
             </View>
           ) : null}
           <View className="flex-row items-center justify-between">
-            <Text className="text-[13px] text-muted">Comisión</Text>
-            <Text className="text-[14px] font-semibold text-ink">
+            <Text className="font-body text-[13px] text-texto-suave">Comisión</Text>
+            <Text className="text-[14px] font-heading-semibold text-texto">
               {formatUsd(summary.deliveryFee)}
             </Text>
           </View>
@@ -75,14 +79,14 @@ export function OrderCompletedSummary({ summary }: OrderCompletedSummaryProps) {
       </Animated.View>
 
       <View
-        className="border-t border-hair bg-white px-4 pt-3"
+        className="border-t border-borde-suave bg-superficie px-4 pt-3"
         style={{ paddingBottom: Math.max(insets.bottom, 16) + 12 }}
       >
         <Pressable
           onPress={() => router.replace(ROUTES.APP.HOME)}
-          className="h-[52px] w-full items-center justify-center rounded-[14px] bg-ink"
+          className="h-[52px] w-full items-center justify-center rounded-[14px] bg-marca"
         >
-          <Text className="text-[16px] font-bold text-white">Volver a Inicio</Text>
+          <Text className="text-[16px] font-heading-bold text-white">Volver a Inicio</Text>
         </Pressable>
       </View>
     </View>

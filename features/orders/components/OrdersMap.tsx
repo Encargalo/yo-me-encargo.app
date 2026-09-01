@@ -83,8 +83,10 @@ export const FOLLOW_ZOOM_DELTA = 0.00176;
 // espacio que ocuparía el MapView, sin GPS ni render nativo detrás.
 function MapDisabledPlaceholder() {
   return (
-    <View className="flex-1 items-center justify-center bg-block px-8">
-      <Text className="text-center text-[13px] text-muted">Actívate para ver el mapa</Text>
+    <View className="flex-1 items-center justify-center bg-fondo px-8">
+      <Text className="font-body text-center text-[13px] text-texto-suave">
+        Actívate para ver el mapa
+      </Text>
     </View>
   );
 }
@@ -243,7 +245,7 @@ export function OrdersMap({
 
   return (
     <View className="flex-1 p-3">
-      <View className="flex-1 overflow-hidden rounded-2xl border border-hair bg-block">
+      <View className="flex-1 overflow-hidden rounded-2xl border border-borde-suave bg-fondo">
         {!enabled ? (
           <MapDisabledPlaceholder />
         ) : riderStatus === "loading" ? (
@@ -278,8 +280,8 @@ export function OrdersMap({
                   anchor={{ x: 0.5, y: 0.5 }}
                   tracksViewChanges={tracks}
                 >
-                  <View className="h-6 w-6 items-center justify-center rounded-full bg-ink/20">
-                    <View className="h-3.5 w-3.5 rounded-full border-2 border-white bg-ink" />
+                  <View className="h-6 w-6 items-center justify-center rounded-full bg-marca/20">
+                    <View className="h-3.5 w-3.5 rounded-full border-2 border-white bg-marca" />
                   </View>
                 </Marker>
               )}
@@ -384,16 +386,18 @@ export function OrdersMap({
             <Pressable
               testID="close-fullscreen-button"
               onPress={onRequestClose}
-              className="absolute left-2.5 top-2.5 rounded-md bg-white/85 px-3 py-1.5"
+              className="absolute left-2.5 top-2.5 rounded-md bg-superficie/85 px-3 py-1.5"
             >
-              <Text className="font-mono text-[12px] tracking-[1px] text-label">✕ Cerrar</Text>
+              <Text className="font-mono text-[12px] tracking-[1px] text-texto-suave">
+                ✕ Cerrar
+              </Text>
             </Pressable>
           ) : (
             <View
-              className="absolute left-2.5 top-2.5 rounded-md bg-white/85 px-2 py-1"
+              className="absolute left-2.5 top-2.5 rounded-md bg-superficie/85 px-2 py-1"
               pointerEvents="none"
             >
-              <Text className="font-mono text-[9px] tracking-[1.2px] text-label">
+              <Text className="font-mono text-[9px] tracking-[1.2px] text-texto-suave">
                 TOCA PARA VER EN PANTALLA COMPLETA
               </Text>
             </View>
@@ -408,12 +412,12 @@ export function OrdersMap({
             onPress={() => setFollowEnabled(!followEnabled)}
             className={`absolute bottom-2.5 right-2.5 rounded-md ${
               isFullscreen ? "px-[13px] py-[7px]" : "px-3 py-1.5"
-            } ${followEnabled ? "bg-ink" : "bg-white/85"}`}
+            } ${followEnabled ? "bg-marca" : "bg-superficie/85"}`}
           >
             <Text
-              className={`font-mono font-bold tracking-[1px] ${
+              className={`font-mono font-heading-bold tracking-[1px] ${
                 isFullscreen ? "text-[11px]" : "text-[10px]"
-              } ${followEnabled ? "text-white" : "text-ink"}`}
+              } ${followEnabled ? "text-white" : "text-texto"}`}
             >
               {followEnabled ? "Siguiendo…" : "Hacer seguimiento"}
             </Text>
