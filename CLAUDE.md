@@ -2,7 +2,7 @@
 
 # YoMeEncargo (app de riders)
 
-App móvil para los **encargeros** (riders) de Encárgalo — la app hermana de `encargalo-mobile-v2` (app de clientes). Esta app permite a los riders gestionar órdenes, mapa en tiempo real, confirmación de entrega y balance/retiros, de forma autónoma desde el dispositivo.
+App móvil para los **riders** de Encárgalo — la app hermana de `encargalo-mobile-v2` (app de clientes). Esta app permite a los riders gestionar órdenes, mapa en tiempo real, confirmación de entrega y balance/retiros, de forma autónoma desde el dispositivo.
 
 ## Stack
 

@@ -5,7 +5,10 @@
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
+    "android:dev": "APP_VARIANT=development expo run:android",
+    "android:apk": "APP_VARIANT=development npx expo prebuild --platform android && cd android && ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a",
     "ios": "expo run:ios",
+    "ios:dev": "APP_VARIANT=development expo run:ios",
     "web": "expo start --web",
     "lint": "eslint .",
     "test": "jest",

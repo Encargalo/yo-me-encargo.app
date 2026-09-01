@@ -37,6 +37,9 @@ yarn-error.*
 .env
 .env*.local
 
+# EAS Submit — credencial de la service account de Google Cloud
+google-service-account.json
+
 # OpenSpec local config (no commitear tokens/credenciales)
 .claude/openspec-config.json
 .claude/settings.local.json
