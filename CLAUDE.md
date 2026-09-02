@@ -140,6 +140,28 @@ Cuando se instale, aplicar este árbol de decisión:
 
 Regla universal: cada cambio incluye tests — happy path + al menos un caso de error.
 
+## /verify — comportamiento obligatorio
+
+- La superficie de este repo es una **GUI** (app Expo/RN en dispositivo o simulador). Este entorno **no tiene ninguna herramienta para accionar la UI móvil** — la verificación de comportamiento en runtime (pantallas, gestos, mapa en tiempo real, red visible en el dispositivo) la hace el usuario.
+- El dev server de Expo, si está corriendo, es del usuario — **no reiniciarlo**. Solo levantar uno nuevo si no hay ninguno activo y el usuario lo pide.
+- Al pedir `/verify` un cambio: reportar **BLOQUEADA** la parte de observación de runtime y pedir al usuario que confirme en su dispositivo, o apoyarse en lo que ya haya reportado. El agente SÍ puede correr `npx tsc --noEmit`, `npm run lint` y (cuando Jest exista) los tests de los archivos tocados, y hacer code review del diff. Nunca dar algo por funcionando sin comprobarlo o sin confirmación del usuario.
+- La receta operativa completa vive en `.claude/skills/verify/SKILL.md`.
+
+## Flujo OpenSpec — `/opsx:*`
+
+Cada pantalla/feature es un change de OpenSpec. Comandos disponibles (equivalentes a sus skills `openspec-*`):
+
+- `/opsx:explore` — pensar/investigar antes de proponer, sin escribir código
+- `/opsx:propose <nombre>` — crea proposal + specs + design + tasks + rama git (+ tarea en gestor externo si `.claude/openspec-config.json` lo configura)
+- `/opsx:apply` — implementa tarea por tarea, corriendo solo los tests de los archivos tocados; pregunta antes de commitear
+- `/opsx:verify` — chequeo **solo si el usuario lo pide explícitamente**: compara la implementación contra proposal/design/tasks/specs. Nunca es un paso automático de `apply`/`archive`/`live`.
+- `/opsx:archive` — cierra el change, sincroniza specs, hace commit tras aprobación
+- `/opsx:sync` — sincroniza delta specs a main specs sin archivar
+- `/opsx:live <nombre>` — alternativa para iterar en vivo: investiga y edita en el mismo turno; al cerrar (`/opsx:live end`) arma el proposal retroactivo y archiva
+- `/opsx:status` — dashboard de changes activos
+- `/opsx:update` — revisa los artifacts de planeación de un change y los mantiene coherentes
+- `/opsx:doc-sync` — instala/actualiza este mismo flujo leyendo la documentación en `/home/runbex13/Documentos/Proyectos/Instalación openspec` (correr después de cada `openspec update`, que regenera las skills/comandos vanilla y borra las integraciones custom)
+
 ## Lo que Claude NO debe hacer
 
 - Usar bun ni yarn — solo npm con Expo

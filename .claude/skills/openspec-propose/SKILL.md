@@ -1,41 +1,51 @@
 ---
 name: openspec-propose
 description: Propose a new change with all artifacts generated in one step. Use when the user wants to quickly describe what they want to build and get a complete proposal with design, specs, and tasks ready for implementation.
+allowed-tools: Bash(openspec:*)
 license: MIT
 compatibility: Requires openspec CLI.
 metadata:
   author: openspec
-  version: "2.0"
-  generatedBy: "1.5.0"
+  version: "1.0"
+  generatedBy: "1.11.0"
 ---
 
 Propose a new change - create the change and generate all artifacts in one step.
 
-I'll create a change with artifacts:
+**Planning boundary**: This workflow creates planning artifacts only. The user request that selected or triggered this workflow authorizes planning only, even if it asks to build or fix something. Do not edit project code. After the planning artifacts are complete, stop. Do not start implementation in the same response, even if the initial request asks for it. Wait for a new user request after the artifacts are presented; then start the apply workflow.
+
+I'll create a change with the artifacts your schema defines. With the default spec-driven schema that is:
 - proposal.md (what & why)
+- `specs/<capability-path>/spec.md` (what the system must do - a delta, not the main spec)
 - design.md (how)
 - tasks.md (implementation steps)
 
-When ready to implement, run /opsx:apply
+`<capability-path>` is the spec directory relative to `specs/` (for example, `user-auth` or `identity/user-auth`). Preserve an existing capability's full path and follow the project's established organization for new capabilities.
+
+When the user is ready to implement, they must start the apply workflow explicitly.
 
 ---
 
-**Store selection:** If the user names a store (a store is a standalone OpenSpec repo registered on this machine) or the work lives in one, run `openspec store list --json` to discover registered store ids, then pass `--store <id>` on the commands that read or write specs and changes (`new change`, `status`, `instructions`, `list`, `show`, `validate`, `archive`, `doctor`, `context`). Other commands do not take the flag. Hints printed by commands already carry the flag; keep it on follow-ups. Without a store, commands act on the nearest local `openspec/` root.
+**Store selection:** If the user names a store (a store is a standalone OpenSpec repo registered on this machine) or the work lives in one, run `openspec store list --json` to discover registered store ids, then pass `--store <id>` on the commands that read or write specs and changes (`new change`, `status`, `instructions`, `list`, `show`, `validate`, `archive`, `doctor`, `context`, `schemas`, `view`). Once selected, treat `--store <id>` as sticky for the rest of the workflow. Every unscoped example of those commands below is shorthand: before running it, append the flag. For example, run `openspec status --change "<name>" --json --store "<id>"`, not the unscoped form shown below. Other commands do not take the flag. Hints printed by commands already carry the flag; keep it on follow-ups. Without a store, commands act on the nearest local `openspec/` root.
 
 **Input**: The user's request should include a change name (kebab-case) OR a description of what they want to build.
 
 **Steps**
 
-1. **If no clear input provided, ask what they want to build**
+1. **Understand the request and clarify material ambiguity**
 
-   Use the **AskUserQuestion tool** (open-ended, no preset options) to ask:
+   If no clear input is provided, ask the user (open-ended, no preset options):
    > "What change do you want to work on? Describe what you want to build or fix."
 
    From their description, derive a kebab-case name (e.g., "add user authentication" → `add-user-auth`).
 
    **IMPORTANT**: Do NOT proceed without understanding what the user wants to build.
 
-2. **Leer configuración del proyecto**
+   If the request contains ambiguity that would materially affect scope, externally observable behavior, compatibility, or acceptance criteria, ask the user before creating the change. For minor details, make a reasonable assumption and record it in the planning artifacts.
+
+2. **Leer configuración y reglas del proyecto**
+
+   Leer el archivo de reglas del agente del proyecto (`CLAUDE.md` para Claude Code, `AGENTS.md` u otro equivalente) si existe, para que el proposal/design/tasks respeten las convenciones ya establecidas (stack, estructura, testing, restricciones). Las convenciones ahí definidas tienen prioridad sobre patrones genéricos.
 
    Leer `.claude/openspec-config.json` si existe. Este archivo es opcional — si no existe o le falta un bloque, los pasos de integración correspondientes se omiten silenciosamente.
 
@@ -45,38 +55,51 @@ When ready to implement, run /opsx:apply
      "taskManager": {
        "type": "notion | jira | github-projects",
        "tokenPath": "/ruta/absoluta/al/token.txt",
-       ...campos específicos del tipo...
-     },
-     "docManager": {
-       "type": "notion",
-       "tokenPath": "/ruta/absoluta/al/token.txt",
-       "pageId": "ID-de-pagina"
+       "...campos específicos del tipo..."
      }
    }
    ```
 
-   - Si `taskManager` no existe → omitir pasos 7 y 7b completamente.
-   - Si `docManager` no existe → no hay documentación externa que actualizar en este skill.
+   - Si `taskManager` no existe → omitir los pasos 8 y 8b completamente.
    - Guardar la config en memoria para usarla en pasos posteriores.
 
-3. **Create the change directory**
+3. **Determine the workflow schema**
+
+   Use the configured default schema unless the user explicitly requests a different workflow.
+
+   **Use a different schema only if the user:**
+   - Explicitly requests a specific schema by name → use `--schema <schema-name>`
+   - Asks to "show workflows" or asks "what workflows" exist → resolve the authoritative root by running `openspec context --json` from the current working directory. If the user explicitly selected a registered store, use `openspec context --json --store "<store-id>"`. Then run `openspec schemas --json` with its working directory set to the returned `root.path` and let them choose. This preserves roots selected by a local `store:` pointer or the global `defaultStore`; when a registered store was explicitly selected, append `--store "<store-id>"` to `openspec schemas --json` as well. If context reports only `no_openspec_root`, run `openspec schemas --json` from the current working directory instead. Do not use this fallback for invalid or unavailable stores.
+
+   Otherwise, omit `--schema` to preserve the configured default.
+
+4. **Create the change directory**
+
+   Choose one schema form below. If a registered store is selected, append `--store "<store-id>"` to that command and each later OpenSpec command shown below that accepts `--store`.
+
+   Using the configured default:
    ```bash
    openspec new change "<name>"
    ```
+
+   Using an explicitly requested schema:
+   ```bash
+   openspec new change "<name>" --schema "<schema-name>"
+   ```
    This creates a scaffolded change in the planning home resolved by the CLI with `.openspec.yaml`.
 
-4. **Get the artifact build order**
+5. **Get the artifact build order**
    ```bash
    openspec status --change "<name>" --json
    ```
    Parse the JSON to get:
    - `applyRequires`: array of artifact IDs needed before implementation (e.g., `["tasks"]`)
-   - `artifacts`: list of all artifacts with their status and dependencies
+   - `artifacts`: list of all artifacts, each with its `status` and its `requires` edges (the artifact IDs it directly depends on)
    - `planningHome`, `changeRoot`, `artifactPaths`, and `actionContext`: path and scope context. Use these instead of assuming repo-local paths.
 
-5. **Create artifacts in sequence until apply-ready**
+6. **Create every artifact in the required set**
 
-   Use the **TodoWrite tool** to track progress through the artifacts.
+   Use a todo list to track progress through the artifacts.
 
    Loop through artifacts in dependency order (artifacts with no pending dependencies first):
 
@@ -90,25 +113,32 @@ When ready to implement, run /opsx:apply
         - `rules`: Artifact-specific rules (constraints for you - do NOT include in output)
         - `template`: The structure to use for your output file
         - `instruction`: Schema-specific guidance for this artifact type
+        - `skipped`/`warning`: present when the change declares skip_specs and this artifact must NOT be created - stop and pick another artifact
         - `resolvedOutputPath`: Resolved path or pattern to write the artifact
         - `dependencies`: Completed artifacts to read for context
-      - Read any completed dependency files for context
-      - Create the artifact file using `template` as the structure and write it to `resolvedOutputPath`
+      - Read any completed dependency files for context - always re-read them from disk, even if you saw them earlier in the conversation (the user may have edited them)
+      - If the `instruction` field delegates creation to a specific skill or command, invoke it to produce the artifact instead of writing the file yourself, then verify the artifact file exists at `resolvedOutputPath`
+      - Otherwise create the artifact file using `template` as the structure and write it to `resolvedOutputPath`. If `resolvedOutputPath` is a glob, follow `instruction` to choose the concrete file path
       - Apply `context` and `rules` as constraints - but do NOT copy them into the file
       - Show brief progress: "Created <artifact-id>"
 
-   b. **Continue until all `applyRequires` artifacts are complete**
+   b. **Continue until every artifact in the required set exists (not just `apply.requires`)**
       - After creating each artifact, re-run `openspec status --change "<name>" --json`
-      - Check if every artifact ID in `applyRequires` has `status: "done"` in the artifacts array
-      - Stop when all `applyRequires` artifacts are done
+      - The required set is `applyRequires` plus every artifact reachable from those by following the `requires` edges in `status --json` - walk them transitively (spec-driven closes over proposal, specs, design, tasks). Leave artifacts outside that set alone
+      - `status` is file-existence only, so an `applyRequires` artifact reading `done` does NOT mean its dependencies exist - writing `tasks.md` early marks `tasks` done while `specs` was never written. Use each artifact's `requires` edges, not its `status`, to build the required set: a `done` artifact still lists what it depends on
+      - An artifact already reading `status: "skipped"` is satisfied: the change declares `skip_specs` in `.openspec.yaml`, so its files must NOT exist. Never try to create one
+      - Create every artifact in the required set that is missing, then re-check - creating one can unblock others
+      - Skip one only when `status` already reports it `skipped`, or when its own `instruction` says it is conditional: run `openspec instructions <artifact-id> --change "<name>" --json` and skip only if its `instruction` field marks it optional (e.g. "create only if..."). Spec-driven's `design.md` qualifies; `specs` qualifies only via the `skipped` status above, never by your own judgment. Tell the user, and do not reconsider it
+      - Dependencies are enablers, not gates: if a required artifact is still `blocked` only because you skipped a conditional dependency, write it anyway
+      - Stop when every artifact in the required set is `done`, `skipped`, or was deliberately skipped
 
    c. **If an artifact requires user input** (unclear context):
-      - Use **AskUserQuestion tool** to clarify
+      - Ask the user to clarify
       - Then continue with creation
 
-6. **Crear rama git**
+7. **Crear rama git**
 
-   Una vez que todos los artifacts estén creados:
+   Una vez que todos los artifacts estén creados (nunca antes):
 
    a. Determinar prefijo de rama según el tipo de change:
       - Feature nuevo → `feat/<change-name>`
@@ -117,147 +147,34 @@ When ready to implement, run /opsx:apply
       - Refactor sin cambio funcional → `refactor/<change-name>`
       - Si no es claro, usar `feat/<change-name>`
 
-   b. Verificar si la rama ya existe:
-      ```bash
-      git branch --list <prefijo>/<change-name>
-      ```
+   b. Verificar si la rama ya existe: `git branch --list <prefijo>/<change-name>`
 
-   c. Si NO existe → crear y cambiar a ella:
-      ```bash
-      git checkout -b <prefijo>/<change-name>
-      ```
+   c. Si NO existe → `git checkout -b <prefijo>/<change-name>`. Si YA existe → `git checkout <prefijo>/<change-name>`.
 
-      Si YA existe → simplemente cambiar a ella:
-      ```bash
-      git checkout <prefijo>/<change-name>
-      ```
-
-7. **Crear tarea en gestor externo** *(solo si `taskManager` está en config)*
+8. **Crear tarea en gestor externo** *(solo si `taskManager` está en config)*
 
    Leer el token desde `config.taskManager.tokenPath`. NUNCA hardcodear tokens.
+   Usar Python con `urllib.request` — NUNCA curl. Buscar primero si ya existe una tarea para este change (filtrar por el identificador del change) — si existe, no duplicar.
 
-   Buscar primero si ya existe una tarea para este change — si existe, no duplicar.
+   **Si `type` es `notion`:** buscar via POST `https://api.notion.com/v1/databases/<database>/query` con `{"filter": {"property": "Change OpenSpec", "rich_text": {"equals": "<change-name>"}}}`. Si no existe, crear via POST `https://api.notion.com/v1/pages` con `Estado: En curso`, `Rama Git` = nombre exacto de la rama, `Change OpenSpec` = `<change-name>`, `Proyecto` = `config.taskManager.project`, `Responsable` = `config.taskManager.assignee`, y `Tarea` = nombre legible derivado de la rama (ej. `feat/checkout-redesign` → `feat(checkout): rediseño del flujo de checkout`).
 
-   **Si `type` es `notion`:**
+   **Si `type` es `jira`:** auth Basic con `email:token` en base64 (Python `base64` + `urllib.request`). Buscar via GET `<baseUrl>/rest/api/3/issue/picker?query=<change-name>&projectKeys=<projectKey>`. Si no existe, crear via POST `<baseUrl>/rest/api/3/issue` con `issuetype: Story`, `assignee.accountId`, y `labels: ["openspec", "<change-name>"]`.
 
-   Config esperada:
-   ```json
-   {
-     "type": "notion",
-     "tokenPath": "/ruta/token.txt",
-     "database": "ID-base-de-datos",
-     "project": "ID-pagina-proyecto",
-     "assignee": "ID-usuario-responsable"
-   }
-   ```
+   **Si `type` es `github-projects`:** crear issue via POST `https://api.github.com/repos/<owner>/<repo>/issues` con `labels: ["openspec"]`, luego agregarlo al project via GraphQL `addProjectV2ItemById`.
 
-   Usar Python con `urllib.request` — NUNCA curl (falla con caracteres especiales).
+   Guardar el ID de la tarea creada. Si el gestor externo falla → loguear warning y continuar, nunca bloquear.
 
-   Buscar existente via POST `https://api.notion.com/v1/databases/<database>/query`:
-   ```json
-   {"filter": {"property": "Change OpenSpec", "rich_text": {"equals": "<change-name>"}}}
-   ```
+8b. **Crear subtareas en gestor externo — umbral por nivel** *(solo si `taskManager` está en config)*
 
-   Si no existe, crear via POST `https://api.notion.com/v1/pages`:
-   - `Tarea` → nombre legible derivado de la rama (ej. rama `feat/checkout-redesign` → `feat(checkout): rediseño del flujo de checkout`)
-   - `Estado` → `En curso`
-   - `Prioridad` → inferir del change (Alta / Media / Baja)
-   - `Tipo` → inferir del change (Feature / Bug / Mejora / Investigacion / Documentacion / DevOps / Chore)
-   - `Area` → inferir del proyecto o del CLAUDE.md
-   - `Rama Git` → nombre exacto de la rama
-   - `Change OpenSpec` → `<change-name>`
-   - `Proyecto` → relación con `config.taskManager.project`
-   - `Responsable` → `config.taskManager.assignee`
+   El umbral de 20 aplica **por nivel de forma independiente** (por grupo del mismo nivel y mismo padre, nunca global):
+   - Nivel 1 (tareas `N.` del tasks.md): si ≤ 20 → solo local; si > 20 → crear cada una vinculada a la tarea principal.
+   - Nivel 2 (sub-tareas `N.M`): para cada tarea de nivel 1 subida al gestor, si tiene ≤ 20 sub-tareas → solo local; si > 20 → crear cada una vinculada a su padre de nivel 1.
 
-   **Si `type` es `jira`:**
+   El orden de creación DEBE ser el mismo que en tasks.md. Notion: subtareas con `Estado: Backlog`, sin `Proyecto`/`Responsable`/`Prioridad`/`Tipo`. Jira: `issuetype: Subtask` vinculado al padre. GitHub Projects: issues hijos en el mismo project.
 
-   Config esperada:
-   ```json
-   {
-     "type": "jira",
-     "tokenPath": "/ruta/token.txt",
-     "email": "usuario@dominio.com",
-     "baseUrl": "https://workspace.atlassian.net",
-     "projectKey": "CLAVE",
-     "assigneeAccountId": "ID-atlassian"
-   }
-   ```
+   Si falla alguna subtarea → warning y continuar. Si falla la tarea principal → no crear subtareas, warning y continuar.
 
-   Auth: Basic con `email:token` en base64. Usar Python `base64` + `urllib.request`.
-
-   Buscar existente: GET `<baseUrl>/rest/api/3/issue/picker?query=<change-name>&projectKeys=<projectKey>`
-
-   Si no existe, crear via POST `<baseUrl>/rest/api/3/issue`:
-   ```json
-   {
-     "fields": {
-       "project": {"key": "<projectKey>"},
-       "summary": "<nombre legible del change>",
-       "issuetype": {"name": "Story"},
-       "assignee": {"accountId": "<assigneeAccountId>"},
-       "labels": ["openspec", "<change-name>"]
-     }
-   }
-   ```
-
-   **Si `type` es `github-projects`:**
-
-   Config esperada:
-   ```json
-   {
-     "type": "github-projects",
-     "tokenPath": "/ruta/token.txt",
-     "owner": "usuario-u-org",
-     "repo": "nombre-repo",
-     "projectNumber": 1
-   }
-   ```
-
-   Usar GraphQL API: `https://api.github.com/graphql` con header `Authorization: Bearer <token>`.
-
-   Crear issue via REST: POST `https://api.github.com/repos/<owner>/<repo>/issues`:
-   ```json
-   {"title": "<nombre legible>", "labels": ["openspec"]}
-   ```
-
-   Luego agregar al project via GraphQL mutation `addProjectV2ItemById`.
-
-   Guardar el ID de la tarea creada para usarlo en pasos posteriores.
-
-7b. **Crear subtareas en gestor externo — umbral por nivel** *(solo si `taskManager` está en config)*
-
-   El umbral de 20 aplica **por nivel de forma independiente**:
-
-   ```
-   Tarea principal (gestor externo — siempre)
-     └── Nivel 1: tareas N. del tasks.md
-           └── Nivel 2: tareas N.M del tasks.md
-   ```
-
-   **Nivel 1 — tareas principales del tasks.md:**
-   - Si ≤ 20 → quedan solo en local, NO se crean en el gestor externo.
-   - Si > 20 → crear cada una vinculada a la tarea principal.
-
-   **Nivel 2 — sub-tareas de cada tarea de nivel 1:**
-   - Para cada tarea de nivel 1 subida al gestor, contar sus sub-tareas.
-   - Si esa tarea tiene ≤ 20 → quedan solo en local.
-   - Si esa tarea tiene > 20 → crear cada una vinculada a su tarea padre de nivel 1.
-   - Evaluar independientemente por cada tarea padre.
-
-   **Regla clave:** el umbral no es global. Es por grupo del mismo nivel y mismo padre.
-
-   Para Notion: campos de subtareas: `Tarea` → texto de tasks.md (sin `- [ ]`), `Estado` → `Backlog`, `Area` → inferir. NO añadir `Proyecto`, `Responsable`, `Prioridad`, `Tipo`.
-
-   Para Jira: crear sub-issues con `issuetype: Subtask` vinculados al issue padre.
-
-   Para GitHub Projects: crear issues hijos y agregarlos al mismo project.
-
-   El orden de creación DEBE ser el mismo que en tasks.md.
-
-   **Si falla alguna subtarea:** loguear warning, continuar — no bloquear.
-   **Si falla la tarea principal:** loguear warning, no crear subtareas — no bloquear.
-
-8. **Show final status**
+9. **Show final status**
    ```bash
    openspec status --change "<name>"
    ```
@@ -266,15 +183,16 @@ When ready to implement, run /opsx:apply
 
 After completing all artifacts, summarize:
 - Change name and location
-- List of artifacts created with brief descriptions
+- List of artifacts created with brief descriptions, plus any conditional artifact you skipped and why
 - Rama git creada: `<prefijo>/<change-name>`
-- Si taskManager configurado: tarea creada/encontrada con N subtareas (o warning si falló)
-- Si taskManager no configurado: indicar que no hay gestor externo configurado
-- Prompt: "Todo listo. Cuando quieras implementar, usa `/opsx:apply`."
+- Si `taskManager` configurado: tarea creada/encontrada con N subtareas (o warning si falló). Si no está configurado: indicar que no hay gestor externo.
+- What's ready: "All artifacts needed for implementation are ready."
+- Prompt: "The artifacts are ready for review. When you are ready, run `/opsx:apply` or ask me to apply this change."
 
 **Artifact Creation Guidelines**
 
-- Follow the `instruction` field from `openspec instructions` for each artifact type
+- Follow the `instruction` field from `openspec instructions` for each artifact type - it is the authoritative guidance, even for familiar artifact names
+- If the `instruction` field directs you to use a specific skill or command to create the artifact, invoke it instead of writing the artifact directly
 - The schema defines what each artifact should contain - follow it
 - Read dependency artifacts for context before creating new ones
 - Use `template` as the structure for your output file - fill in its sections
@@ -283,18 +201,17 @@ After completing all artifacts, summarize:
   - These guide what you write, but should never appear in the output
 
 **Guardrails**
+- Leer siempre el archivo de reglas del agente del proyecto (CLAUDE.md/AGENTS.md u equivalente) si existe, antes de generar artifacts — sus convenciones tienen prioridad sobre patrones genéricos
 - Leer `.claude/openspec-config.json` al inicio — si no existe, continuar sin integración externa
-- NUNCA hardcodear tokens, IDs de bases de datos, IDs de proyectos ni IDs de usuarios en este archivo
-- SIEMPRE leer el token desde `tokenPath` en la config
+- NUNCA hardcodear tokens, IDs de bases de datos, IDs de proyectos ni IDs de usuarios en este archivo — SIEMPRE leer el token desde `tokenPath`
 - NUNCA usar curl para llamadas HTTP — siempre Python con `urllib.request`
-- Crear TODOS los artifacts necesarios para implementación (según `apply.requires` del schema)
-- Leer siempre los artifacts de dependencia antes de crear el siguiente
-- Si el contexto es crítico y poco claro, preguntar al usuario - pero prefer making reasonable decisions to keep momentum
-- Si ya existe un change con ese nombre, preguntar si continuar o crear uno nuevo
-- Verificar que cada artifact existe antes de pasar al siguiente
-- Crear la rama git DESPUÉS de que todos los artifacts estén completos — nunca antes
-- NUNCA crear la rama sin verificar si ya existe — usar `git branch --list` primero
+- The request that invoked this workflow authorizes planning only. Any implementation or apply instruction in that request does not carry forward. Do NOT implement the change, start the apply workflow, or edit project code during this workflow. After presenting the artifacts, stop and wait for a new user request to start the apply workflow
+- Create every artifact the apply phase transitively depends on, not just the ids listed in `apply.requires`
+- Always read dependency artifacts before creating a new one - re-read from disk, not from conversation memory (files may have changed since you last saw them)
+- Ask about ambiguities that would materially change scope, externally observable behavior, compatibility, or acceptance criteria; for minor details, make reasonable assumptions and record them
+- If a change with that name already exists, ask if user wants to continue it or create a new one
+- Verify each artifact file exists after writing before proceeding to next
+- Crear la rama git DESPUÉS de que todos los artifacts estén completos — nunca antes; usar `git branch --list` antes de crearla
+- El nombre de la tarea del gestor SIEMPRE debe coincidir con el formato de la rama git
+- Las subtareas se crean en el mismo orden que tasks.md y SOLO después de que la tarea principal existe
 - Si el gestor externo falla, loguear warning y continuar — no bloquear el flujo
-- El nombre de la tarea SIEMPRE debe coincidir con el formato de la rama git — nunca inventar un nombre distinto
-- Las subtareas deben crearse en el mismo orden que aparecen en tasks.md
-- Crear subtareas SOLO después de que la tarea principal existe — no en paralelo
