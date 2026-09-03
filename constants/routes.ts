@@ -1,6 +1,8 @@
 export const ROUTES = {
   AUTH: {
+    SELECT_MODE: "/select-mode",
     LOGIN: "/login",
+    PASSENGER_SOON: "/passenger-soon",
   },
   APP: {
     HOME: "/home",

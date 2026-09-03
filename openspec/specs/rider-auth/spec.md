@@ -76,7 +76,7 @@ El sistema SHALL leer la bandera de sesión del almacenamiento seguro al iniciar
 
 #### Scenario: App inicia sin sesión previa
 - **WHEN** la app arranca y no existe bandera de sesión (o `hasSession: false`) en el almacenamiento seguro
-- **THEN** el sistema navega a `(auth)/login`
+- **THEN** el sistema navega a la pantalla "Elegir modo" en vez de ir directo a `(auth)/login`
 
 #### Scenario: App inicia mientras se lee el almacenamiento seguro
 - **WHEN** la app arranca y la lectura del almacenamiento seguro todavía no completó
