@@ -11,7 +11,7 @@ import { setUnauthorizedHandler } from "@/lib/axios";
 
 setUnauthorizedHandler(() => {
   useAuthStore.getState().logout();
-  router.replace(ROUTES.AUTH.LOGIN);
+  router.replace(ROUTES.AUTH.LOGIN_PHONE);
 });
 
 // El splash se mantiene visible hasta que las fuentes del System Design están

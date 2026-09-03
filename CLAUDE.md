@@ -86,6 +86,13 @@ utils/            → utilidades puras
 - Interfaces para objetos, `type` para uniones
 - Tipos compartidos en `types/` de cada feature
 
+### Comentarios
+
+- Por defecto, **no escribir comentarios**. El nombre del archivo, del componente/función y de las props ya deben explicar el "qué".
+- Nada de JSDoc ni encabezados descriptivos en componentes, hooks, utils o stores.
+- Se permite un comentario **solo** cuando explica un "por qué" no evidente que, sin él, alguien rompería al editar: un workaround de plataforma, una decisión contraintuitiva, una restricción externa. Que sea de una línea.
+- Nunca comentar el "qué" ni parafrasear el código.
+
 ## Colores de estado — obligatorio
 
 La app usa colores de estado consistentes para identificar el estado de una orden, derivados del System Design de YoMeEncargo en Figma:

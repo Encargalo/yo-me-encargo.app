@@ -65,6 +65,13 @@ export const OrderStatusColors = {
   error: Palette.rojo,
 } as const;
 
+// Acento decorativo, NO derivado del System Design: solo para el borde animado
+// del botón "Registrarme como conductor". No usar como color de UI ni de estado.
+export const NeonAccent = {
+  coral: "#F83D25",
+  violet: "#7C3AED",
+} as const;
+
 // Gradiente de marca. Figma lo define a 135.93°, que en los vectores que espera
 // `LinearGradient` de expo-linear-gradient equivale a una diagonal de la esquina
 // superior izquierda a la inferior derecha.
