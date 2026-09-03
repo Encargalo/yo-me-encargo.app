@@ -9,5 +9,12 @@ export function getWithdrawalErrorMessage(status?: number): string {
   if (status === 401) {
     return "Tu sesión expiró. Vuelve a iniciar sesión.";
   }
+  // El retiro necesita la tasa BCV vigente para convertir el monto. Si el BCV
+  // no responde, el backend corta con 503 (`bcv_rate_unavailable`): es
+  // transitorio, así que el copy invita a reintentar en vez de sonar a fallo
+  // permanente.
+  if (status === 503) {
+    return "No pudimos obtener la tasa del día. Intenta en unos minutos.";
+  }
   return "No pudimos procesar tu retiro. Intenta de nuevo.";
 }

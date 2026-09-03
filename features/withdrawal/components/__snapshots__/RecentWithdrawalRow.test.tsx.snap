@@ -8,7 +8,7 @@ exports[`RecentWithdrawalRow retiro pendiente 1`] = `
     <Text
       className="text-[13px] font-semibold text-ink"
     >
-      18$
+      720Bs
     </Text>
     <Text
       className="text-[10.5px] text-label"

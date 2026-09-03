@@ -9,8 +9,12 @@ import type { TransactionsSummary } from "../utils/summarizeTransactions";
 export type BalanceStatus = "loading" | "refreshing" | "error" | "success";
 
 export interface UseBalanceReturn {
-  balance: number;
+  balanceBs: number;
+  balanceUsd: number;
+  bcvRate: number | null;
   zone: string;
+  // Mínimo de retiro vigente en Bs, tal como lo manda el backend.
+  withdrawalMinBs: number;
   transactions: Transaction[];
   summary: TransactionsSummary;
   status: BalanceStatus;
@@ -30,8 +34,11 @@ export interface UseBalanceReturn {
  * Ver design.md del change `balance-screen`, Decisión 1 y 5.
  */
 export function useBalance(): UseBalanceReturn {
-  const [balance, setBalance] = useState(0);
+  const [balanceBs, setBalanceBs] = useState(0);
+  const [balanceUsd, setBalanceUsd] = useState(0);
+  const [bcvRate, setBcvRate] = useState<number | null>(null);
   const [zone, setZone] = useState("");
+  const [withdrawalMinBs, setWithdrawalMinBs] = useState(0);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [status, setStatus] = useState<BalanceStatus>("loading");
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
@@ -44,8 +51,11 @@ export function useBalance(): UseBalanceReturn {
     setStatus(mode);
     try {
       const response = await getBalance();
-      setBalance(response.balance);
+      setBalanceBs(response.balanceBs);
+      setBalanceUsd(response.balanceUsd);
+      setBcvRate(response.bcvRate ?? null);
       setZone(response.zone);
+      setWithdrawalMinBs(response.withdrawalMinBs);
       setTransactions(response.transactions);
       setStatus("success");
       hasLoadedOnceRef.current = true;
@@ -82,8 +92,11 @@ export function useBalance(): UseBalanceReturn {
   );
 
   return {
-    balance,
+    balanceBs,
+    balanceUsd,
+    bcvRate,
     zone,
+    withdrawalMinBs,
     transactions,
     summary: summarizeTransactions(transactions),
     status,

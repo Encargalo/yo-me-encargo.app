@@ -16,13 +16,13 @@ beforeEach(() => {
 });
 
 describe("requestWithdrawal", () => {
-  it("mapea amount_withdrawn a amountWithdrawn", async () => {
-    mockedPost.mockResolvedValueOnce({ data: { amount_withdrawn: 24.5 } });
+  it("mapea amount_withdrawn (Bs) a amountWithdrawnBs", async () => {
+    mockedPost.mockResolvedValueOnce({ data: { amount_withdrawn: 980 } });
 
     const result = await requestWithdrawal();
 
     expect(mockedPost).toHaveBeenCalledWith("/riders/withdrawal");
-    expect(result).toEqual({ amountWithdrawn: 24.5 });
+    expect(result).toEqual({ amountWithdrawnBs: 980 });
   });
 
   it("propaga el error como AxiosError sin capturarlo", async () => {
@@ -37,12 +37,12 @@ describe("requestWithdrawal", () => {
 });
 
 describe("getMockRecentWithdrawals", () => {
-  it("devuelve el array mockeado con amount, date y status", () => {
+  it("devuelve el array mockeado con amountBs, date y status", () => {
     const result = getMockRecentWithdrawals();
 
     expect(result).toEqual([
-      { amount: 30, date: "2026-06-28T12:00:00Z", status: "processed" },
-      { amount: 18, date: "2026-06-30T12:00:00Z", status: "pending" },
+      { amountBs: 1200, date: "2026-06-28T12:00:00Z", status: "processed" },
+      { amountBs: 720, date: "2026-06-30T12:00:00Z", status: "pending" },
     ]);
   });
 });

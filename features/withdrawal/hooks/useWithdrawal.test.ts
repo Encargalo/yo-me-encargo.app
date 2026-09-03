@@ -28,7 +28,7 @@ describe("useWithdrawal", () => {
   });
 
   it("envío exitoso pasa por submitting y termina en success con el monto", async () => {
-    let resolveRequest: (value: { amountWithdrawn: number }) => void = () => {};
+    let resolveRequest: (value: { amountWithdrawnBs: number }) => void = () => {};
     mockedRequestWithdrawal.mockReturnValueOnce(
       new Promise((resolve) => {
         resolveRequest = resolve;
@@ -43,11 +43,11 @@ describe("useWithdrawal", () => {
     expect(result.current.status).toBe("submitting");
 
     await act(async () => {
-      resolveRequest({ amountWithdrawn: 24.5 });
+      resolveRequest({ amountWithdrawnBs: 24.5 });
     });
 
     expect(result.current.status).toBe("success");
-    expect(result.current.amountWithdrawn).toBe(24.5);
+    expect(result.current.amountWithdrawnBs).toBe(24.5);
   });
 
   it("error 422 → mensaje de saldo insuficiente", async () => {

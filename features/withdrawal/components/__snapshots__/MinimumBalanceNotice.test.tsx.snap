@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MinimumBalanceNotice muestra el umbral mínimo formateado 1`] = `
+exports[`MinimumBalanceNotice por debajo del mínimo muestra cuánto falta 1`] = `
 <View
   className="flex-row items-start gap-2 rounded-[12px] border border-hair bg-block px-3.5 py-3"
 >
@@ -12,14 +12,15 @@ exports[`MinimumBalanceNotice muestra el umbral mínimo formateado 1`] = `
   <Text
     className="flex-1 text-[12px] leading-[17px] text-body"
   >
-    Disponible para retiro a partir de
-     
+    Te faltan 
     <Text
       className="font-bold"
     >
-      0.1$
+      350Bs
     </Text>
-    . Por debajo de ese monto el botón permanece deshabilitado.
+     para poder retirar. El mínimo es 
+    600Bs
+    .
   </Text>
 </View>
 `;

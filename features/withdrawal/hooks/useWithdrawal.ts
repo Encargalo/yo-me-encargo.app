@@ -9,7 +9,7 @@ export type WithdrawalStatus = "idle" | "submitting" | "success" | "error";
 
 export interface UseWithdrawalReturn {
   status: WithdrawalStatus;
-  amountWithdrawn: number | null;
+  amountWithdrawnBs: number | null;
   errorMessage: string | null;
   recentWithdrawals: RecentWithdrawal[];
   submit: () => void;
@@ -23,7 +23,7 @@ export interface UseWithdrawalReturn {
  */
 export function useWithdrawal(): UseWithdrawalReturn {
   const [status, setStatus] = useState<WithdrawalStatus>("idle");
-  const [amountWithdrawn, setAmountWithdrawn] = useState<number | null>(null);
+  const [amountWithdrawnBs, setAmountWithdrawnBs] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [recentWithdrawals] = useState<RecentWithdrawal[]>(() => getMockRecentWithdrawals());
 
@@ -32,7 +32,7 @@ export function useWithdrawal(): UseWithdrawalReturn {
     setErrorMessage(null);
     void requestWithdrawal()
       .then((response) => {
-        setAmountWithdrawn(response.amountWithdrawn);
+        setAmountWithdrawnBs(response.amountWithdrawnBs);
         setStatus("success");
       })
       .catch((error: AxiosError) => {
@@ -43,7 +43,7 @@ export function useWithdrawal(): UseWithdrawalReturn {
 
   return {
     status,
-    amountWithdrawn,
+    amountWithdrawnBs,
     errorMessage,
     recentWithdrawals,
     submit,

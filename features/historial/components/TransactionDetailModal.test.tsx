@@ -7,7 +7,8 @@ import { TransactionDetailModal } from "./TransactionDetailModal";
 function makeTransaction(overrides: Partial<Transaction> = {}): Transaction {
   return {
     id: "tx-1",
-    amount: 8.5,
+    amountBs: 340,
+    amountUsd: 8.5,
     createdAt: "2026-06-30T14:20:00Z",
     distanceKm: 3.1,
     movementType: "ride_bank",
@@ -30,7 +31,8 @@ describe("TransactionDetailModal", () => {
     );
 
     expect(getByText("Carrera")).toBeTruthy();
-    expect(getByText("+8.5$")).toBeTruthy();
+    expect(getByText("+340Bs")).toBeTruthy();
+    expect(getByText("Ref. 8.5$")).toBeTruthy();
     expect(getByText("30 jun")).toBeTruthy();
     expect(getByText("3.1 km")).toBeTruthy();
     expect(queryByText(/efectivo/)).toBeNull();

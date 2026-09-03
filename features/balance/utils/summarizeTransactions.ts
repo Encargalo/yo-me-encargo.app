@@ -1,8 +1,8 @@
 import type { Transaction } from "../types/balance.types";
 
 export interface TransactionsSummary {
-  earned: number; // suma de montos positivos
-  deducted: number; // suma absoluta de montos negativos
+  earned: number; // suma de montos positivos, en Bs
+  deducted: number; // suma absoluta de montos negativos, en Bs
 }
 
 // Desglose Ganado/Descontado calculado sobre los movimientos ya visibles en
@@ -11,11 +11,11 @@ export interface TransactionsSummary {
 export function summarizeTransactions(transactions: Transaction[]): TransactionsSummary {
   return transactions.reduce<TransactionsSummary>(
     (summary, tx) => {
-      if (tx.amount > 0) {
-        return { ...summary, earned: summary.earned + tx.amount };
+      if (tx.amountBs > 0) {
+        return { ...summary, earned: summary.earned + tx.amountBs };
       }
-      if (tx.amount < 0) {
-        return { ...summary, deducted: summary.deducted - tx.amount };
+      if (tx.amountBs < 0) {
+        return { ...summary, deducted: summary.deducted - tx.amountBs };
       }
       return summary;
     },

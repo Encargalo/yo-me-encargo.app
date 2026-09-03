@@ -1,10 +1,11 @@
 import type { Transaction } from "../types/balance.types";
 import { summarizeTransactions } from "./summarizeTransactions";
 
-function tx(amount: number): Transaction {
+function tx(amountBs: number): Transaction {
   return {
-    id: `tx-${amount}`,
-    amount,
+    id: `tx-${amountBs}`,
+    amountBs,
+    amountUsd: amountBs / 40,
     createdAt: "2026-06-30T10:00:00Z",
     movementType: "Movimiento",
   };

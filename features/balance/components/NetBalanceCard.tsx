@@ -3,19 +3,21 @@ import { Text, View } from "react-native";
 import { OrderStatusColors } from "@/constants/theme";
 
 import type { TransactionsSummary } from "../utils/summarizeTransactions";
-import { formatAmount, formatSignedAmount } from "../utils/formatAmount";
+import { formatBs, formatRef, formatSignedBs } from "../utils/formatAmount";
 
 interface NetBalanceCardProps {
-  balance: number;
+  balanceBs: number;
+  balanceUsd: number;
   zone: string;
   summary: TransactionsSummary;
 }
 
 // Card hero de saldo (wireframe 06). Reusa OrderStatusColors.completed/.error
 // para el signo del monto en vez de introducir una paleta verde/rojo nueva —
-// ver design.md, Decisión 4.
-export function NetBalanceCard({ balance, zone, summary }: NetBalanceCardProps) {
-  const balanceColor = balance >= 0 ? OrderStatusColors.completed : OrderStatusColors.error;
+// ver design.md, Decisión 4. El saldo se muestra en Bs (moneda principal) con
+// el equivalente en USD como referencia debajo.
+export function NetBalanceCard({ balanceBs, balanceUsd, zone, summary }: NetBalanceCardProps) {
+  const balanceColor = balanceBs >= 0 ? OrderStatusColors.completed : OrderStatusColors.error;
 
   return (
     <View className="rounded-[18px] border border-hair bg-white p-5">
@@ -27,8 +29,9 @@ export function NetBalanceCard({ balance, zone, summary }: NetBalanceCardProps) 
       </View>
 
       <Text className="text-[38px] font-bold tracking-[-0.4px]" style={{ color: balanceColor }}>
-        {formatAmount(balance)}
+        {formatBs(balanceBs)}
       </Text>
+      <Text className="mt-0.5 text-[13px] text-label">{formatRef(balanceUsd)}</Text>
 
       <View className="mt-3 flex-row gap-[18px] border-t border-canvas pt-3">
         <View>
@@ -37,13 +40,13 @@ export function NetBalanceCard({ balance, zone, summary }: NetBalanceCardProps) 
             className="text-[14px] font-semibold"
             style={{ color: OrderStatusColors.completed }}
           >
-            {formatSignedAmount(summary.earned)}
+            {formatSignedBs(summary.earned)}
           </Text>
         </View>
         <View>
           <Text className="font-mono text-[9px] text-label">DESCONTADO</Text>
           <Text className="text-[14px] font-semibold" style={{ color: OrderStatusColors.error }}>
-            {formatSignedAmount(-summary.deducted)}
+            {formatSignedBs(-summary.deducted)}
           </Text>
         </View>
       </View>

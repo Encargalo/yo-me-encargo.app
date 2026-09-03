@@ -95,6 +95,8 @@ Establece una conexión WebSocket exclusiva para el rol Rider.
 
 Retorna el balance actual del rider, su zona de control y los últimos 10 movimientos.
 
+Desde `fd0bb7d` los montos se registran en bolívares con la tasa BCV congelada por movimiento: `balance_bs` / `amount_bs` son la moneda principal y `balance_usd` / `amount_usd` la referencia. Los campos planos `balance` y `amount` en USD ya no existen. `withdrawal_min_bs` es el mínimo de retiro vigente, recalculado con la tasa actual — no hardcodear un umbral en el front.
+
 **Parámetros:** Ninguno
 
 **Respuestas**
@@ -108,15 +110,21 @@ Retorna el balance actual del rider, su zona de control y los últimos 10 movimi
 **Ejemplo de respuesta 200:**
 ```json
 {
-  "balance": 0,
+  "balance_bs": 0,
+  "balance_usd": 0,
+  "bcv_rate": 0,
+  "withdrawal_min_bs": 0,
   "transactions": [
     {
-      "amount": 0,
+      "amount_bs": 0,
+      "amount_usd": 0,
+      "bcv_rate": 0,
       "created_at": "string",
       "distance_km": 0,
       "id": "string",
       "movement_type": "string",
       "order_id": "string",
+      "trip_id": "string",
       "payment_method": "string"
     }
   ],
@@ -154,12 +162,15 @@ Retorna el historial paginado de movimientos de balance del rider.
   "total": 0,
   "transactions": [
     {
-      "amount": 0,
+      "amount_bs": 0,
+      "amount_usd": 0,
+      "bcv_rate": 0,
       "created_at": "string",
       "distance_km": 0,
       "id": "string",
       "movement_type": "string",
       "order_id": "string",
+      "trip_id": "string",
       "payment_method": "string"
     }
   ]
@@ -171,7 +182,7 @@ Retorna el historial paginado de movimientos de balance del rider.
 ### `POST /riders/withdrawal`
 **Solicitar retiro de balance**
 
-El rider solicita retirar su balance acumulado. Requiere balance >= +$0.1.
+El rider solicita retirar su balance acumulado. El backend habilita el retiro vía `zone === "withdrawal_available"` en `GET /riders/balance`; el mínimo vigente viaja en `withdrawal_min_bs`. `amount_withdrawn` se devuelve en Bs.
 
 **Parámetros:** Ninguno
 
@@ -179,7 +190,8 @@ El rider solicita retirar su balance acumulado. Requiere balance >= +$0.1.
 
 | Código | Descripción | Ejemplo |
 |---|---|---|
-| 200 | OK | `{ "amount_withdrawn": 0 }` |
+| 200 | OK | `{ "amount_withdrawn": 0 }` (Bs) |
+| 503 | Tasa BCV no disponible (`bcv_rate_unavailable`) — transitorio, reintentar | `"string"` |
 | 401 | No autorizado | `"string"` |
 | 422 | Balance insuficiente para retiro | `"string"` |
 | 500 | Error interno | `"string"` |

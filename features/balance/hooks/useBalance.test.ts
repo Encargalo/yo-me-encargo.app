@@ -28,7 +28,14 @@ function triggerFocus() {
 
 const mockedGetBalance = getBalance as jest.Mock;
 
-const sampleResponse = { balance: 24.5, zone: "normal", transactions: [] };
+const sampleResponse = {
+  balanceBs: 980,
+  balanceUsd: 24.5,
+  bcvRate: 40,
+  zone: "normal",
+  withdrawalMinBs: 600,
+  transactions: [],
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -43,8 +50,11 @@ describe("useBalance", () => {
     const { result } = await renderHook(() => useBalance());
 
     expect(result.current.status).toBe("success");
-    expect(result.current.balance).toBe(24.5);
+    expect(result.current.balanceBs).toBe(980);
+    expect(result.current.balanceUsd).toBe(24.5);
+    expect(result.current.bcvRate).toBe(40);
     expect(result.current.zone).toBe("normal");
+    expect(result.current.withdrawalMinBs).toBe(600);
   });
 
   it("error en carga inicial", async () => {
@@ -60,13 +70,13 @@ describe("useBalance", () => {
     const { result } = await renderHook(() => useBalance());
     expect(result.current.status).toBe("success");
 
-    mockedGetBalance.mockResolvedValueOnce({ ...sampleResponse, balance: 30 });
+    mockedGetBalance.mockResolvedValueOnce({ ...sampleResponse, balanceBs: 1200 });
     await act(async () => {
       triggerFocus();
     });
 
     expect(mockedGetBalance).toHaveBeenCalledTimes(2);
-    expect(result.current.balance).toBe(30);
+    expect(result.current.balanceBs).toBe(1200);
   });
 
   it("refresh() marca 'refreshing' sin volver a 'loading' cuando ya había datos", async () => {
@@ -87,10 +97,10 @@ describe("useBalance", () => {
     expect(result.current.status).toBe("refreshing");
 
     await act(async () => {
-      resolveSecond({ ...sampleResponse, balance: 50 });
+      resolveSecond({ ...sampleResponse, balanceBs: 2000 });
     });
 
     expect(result.current.status).toBe("success");
-    expect(result.current.balance).toBe(50);
+    expect(result.current.balanceBs).toBe(2000);
   });
 });

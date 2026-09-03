@@ -20,7 +20,7 @@ export function RecentWithdrawalsList({ withdrawals }: RecentWithdrawalsListProp
     <View className="overflow-hidden rounded-[14px] border border-hair bg-white">
       {withdrawals.map((withdrawal, index) => (
         <RecentWithdrawalRow
-          key={`${withdrawal.date}-${withdrawal.amount}`}
+          key={`${withdrawal.date}-${withdrawal.amountBs}`}
           withdrawal={withdrawal}
           isLast={index === withdrawals.length - 1}
         />

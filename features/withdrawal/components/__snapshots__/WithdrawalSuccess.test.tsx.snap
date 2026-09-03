@@ -73,7 +73,7 @@ exports[`WithdrawalSuccess muestra el monto retirado y llama a onDismiss 1`] = `
     <Text
       className="text-[28px] font-bold text-ink"
     >
-      24.5$
+      980Bs
     </Text>
   </View>
   <View

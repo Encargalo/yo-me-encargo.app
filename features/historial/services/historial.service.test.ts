@@ -25,7 +25,8 @@ describe("getTransactions", () => {
         transactions: [
           {
             id: "tx-1",
-            amount: 8.5,
+            amount_bs: 340,
+            amount_usd: 8.5,
             created_at: "2026-06-30T14:20:00Z",
             distance_km: 3.1,
             movement_type: "ride_bank",
@@ -48,7 +49,8 @@ describe("getTransactions", () => {
       transactions: [
         {
           id: "tx-1",
-          amount: 8.5,
+          amountBs: 340,
+          amountUsd: 8.5,
           createdAt: "2026-06-30T14:20:00Z",
           distanceKm: 3.1,
           movementType: "ride_bank",
@@ -88,7 +90,8 @@ describe("getTransactions", () => {
 function rawTransaction(id: string) {
   return {
     id,
-    amount: 1,
+    amount_bs: 40,
+    amount_usd: 1,
     created_at: "2026-06-30T14:20:00Z",
     movement_type: "ride_bank",
   };

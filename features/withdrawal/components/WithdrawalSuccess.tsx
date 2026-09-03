@@ -2,17 +2,17 @@ import LottieView from "lottie-react-native";
 import { Pressable, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 
-import { formatAmount } from "@/features/balance/utils/formatAmount";
+import { formatBs } from "@/features/balance/utils/formatAmount";
 
 interface WithdrawalSuccessProps {
-  amountWithdrawn: number;
+  amountWithdrawnBs: number;
   onDismiss: () => void;
 }
 
 // Swap de estado dentro de la misma pantalla (no ruta/modal nueva), mismo
 // patrón que OrderCompletedSummary (order-completed-polish) — ver design.md,
 // Decisión 7. Reutiliza el mismo asset Lottie de éxito ya integrado ahí.
-export function WithdrawalSuccess({ amountWithdrawn, onDismiss }: WithdrawalSuccessProps) {
+export function WithdrawalSuccess({ amountWithdrawnBs, onDismiss }: WithdrawalSuccessProps) {
   return (
     <Animated.View
       entering={FadeIn.duration(350)}
@@ -36,7 +36,7 @@ export function WithdrawalSuccess({ amountWithdrawn, onDismiss }: WithdrawalSucc
 
       <View className="w-full items-center rounded-[14px] bg-block p-4">
         <Text className="font-mono text-[10px] text-label">MONTO RETIRADO</Text>
-        <Text className="text-[28px] font-bold text-ink">{formatAmount(amountWithdrawn)}</Text>
+        <Text className="text-[28px] font-bold text-ink">{formatBs(amountWithdrawnBs)}</Text>
       </View>
 
       <Pressable

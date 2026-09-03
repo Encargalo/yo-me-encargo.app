@@ -6,35 +6,43 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Neutrals, OrderStatusColors } from "@/constants/theme";
 import { BalanceSkeleton } from "@/features/balance/components/BalanceSkeleton";
 import { useBalance } from "@/features/balance/hooks/useBalance";
+import { WITHDRAWAL_AVAILABLE_ZONE } from "@/features/balance/types/balance.types";
 import { AvailableBalanceCard } from "@/features/withdrawal/components/AvailableBalanceCard";
 import { MinimumBalanceNotice } from "@/features/withdrawal/components/MinimumBalanceNotice";
 import { RecentWithdrawalsList } from "@/features/withdrawal/components/RecentWithdrawalsList";
 import { WithdrawalSuccess } from "@/features/withdrawal/components/WithdrawalSuccess";
 import { useWithdrawal } from "@/features/withdrawal/hooks/useWithdrawal";
-import { MIN_WITHDRAWAL_BALANCE } from "@/features/withdrawal/types/withdrawal.types";
 
 // Pantalla real de Solicitud de retiro (wireframe 07/07b), reemplaza el stub
 // dejado por `balance-screen`. Ver design.md del change `withdrawal-screen`.
 export default function Withdrawal() {
   const insets = useSafeAreaInsets();
-  const { balance, status: balanceStatus, hasLoadedOnce, refetch: refetchBalance } = useBalance();
+  const {
+    balanceBs,
+    balanceUsd,
+    zone,
+    withdrawalMinBs,
+    status: balanceStatus,
+    hasLoadedOnce,
+    refetch: refetchBalance,
+  } = useBalance();
   const {
     status: withdrawalStatus,
-    amountWithdrawn,
+    amountWithdrawnBs,
     errorMessage,
     recentWithdrawals,
     submit,
   } = useWithdrawal();
 
-  if (withdrawalStatus === "success" && amountWithdrawn != null) {
+  if (withdrawalStatus === "success" && amountWithdrawnBs != null) {
     return (
       <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
-        <WithdrawalSuccess amountWithdrawn={amountWithdrawn} onDismiss={() => router.back()} />
+        <WithdrawalSuccess amountWithdrawnBs={amountWithdrawnBs} onDismiss={() => router.back()} />
       </View>
     );
   }
 
-  const canWithdraw = balance >= MIN_WITHDRAWAL_BALANCE;
+  const canWithdraw = zone === WITHDRAWAL_AVAILABLE_ZONE;
   const isSubmitting = withdrawalStatus === "submitting";
 
   return (
@@ -98,8 +106,8 @@ export default function Withdrawal() {
               </Pressable>
             ) : null}
 
-            <AvailableBalanceCard balance={balance} />
-            <MinimumBalanceNotice />
+            <AvailableBalanceCard balanceBs={balanceBs} balanceUsd={balanceUsd} />
+            <MinimumBalanceNotice withdrawalMinBs={withdrawalMinBs} balanceBs={balanceBs} />
 
             <Text className="font-mono text-[10px] tracking-[1px] text-label">
               RETIROS RECIENTES
