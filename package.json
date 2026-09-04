@@ -32,7 +32,7 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "axios": "^1.13.6",
-    "babel-preset-expo": "~54.0.10",
+    "babel-preset-expo": "~57.0.9",
     "encargalo-icons": "^0.1.0",
     "expo": "~54.0.37",
     "expo-constants": "~18.0.14",
