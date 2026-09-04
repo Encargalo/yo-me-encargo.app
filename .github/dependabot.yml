@@ -9,6 +9,24 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    # Estos paquetes los fija Expo SDK 54: se actualizan con `npx expo install`
+    # al subir de SDK, nunca a la última versión publicada de forma suelta.
+    ignore:
+      - dependency-name: "expo"
+      - dependency-name: "expo-*"
+      - dependency-name: "@expo/*"
+      - dependency-name: "react"
+      - dependency-name: "react-dom"
+      - dependency-name: "react-test-renderer"
+      - dependency-name: "react-native"
+      - dependency-name: "react-native-*"
+      - dependency-name: "@react-native/*"
+      - dependency-name: "@react-navigation/*"
+      - dependency-name: "babel-preset-expo"
+      - dependency-name: "jest-expo"
+      - dependency-name: "eslint-config-expo"
+      - dependency-name: "metro"
+      - dependency-name: "metro-*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
