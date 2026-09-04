@@ -2,7 +2,7 @@ import { ChevronDown, ChevronUp } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
-import { Neutrals } from "@/constants/theme";
+import { Colors } from "@/constants/theme";
 
 import type { OrderItem, OrderItemOption } from "../types/order.types";
 
@@ -28,18 +28,20 @@ export function OrderItemsList({ items }: OrderItemsListProps) {
   if (items.length === 0) return null;
 
   return (
-    <View className="mt-2 border-t border-hair pt-2.5">
+    <View className="mt-2 border-t border-borde-suave pt-2.5">
       <Pressable
         onPress={() => setExpanded((v) => !v)}
         className="flex-row items-center justify-between"
         accessibilityRole="button"
         accessibilityLabel="Ver productos del pedido"
       >
-        <Text className="text-[14px] font-semibold text-ink">Productos · {items.length}</Text>
+        <Text className="text-[14px] font-heading-semibold text-texto">
+          Productos · {items.length}
+        </Text>
         {expanded ? (
-          <ChevronUp size={18} color={Neutrals.textMuted} />
+          <ChevronUp size={18} color={Colors.textoSuave} />
         ) : (
-          <ChevronDown size={18} color={Neutrals.textMuted} />
+          <ChevronDown size={18} color={Colors.textoSuave} />
         )}
       </Pressable>
 
@@ -50,11 +52,15 @@ export function OrderItemsList({ items }: OrderItemsListProps) {
             const additions = formatOptions("Adición", item.additions);
             return (
               <View key={item.id} className="gap-0.5">
-                <Text className="text-[14px] text-body">
+                <Text className="font-body text-[14px] text-texto-suave">
                   {item.amount}x {item.name}
                 </Text>
-                {flavors ? <Text className="text-[12px] text-muted">{flavors}</Text> : null}
-                {additions ? <Text className="text-[12px] text-muted">{additions}</Text> : null}
+                {flavors ? (
+                  <Text className="font-body text-[12px] text-texto-suave">{flavors}</Text>
+                ) : null}
+                {additions ? (
+                  <Text className="font-body text-[12px] text-texto-suave">{additions}</Text>
+                ) : null}
               </View>
             );
           })}

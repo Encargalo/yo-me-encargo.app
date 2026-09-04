@@ -3,7 +3,7 @@ import { Pressable, Text, View } from "react-native";
 import { OrderStatusColors } from "@/constants/theme";
 
 import type { Transaction } from "../types/balance.types";
-import { formatSignedAmount } from "../utils/formatAmount";
+import { formatSignedBs } from "../utils/formatAmount";
 import { getMovementTypeLabel } from "../utils/movementTypeLabel";
 
 interface TransactionRowProps {
@@ -25,7 +25,7 @@ function formatDate(iso: string): string | null {
 
 export function TransactionRow({ transaction, isLast, onPress }: TransactionRowProps) {
   const amountColor =
-    transaction.amount >= 0 ? OrderStatusColors.completed : OrderStatusColors.error;
+    transaction.amountBs >= 0 ? OrderStatusColors.completed : OrderStatusColors.error;
 
   // El método de pago no se muestra al rider — decisión del usuario tras ver
   // datos reales de staging (ver design.md, Decisión 8).
@@ -39,23 +39,23 @@ export function TransactionRow({ transaction, isLast, onPress }: TransactionRowP
   const rowContent = (
     <>
       <View className="flex-1 pr-3">
-        <Text className="text-[13px] font-semibold text-ink" numberOfLines={1}>
+        <Text className="text-[13px] font-heading-semibold text-texto" numberOfLines={1}>
           {getMovementTypeLabel(transaction.movementType)}
         </Text>
         {meta ? (
-          <Text className="text-[10.5px] text-label" numberOfLines={1}>
+          <Text className="font-body text-[10.5px] text-texto-suave" numberOfLines={1}>
             {meta}
           </Text>
         ) : null}
       </View>
-      <Text className="text-[14px] font-bold" style={{ color: amountColor }}>
-        {formatSignedAmount(transaction.amount)}
+      <Text className="text-[14px] font-heading-bold" style={{ color: amountColor }}>
+        {formatSignedBs(transaction.amountBs)}
       </Text>
     </>
   );
 
   const className = `flex-row items-center justify-between px-3.5 py-3 ${
-    isLast ? "" : "border-b border-canvas"
+    isLast ? "" : "border-b border-borde-suave"
   }`;
 
   if (onPress) {

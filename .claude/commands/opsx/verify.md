@@ -1,11 +1,16 @@
 ---
 name: "OPSX: Verify"
-description: Verify that the implementation of a change matches its artifacts (proposal, design, tasks)
-category: Workflow
-tags: [workflow, verify, experimental]
+description: "Verify implementation matches change artifacts before archiving"
+allowed-tools: Bash(openspec:*)
+category: "Workflow"
+tags: ["workflow", "verify", "experimental"]
 ---
 
-Verify that a change's implementation matches its planning artifacts.
+Verify that an implementation matches the change artifacts (specs, tasks, design).
+
+**On-demand only**: este chequeo se corre ÚNICAMENTE cuando el usuario lo pide de forma explícita (`/opsx:verify` o pedirlo por escrito). Ningún otro workflow (`/opsx:apply`, `/opsx:archive`, `/opsx:live`) debe invocarlo ni sugerirlo como paso estándar.
+
+**Store selection:** If the user names a store (a store is a standalone OpenSpec repo registered on this machine) or the work lives in one, run `openspec store list --json` to discover registered store ids, then pass `--store <id>` on the commands that read or write specs and changes (`new change`, `status`, `instructions`, `list`, `show`, `validate`, `archive`, `doctor`, `context`, `schemas`, `view`). Once selected, treat `--store <id>` as sticky for the rest of the workflow. Every unscoped example of those commands below is shorthand: before running it, append the flag. For example, run `openspec status --change "<name>" --json --store "<id>"`, not the unscoped form shown below. Other commands do not take the flag. Hints printed by commands already carry the flag; keep it on follow-ups. Without a store, commands act on the nearest local `openspec/` root.
 
 **Input**: Optionally specify a change name after `/opsx:verify` (e.g., `/opsx:verify add-auth`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
@@ -16,143 +21,153 @@ Verify that a change's implementation matches its planning artifacts.
    If a name is provided, use it. Otherwise:
    - Infer from conversation context if the user mentioned a change
    - Auto-select if only one active change exists
-   - If ambiguous, run `openspec list --json` to get available changes and use the **AskUserQuestion tool** to let the user select
+   - If ambiguous, run `openspec list --json` to get available changes and ask the user to select one
 
-   Always announce: "Verifying change: <name>"
+   When prompting, show changes that have implementation tasks (tasks artifact exists).
+   Include the schema used for each change if available.
+   Mark changes with incomplete tasks as "(In Progress)".
 
-2. **Check status and resolve paths**
+   Always announce: "Using change: <name>" and how to override (e.g., `/opsx:verify <other>`).
 
+2. **Check status to understand the schema**
    ```bash
    openspec status --change "<name>" --json
    ```
+   Parse the JSON to understand:
+   - `schemaName`: The workflow being used (e.g., "spec-driven")
+   - `planningHome`, `changeRoot`, `artifactPaths`, and `actionContext`: path and scope context
+   - Which artifacts exist for this change
 
-   Parse the JSON to get:
-   - `schemaName`: The workflow being used
-   - `changeRoot`: Root path of the change artifacts
-   - `artifactPaths`: Concrete paths for proposal, design, tasks, specs
-   - `artifacts`: List with their status (`done` or not)
+3. **Get planning context and load artifacts**
 
-3. **Read all planning artifacts**
+   ```bash
+   openspec instructions apply --change "<name>" --json
+   ```
 
-   Read every artifact that has `status: "done"`:
-   - `proposal.md` — intent, scope, what's in/out
-   - `design.md` — technical decisions, files affected, data flow
-   - `tasks.md` — full task list with completion status
-   - Delta specs under `specs/` — what was added/modified/removed
+   This returns the change directory and `contextFiles` (artifact ID -> array of concrete file paths). Read all available artifacts from `contextFiles`.
 
-4. **Read the relevant source files**
+4. **Initialize verification report structure**
 
-   From `design.md`, extract the list of files affected. Read each one.
-   If `design.md` is not specific enough, infer from task descriptions which files were changed.
+   Create a report structure with three dimensions:
+   - **Completeness**: Track tasks and spec coverage
+   - **Correctness**: Track requirement implementation and scenario coverage
+   - **Coherence**: Track design adherence and pattern consistency
 
-5. **Run verification across three dimensions**
+   Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
 
-   **A — Completitud (Completeness)**
-   - Count tasks marked `[x]` vs `[ ]` in `tasks.md`
-   - For each completed task, confirm the corresponding code change exists in the source files
-   - Check that every requirement in `proposal.md` (in-scope items) has a code counterpart
-   - Check that each scenario or acceptance criterion in delta specs is satisfied
+5. **Verify Completeness**
 
-   **B — Corrección (Correctness)**
-   - Verify the implementation matches the *intent* described in `proposal.md`
-   - Check that out-of-scope items from `proposal.md` were NOT implemented
-   - Verify that data types, interfaces, and function signatures in the code match what design.md specified
+   **Task Completion**:
+   - If `contextFiles.tasks` exists, read every file path in it
+   - Parse checkboxes: `- [ ]` (incomplete) vs `- [x]` (complete)
+   - Count complete vs total tasks
+   - If incomplete tasks exist:
+     - Add CRITICAL issue for each incomplete task
+     - Recommendation: "Complete task: <description>" or "Mark as done if already implemented"
 
-   **C — Coherencia (Coherence)**
-   - Verify decisions documented in `design.md` are reflected in the code
-     (e.g., if design.md says "use Reanimated 3 instead of Animated", confirm Animated is not used)
-   - Check that file locations match what design.md described
-   - Verify naming conventions from design.md are followed in the code
+   **Spec Coverage**:
+   - If delta specs exist in `contextFiles.specs`:
+     - Extract all requirements (marked with "### Requirement:")
+     - For each requirement:
+       - Search codebase for keywords related to the requirement
+       - Assess if implementation likely exists
+     - If requirements appear unimplemented:
+       - Add CRITICAL issue: "Requirement not found: <requirement name>"
+       - Recommendation: "Implement requirement X: <description>"
 
-6. **Build the verification report**
+6. **Verify Correctness**
 
-   For each issue found, classify it as:
-   - `PASS` — dimension verified, no issues
-   - `WARN` — minor deviation, low risk (e.g., extra helper added, naming slightly different)
-   - `FAIL` — clear mismatch between artifact and implementation
+   **Requirement Implementation Mapping**:
+   - For each requirement from delta specs:
+     - Search codebase for implementation evidence
+     - If found, note file paths and line ranges
+     - Assess if implementation matches requirement intent
+     - If divergence detected:
+       - Add WARNING: "Implementation may diverge from spec: <details>"
+       - Recommendation: "Review <file>:<lines> against requirement X"
 
-7. **Display the report**
+   **Scenario Coverage**:
+   - For each scenario in delta specs (marked with "#### Scenario:"):
+     - Check if conditions are handled in code
+     - Check if tests exist covering the scenario
+     - If scenario appears uncovered:
+       - Add WARNING: "Scenario not covered: <scenario name>"
+       - Recommendation: "Add test or implementation for scenario: <description>"
 
-**Output — Full Pass**
+7. **Verify Coherence**
 
-```
-## Verification Complete: <change-name>
+   **Design Adherence**:
+   - If `contextFiles.design` exists:
+     - Extract key decisions (look for sections like "Decision:", "Approach:", "Architecture:")
+     - Verify implementation follows those decisions
+     - If contradiction detected:
+       - Add WARNING: "Design decision not followed: <decision>"
+       - Recommendation: "Update implementation or revise design.md to match reality"
+   - If no design.md: Skip design adherence check, note "No design.md to verify against"
 
-**Schema:** <schema-name>
-**Tasks:** N/N complete
+   **Code Pattern Consistency**:
+   - Review new code for consistency with project patterns
+   - Check file naming, directory structure, coding style
+   - If significant deviations found:
+     - Add SUGGESTION: "Code pattern deviation: <details>"
+     - Recommendation: "Consider following project pattern: <example>"
 
-### A — Completitud
-PASS All N tasks implemented and verified in source files.
+8. **Generate Verification Report**
 
-### B — Corrección
-PASS Implementation matches the intent of proposal.md.
-PASS Out-of-scope items not present in code.
+   **Summary Scorecard**:
+   ```markdown
+   ## Verification Report: <change-name>
 
-### C — Coherencia
-PASS All design decisions reflected in code.
-PASS File locations and naming match design.md.
+   ### Summary
+   | Dimension    | Status           |
+   |--------------|------------------|
+   | Completeness | X/Y tasks, N reqs|
+   | Correctness  | M/N reqs covered |
+   | Coherence    | Followed/Issues  |
+   ```
 
-All checks passed. Ready to archive with `/opsx:archive`.
-```
+   **Issues by Priority**:
 
-**Output — With Issues**
+   1. **CRITICAL** (Must fix before archive):
+      - Incomplete tasks
+      - Missing requirement implementations
+      - Each with specific, actionable recommendation
 
-```
-## Verification Report: <change-name>
+   2. **WARNING** (Should fix):
+      - Spec/design divergences
+      - Missing scenario coverage
+      - Each with specific recommendation
 
-**Schema:** <schema-name>
-**Tasks:** N/M complete
+   3. **SUGGESTION** (Nice to fix):
+      - Pattern inconsistencies
+      - Minor improvements
+      - Each with specific recommendation
 
-### A — Completitud
-PASS Tasks 1–4 verified in source files.
-FAIL Task 5 marked [x] but no corresponding change found in <file>.
-WARN Task 6: implementation exists but differs from task description.
+   **Final Assessment**:
+   - If CRITICAL issues: "X critical issue(s) found. Fix before archiving."
+   - If only warnings: "No critical issues. Y warning(s) to consider. Ready for archive (with noted improvements)."
+   - If all clear: "All checks passed. Ready for archive."
 
-### B — Corrección
-PASS Implementation matches proposal intent.
-WARN <file> includes logic not mentioned in proposal.md (may be out of scope).
+**Verification Heuristics**
 
-### C — Coherencia
-FAIL design.md specifies useSharedValue for animations, but <file>:42 still uses Animated.Value.
-PASS File locations match design.md.
+- **Completeness**: Focus on objective checklist items (checkboxes, requirements list)
+- **Correctness**: Use keyword search, file path analysis, reasonable inference - don't require perfect certainty
+- **Coherence**: Look for glaring inconsistencies, don't nitpick style
+- **False Positives**: When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL
+- **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
 
----
-### Issues to Resolve (2 FAIL, 1 WARN)
+**Graceful Degradation**
 
-**FAIL 1** — Task 5 not found in source
-- Expected: change in <file> related to "<task description>"
-- Found: no matching change
-- Suggested fix: implement the task or remove it from tasks.md if intentionally skipped
+- If only tasks.md exists: verify task completion only, skip spec/design checks
+- If tasks + specs exist: verify completeness and correctness, skip design
+- If full artifacts: verify all three dimensions
+- Always note which checks were skipped and why
 
-**FAIL 2** — design.md decision not reflected
-- Decision: "use Reanimated 3 instead of Animated"
-- Violation: <file>:42 uses `Animated.Value`
-- Suggested fix: migrate line 42 to `useSharedValue`
+**Output Format**
 
-**WARN 1** — Extra logic in <file>
-- Not mentioned in proposal or design
-- Risk: low — may be fine, but review intentionality
-```
-
-**Output — Incomplete Tasks**
-
-```
-## Verification Report: <change-name>
-
-**Tasks:** N/M complete — M-N tasks still pending
-
-### Pending Tasks
-- [ ] Task description 1
-- [ ] Task description 2
-
-Run `/opsx:apply` to implement the remaining tasks before verifying.
-```
-
-**Guardrails**
-- Always read all available planning artifacts before verifying
-- Verify against the artifacts, not against your own opinion of what the code should look like
-- WARN for deviations that are minor or clearly intentional; FAIL for clear mismatches
-- Never auto-fix issues — report them and let the user decide
-- If tasks.md has no incomplete tasks but issues are found, still report them
-- If delta specs exist, use them as the primary correctness reference alongside proposal.md
-- Keep the report concise: group related issues, don't repeat the same issue multiple times
+Use clear markdown with:
+- Table for summary scorecard
+- Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
+- Code references in format: `file.ts:123`
+- Specific, actionable recommendations
+- No vague suggestions like "consider reviewing"

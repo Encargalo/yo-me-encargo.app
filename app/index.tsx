@@ -16,7 +16,7 @@ export default function Index() {
 
   useEffect(() => {
     if (!isHydrated) return;
-    router.replace(isAuthenticated ? ROUTES.APP.HOME : ROUTES.AUTH.LOGIN);
+    router.replace(isAuthenticated ? ROUTES.APP.HOME : ROUTES.AUTH.SELECT_MODE);
   }, [isHydrated, isAuthenticated]);
 
   return (

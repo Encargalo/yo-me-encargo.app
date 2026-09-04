@@ -5,7 +5,10 @@
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
+    "android:dev": "APP_VARIANT=development expo run:android",
+    "android:apk": "APP_VARIANT=development npx expo prebuild --platform android && cd android && ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a",
     "ios": "expo run:ios",
+    "ios:dev": "APP_VARIANT=development expo run:ios",
     "web": "expo start --web",
     "lint": "eslint .",
     "test": "jest",
@@ -30,11 +33,13 @@
     "@react-navigation/native": "^7.1.8",
     "axios": "^1.13.6",
     "babel-preset-expo": "~54.0.10",
+    "encargalo-icons": "^0.1.0",
     "expo": "~54.0.37",
     "expo-constants": "~18.0.14",
     "expo-font": "~14.0.11",
     "expo-haptics": "~15.0.8",
     "expo-image": "~3.0.11",
+    "expo-linear-gradient": "~15.0.8",
     "expo-linking": "~8.0.12",
     "expo-location": "~19.0.8",
     "expo-router": "~6.0.23",
@@ -82,6 +87,10 @@
     "preset": "jest-expo",
     "setupFiles": [
       "<rootDir>/jest.setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(.pnpm|react-native|@react-native|@react-native-community|expo|@expo|@expo-google-fonts|react-navigation|@react-navigation|@sentry/react-native|native-base|encargalo-icons))",
+      "/node_modules/react-native-reanimated/plugin/"
     ]
   }
 }

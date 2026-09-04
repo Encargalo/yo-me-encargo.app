@@ -1,6 +1,8 @@
 import { Phone } from "lucide-react-native";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
+import { Colors, FontFamilies } from "@/constants/theme";
+
 interface PhoneInputProps {
   value: string;
   onChangeText: (text: string) => void;
@@ -11,7 +13,7 @@ export function PhoneInput({ value, onChangeText, error }: PhoneInputProps) {
   return (
     <View>
       <View style={[styles.container, error && styles.containerError]}>
-        <Phone size={18} color="#9ca3af" />
+        <Phone size={18} color={Colors.textoTenue} />
         <Text style={styles.prefix}>+57</Text>
         <View style={styles.separator} />
         <TextInput
@@ -20,7 +22,7 @@ export function PhoneInput({ value, onChangeText, error }: PhoneInputProps) {
           onChangeText={onChangeText}
           keyboardType="phone-pad"
           placeholder="Número de teléfono"
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor={Colors.textoTenue}
           maxLength={10}
         />
       </View>
@@ -34,35 +36,38 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#d1d5db",
+    borderColor: Colors.borde,
     borderRadius: 4,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.superficie,
     height: 56,
     paddingHorizontal: 12,
     gap: 8,
   },
   containerError: {
-    borderColor: "#dc2626",
+    borderColor: Colors.error,
   },
   prefix: {
+    fontFamily: FontFamilies.body,
     fontSize: 15,
-    color: "#374151",
+    color: Colors.textoSuave,
   },
   separator: {
     width: 1,
     height: 24,
-    backgroundColor: "#d1d5db",
+    backgroundColor: Colors.borde,
     marginHorizontal: 4,
   },
   input: {
     flex: 1,
+    fontFamily: FontFamilies.body,
     fontSize: 15,
-    color: "#111827",
+    color: Colors.texto,
     padding: 0,
   },
   errorText: {
+    fontFamily: FontFamilies.body,
     fontSize: 12,
-    color: "#dc2626",
+    color: Colors.error,
     marginTop: 6,
   },
 });

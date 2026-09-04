@@ -52,28 +52,28 @@ exports[`WithdrawalSuccess muestra el monto retirado y llama a onDismiss 1`] = `
     className="items-center gap-1"
   >
     <Text
-      className="text-center text-[20px] font-bold tracking-[-0.3px] text-ink"
+      className="text-center text-[20px] font-heading-bold tracking-[-0.3px] text-texto"
     >
       Retiro solicitado
     </Text>
     <Text
-      className="text-center text-[13px] text-muted"
+      className="font-body text-center text-[13px] text-texto-suave"
     >
       Procesaremos tu solicitud en las próximas horas.
     </Text>
   </View>
   <View
-    className="w-full items-center rounded-[14px] bg-block p-4"
+    className="w-full items-center rounded-[14px] bg-fondo p-4"
   >
     <Text
-      className="font-mono text-[10px] text-label"
+      className="font-mono text-[10px] text-texto-suave"
     >
       MONTO RETIRADO
     </Text>
     <Text
-      className="text-[28px] font-bold text-ink"
+      className="text-[28px] font-heading-bold text-texto"
     >
-      24.5$
+      3.200Bs
     </Text>
   </View>
   <View
@@ -95,7 +95,7 @@ exports[`WithdrawalSuccess muestra el monto retirado y llama a onDismiss 1`] = `
       }
     }
     accessible={true}
-    className="h-[50px] w-full items-center justify-center rounded-[13px] bg-ink"
+    className="h-[50px] w-full items-center justify-center rounded-[13px] bg-marca"
     collapsable={false}
     focusable={true}
     onBlur={[Function]}
@@ -109,7 +109,7 @@ exports[`WithdrawalSuccess muestra el monto retirado y llama a onDismiss 1`] = `
     onStartShouldSetResponder={[Function]}
   >
     <Text
-      className="text-[15px] font-bold text-white"
+      className="text-[15px] font-heading-bold text-white"
     >
       Entendido
     </Text>

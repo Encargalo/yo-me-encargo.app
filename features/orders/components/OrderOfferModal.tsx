@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 
+import { OrderStatusColors } from "@/constants/theme";
+
 import { OFFER_TIMEOUT_SECONDS } from "../store/useOffersStore";
 import type { ActiveOrder } from "../types/order.types";
 import { CountdownRing } from "./CountdownRing";
@@ -68,17 +70,20 @@ export function OrderOfferModal({
       }}
     >
       <View className="flex-1 justify-end bg-black/55">
-        <View className="rounded-t-[28px] bg-card px-6 pb-9 pt-5">
+        <View className="rounded-t-[28px] bg-superficie px-6 pb-9 pt-5">
           {/* Temporizador regresivo */}
           <View className="items-center">
             <CountdownRing secondsLeft={secondsLeft} totalSeconds={OFFER_TIMEOUT_SECONDS} />
           </View>
 
           {/* Restaurante */}
-          <Text className="mt-4 font-mono text-[11px] tracking-[1.4px] text-label">
+          <Text className="mt-4 font-mono text-[11px] tracking-[1.4px] text-texto-suave">
             RESTAURANTE
           </Text>
-          <Text className="mt-1 text-[24px] font-bold tracking-[-0.5px] text-ink" numberOfLines={2}>
+          <Text
+            className="mt-1 text-[24px] font-heading-bold tracking-[-0.5px] text-texto"
+            numberOfLines={2}
+          >
             {title}
           </Text>
 
@@ -88,28 +93,30 @@ export function OrderOfferModal({
               <View
                 className="mt-0.5 h-[22px] w-[22px] items-center justify-center border border-white"
                 style={{
-                  backgroundColor: "#3b82f6",
+                  backgroundColor: OrderStatusColors.enroute,
                   borderRadius: 11,
                   borderBottomRightRadius: 2,
                 }}
               >
-                <Text className="text-[11px] font-bold text-white">B</Text>
+                <Text className="text-[11px] font-heading-bold text-white">B</Text>
               </View>
               <View className="flex-1">
-                <Text className="text-[14px] text-body" numberOfLines={2}>
+                <Text className="font-body text-[14px] text-texto-suave" numberOfLines={2}>
                   {address}
                 </Text>
                 {distanceEta ? (
-                  <Text className="mt-0.5 font-mono text-[12px] text-muted">{distanceEta}</Text>
+                  <Text className="mt-0.5 font-mono text-[12px] text-texto-suave">
+                    {distanceEta}
+                  </Text>
                 ) : null}
               </View>
             </View>
           ) : null}
 
           {/* Comisión — el dato que decide */}
-          <View className="mt-5 flex-row items-center justify-between rounded-[14px] bg-block px-4 py-4">
-            <Text className="text-[15px] font-semibold text-body">Comisión</Text>
-            <Text className="text-[30px] font-bold tracking-[-0.5px] text-ink">
+          <View className="mt-5 flex-row items-center justify-between rounded-[14px] bg-fondo px-4 py-4">
+            <Text className="text-[15px] font-heading-semibold text-texto-suave">Comisión</Text>
+            <Text className="text-[30px] font-heading-bold tracking-[-0.5px] text-texto">
               {formatUsd(offer.deliveryFee)}
             </Text>
           </View>
@@ -119,22 +126,22 @@ export function OrderOfferModal({
             <Pressable
               onPress={handleReject}
               disabled={submitting}
-              className="h-[56px] flex-1 items-center justify-center rounded-[14px] border-[1.5px] border-line bg-white"
+              className="h-[56px] flex-1 items-center justify-center rounded-[14px] border-[1.5px] border-borde bg-superficie"
               style={submitting ? { opacity: 0.5 } : undefined}
             >
-              <Text className="text-[16px] font-semibold text-body">Rechazar</Text>
+              <Text className="text-[16px] font-heading-semibold text-texto-suave">Rechazar</Text>
             </Pressable>
             <Pressable
               onPress={handleAccept}
               disabled={submitting}
-              className="h-[56px] items-center justify-center rounded-[14px] bg-ink"
+              className="h-[56px] items-center justify-center rounded-[14px] bg-marca"
               style={[{ flexGrow: 1.3, flexBasis: 0 }, submitting && { opacity: 0.5 }]}
             >
-              <Text className="text-[16px] font-bold text-white">Aceptar</Text>
+              <Text className="text-[16px] font-heading-bold text-white">Aceptar</Text>
             </Pressable>
           </View>
 
-          <Text className="mt-3 text-center font-mono text-[10px] tracking-[1px] text-placeholder">
+          <Text className="mt-3 text-center font-mono text-[10px] tracking-[1px] text-texto-tenue">
             ZONA DEL PULGAR · ACCIONES GRANDES LADO A LADO
           </Text>
         </View>

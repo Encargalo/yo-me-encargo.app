@@ -2,16 +2,16 @@
 
 exports[`RecentWithdrawalRow retiro pendiente 1`] = `
 <View
-  className="flex-row items-center justify-between px-3.5 py-3 border-b border-canvas"
+  className="flex-row items-center justify-between px-3.5 py-3 border-b border-borde-suave"
 >
   <View>
     <Text
-      className="text-[13px] font-semibold text-ink"
+      className="text-[13px] font-heading-semibold text-texto"
     >
-      18$
+      720Bs
     </Text>
     <Text
-      className="text-[10.5px] text-label"
+      className="font-body text-[10.5px] text-texto-suave"
     >
       30 jun
     </Text>
@@ -20,15 +20,15 @@ exports[`RecentWithdrawalRow retiro pendiente 1`] = `
     className="rounded-full border px-2.5 py-[3px]"
     style={
       {
-        "borderColor": "#f59e0b",
+        "borderColor": "#f7aa28",
       }
     }
   >
     <Text
-      className="text-[10px] font-semibold"
+      className="text-[10px] font-heading-semibold"
       style={
         {
-          "color": "#f59e0b",
+          "color": "#f7aa28",
         }
       }
     >

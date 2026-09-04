@@ -5,29 +5,29 @@ Pantalla de Balance del rider: obtención y presentación del saldo neto, la zon
 ## Requirements
 
 ### Requirement: Pantalla de Balance muestra el saldo neto y la zona del rider
-La pantalla de Balance SHALL obtener los datos de `GET /riders/balance` y presentar el saldo neto en tamaño grande junto con un badge de la zona del rider (`zone`). El saldo SHALL mostrarse en color verde (`OrderStatusColors.completed`) cuando sea mayor o igual a cero, y en rojo (`OrderStatusColors.error`) cuando sea negativo.
+La pantalla de Balance SHALL obtener los datos de `GET /riders/balance` y presentar el saldo neto en bolívares (`balance_bs`) en tamaño grande, con el equivalente en dólares (`balance_usd`) como subtítulo referencial (formato `Ref. N$`), junto a un badge de la zona del rider (`zone`). El color del saldo SHALL decidirse sobre `balance_bs`: verde (`OrderStatusColors.completed`) cuando sea mayor o igual a cero, rojo (`OrderStatusColors.error`) cuando sea negativo. El saldo en Bs SHALL NOT mostrarse con el símbolo `$`.
 
 #### Scenario: Saldo positivo o cero
-- **WHEN** `GET /riders/balance` responde con `balance >= 0`
-- **THEN** la pantalla muestra el monto en verde junto al badge de zona
+- **WHEN** `GET /riders/balance` responde con `balance_bs >= 0`
+- **THEN** la pantalla muestra el monto en Bs en verde, con `balance_usd` como subtítulo referencial y el badge de zona
 
 #### Scenario: Saldo negativo
-- **WHEN** `GET /riders/balance` responde con `balance < 0`
-- **THEN** la pantalla muestra el monto en rojo junto al badge de zona
+- **WHEN** `GET /riders/balance` responde con `balance_bs < 0`
+- **THEN** la pantalla muestra el monto en Bs en rojo, con `balance_usd` como subtítulo referencial y el badge de zona
 
 ### Requirement: Desglose Ganado vs. Descontado
-La pantalla SHALL mostrar un desglose "Ganado" (suma de los montos positivos) y "Descontado" (suma de los montos negativos, en valor absoluto) calculado a partir de los movimientos recibidos en la misma respuesta de `GET /riders/balance`.
+La pantalla SHALL mostrar un desglose "Ganado" (suma de los `amount_bs` positivos) y "Descontado" (suma absoluta de los `amount_bs` negativos) calculado a partir de los movimientos recibidos en la misma respuesta de `GET /riders/balance`, expresado en bolívares.
 
 #### Scenario: Movimientos mixtos
-- **WHEN** la respuesta trae movimientos con montos positivos y negativos
-- **THEN** "Ganado" muestra la suma de los positivos y "Descontado" la suma absoluta de los negativos, cada uno con su color (verde/rojo)
+- **WHEN** la respuesta trae movimientos con `amount_bs` positivos y negativos
+- **THEN** "Ganado" muestra la suma en Bs de los positivos y "Descontado" la suma absoluta en Bs de los negativos, cada uno con su color (verde/rojo)
 
 ### Requirement: Lista de últimos movimientos
-La pantalla SHALL listar los movimientos devueltos por `GET /riders/balance` (hasta 10), mostrando por cada uno: una etiqueta legible derivada de `movement_type` (nunca el slug crudo del backend), monto con signo (verde si positivo, rojo si negativo), fecha (`created_at`) y distancia (`distance_km`, si está presente). El método de pago (`payment_method`) SHALL NOT mostrarse — no es información relevante para el rider.
+La pantalla SHALL listar los movimientos devueltos por `GET /riders/balance` (hasta 10), mostrando por cada uno: una etiqueta legible derivada de `movement_type` (nunca el slug crudo del backend), monto en bolívares (`amount_bs`) con signo (verde si positivo, rojo si negativo), fecha (`created_at`) y distancia (`distance_km`, si está presente). El método de pago (`payment_method`) SHALL NOT mostrarse — no es información relevante para el rider.
 
 #### Scenario: Movimiento con distancia
 - **WHEN** un movimiento trae `distance_km`
-- **THEN** la fila muestra la etiqueta del tipo, monto con signo, fecha y distancia, sin el método de pago aunque venga en la respuesta
+- **THEN** la fila muestra la etiqueta del tipo, monto en Bs con signo, fecha y distancia, sin el método de pago aunque venga en la respuesta
 
 #### Scenario: Movimiento sin distancia
 - **WHEN** un movimiento no trae `distance_km`
@@ -46,7 +46,7 @@ La pantalla SHALL listar los movimientos devueltos por `GET /riders/balance` (ha
 - **THEN** la lista muestra un estado vacío explicativo en vez de una lista en blanco
 
 ### Requirement: Estados de carga, recarga y error
-La pantalla SHALL mostrar un skeleton que replica el layout real (card hero + filas de movimientos) durante la carga inicial, SHALL permitir recargar manualmente con un gesto de pull-to-refresh, y SHALL mostrar un mensaje de error específico si la petición falla, con una acción para reintentar.
+La pantalla SHALL mostrar un skeleton que replica el layout real (card hero + filas de movimientos) durante la carga inicial, SHALL permitir recargar manualmente con un gesto de pull-to-refresh, y SHALL mostrar un mensaje de error específico si la petición falla, con una acción para reintentar. Una respuesta `200` con forma inesperada (sin `balance_bs` numérico o sin `transactions` como arreglo) SHALL tratarse como un error de carga — con su mensaje y acción de reintento — y NEVER como una excepción que rompa el render de la pantalla.
 
 #### Scenario: Carga inicial
 - **WHEN** la pantalla se monta y la petición a `GET /riders/balance` está en curso
@@ -63,6 +63,10 @@ La pantalla SHALL mostrar un skeleton que replica el layout real (card hero + fi
 #### Scenario: Error de red
 - **WHEN** `GET /riders/balance` falla (network error o 5xx)
 - **THEN** la pantalla muestra un mensaje de error con una acción para reintentar, sin dejar la pantalla en blanco
+
+#### Scenario: Respuesta 200 con forma inesperada
+- **WHEN** `GET /riders/balance` responde `200` pero el cuerpo no trae `balance_bs` numérico o `transactions` no es un arreglo
+- **THEN** la pantalla muestra el estado de error con acción de reintento, sin lanzar una excepción que rompa el render
 
 ### Requirement: Acceso a Solicitud de retiro y a Historial
 La pantalla SHALL mostrar un botón primario "Solicitar retiro" que navega a la ruta de Solicitud de retiro (`ROUTES.APP.WITHDRAWAL`), y un link secundario "Ver historial completo" que navega al tab Historial (`ROUTES.APP.HISTORIAL`).

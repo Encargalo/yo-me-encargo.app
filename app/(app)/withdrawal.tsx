@@ -3,7 +3,7 @@ import { ChevronLeft } from "lucide-react-native";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Neutrals, OrderStatusColors } from "@/constants/theme";
+import { Colors, OrderStatusColors } from "@/constants/theme";
 import { BalanceSkeleton } from "@/features/balance/components/BalanceSkeleton";
 import { useBalance } from "@/features/balance/hooks/useBalance";
 import { AvailableBalanceCard } from "@/features/withdrawal/components/AvailableBalanceCard";
@@ -11,13 +11,20 @@ import { MinimumBalanceNotice } from "@/features/withdrawal/components/MinimumBa
 import { RecentWithdrawalsList } from "@/features/withdrawal/components/RecentWithdrawalsList";
 import { WithdrawalSuccess } from "@/features/withdrawal/components/WithdrawalSuccess";
 import { useWithdrawal } from "@/features/withdrawal/hooks/useWithdrawal";
-import { MIN_WITHDRAWAL_BALANCE } from "@/features/withdrawal/types/withdrawal.types";
 
 // Pantalla real de Solicitud de retiro (wireframe 07/07b), reemplaza el stub
 // dejado por `balance-screen`. Ver design.md del change `withdrawal-screen`.
 export default function Withdrawal() {
   const insets = useSafeAreaInsets();
-  const { balance, status: balanceStatus, hasLoadedOnce, refetch: refetchBalance } = useBalance();
+  const {
+    balanceBs,
+    balanceUsd,
+    zone,
+    withdrawalMinBs,
+    status: balanceStatus,
+    hasLoadedOnce,
+    refetch: refetchBalance,
+  } = useBalance();
   const {
     status: withdrawalStatus,
     amountWithdrawn,
@@ -28,26 +35,26 @@ export default function Withdrawal() {
 
   if (withdrawalStatus === "success" && amountWithdrawn != null) {
     return (
-      <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
+      <View className="flex-1 bg-fondo" style={{ paddingTop: insets.top }}>
         <WithdrawalSuccess amountWithdrawn={amountWithdrawn} onDismiss={() => router.back()} />
       </View>
     );
   }
 
-  const canWithdraw = balance >= MIN_WITHDRAWAL_BALANCE;
+  const canWithdraw = zone === "withdrawal_available";
   const isSubmitting = withdrawalStatus === "submitting";
 
   return (
-    <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
-      <View className="flex-row items-center gap-2 border-b border-hair px-2 py-3">
+    <View className="flex-1 bg-fondo" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center gap-2 border-b border-borde-suave px-2 py-3">
         <Pressable
           onPress={() => router.back()}
           className="h-9 w-9 items-center justify-center rounded-full"
           accessibilityLabel="Volver"
         >
-          <ChevronLeft size={20} color={Neutrals.ink} />
+          <ChevronLeft size={20} color={Colors.texto} />
         </Pressable>
-        <Text className="text-[15px] font-semibold text-ink">Solicitar retiro</Text>
+        <Text className="text-[15px] font-heading-semibold text-texto">Solicitar retiro</Text>
       </View>
 
       {balanceStatus === "loading" ? (
@@ -60,14 +67,14 @@ export default function Withdrawal() {
         </ScrollView>
       ) : balanceStatus === "error" && !hasLoadedOnce ? (
         <View className="flex-1 items-center justify-center gap-3 px-8">
-          <Text className="text-center text-[15px] font-semibold text-body">
+          <Text className="text-center text-[15px] font-heading-semibold text-texto-suave">
             No pudimos cargar tu saldo
           </Text>
           <Pressable
             onPress={refetchBalance}
-            className="h-11 items-center justify-center rounded-[12px] bg-ink px-5"
+            className="h-11 items-center justify-center rounded-[12px] bg-marca px-5"
           >
-            <Text className="text-[14px] font-semibold text-white">Reintentar</Text>
+            <Text className="text-[14px] font-heading-semibold text-white">Reintentar</Text>
           </Pressable>
         </View>
       ) : (
@@ -84,13 +91,13 @@ export default function Withdrawal() {
                 style={{ backgroundColor: `${OrderStatusColors.error}14` }}
               >
                 <Text
-                  className="flex-1 text-[12.5px] font-semibold"
+                  className="flex-1 text-[12.5px] font-heading-semibold"
                   style={{ color: OrderStatusColors.error }}
                 >
                   No pudimos actualizar tu saldo
                 </Text>
                 <Text
-                  className="text-[12.5px] font-bold"
+                  className="text-[12.5px] font-heading-bold"
                   style={{ color: OrderStatusColors.error }}
                 >
                   Reintentar
@@ -98,22 +105,22 @@ export default function Withdrawal() {
               </Pressable>
             ) : null}
 
-            <AvailableBalanceCard balance={balance} />
-            <MinimumBalanceNotice />
+            <AvailableBalanceCard balanceBs={balanceBs} balanceUsd={balanceUsd} />
+            <MinimumBalanceNotice withdrawalMinBs={withdrawalMinBs} balanceBs={balanceBs} />
 
-            <Text className="font-mono text-[10px] tracking-[1px] text-label">
+            <Text className="font-mono text-[10px] tracking-[1px] text-texto-suave">
               RETIROS RECIENTES
             </Text>
             <RecentWithdrawalsList withdrawals={recentWithdrawals} />
           </ScrollView>
 
           <View
-            className="border-t border-hair bg-white px-4 pt-3"
+            className="border-t border-borde-suave bg-superficie px-4 pt-3"
             style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}
           >
             {withdrawalStatus === "error" && errorMessage ? (
               <Text
-                className="mb-2 text-center text-[12.5px] font-semibold"
+                className="mb-2 text-center text-[12.5px] font-heading-semibold"
                 style={{ color: OrderStatusColors.error }}
               >
                 {errorMessage}
@@ -122,14 +129,14 @@ export default function Withdrawal() {
             <Pressable
               onPress={submit}
               disabled={!canWithdraw || isSubmitting}
-              className={`h-[52px] items-center justify-center rounded-[13px] bg-ink ${
+              className={`h-[52px] items-center justify-center rounded-[13px] bg-marca ${
                 !canWithdraw || isSubmitting ? "opacity-50" : ""
               }`}
             >
               {isSubmitting ? (
-                <ActivityIndicator color={Neutrals.white} />
+                <ActivityIndicator color={Colors.superficie} />
               ) : (
-                <Text className="text-[15px] font-bold text-white">Solicitar retiro</Text>
+                <Text className="text-[15px] font-heading-bold text-white">Solicitar retiro</Text>
               )}
             </Pressable>
           </View>

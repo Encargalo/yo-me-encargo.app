@@ -44,7 +44,7 @@ export default function Home() {
   }
 
   return (
-    <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-fondo" style={{ paddingTop: insets.top }}>
       <HomeHeader />
 
       {/* Zona superior (~48%): mapa en tiempo real. El mismo `OrdersMap` se
@@ -71,7 +71,7 @@ export default function Home() {
         animationType="slide"
         onRequestClose={() => setIsMapFullscreen(false)}
       >
-        <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top }}>
+        <View className="flex-1 bg-fondo" style={{ paddingTop: insets.top }}>
           <OrdersMap
             region={region}
             riderStatus={status}
@@ -97,10 +97,10 @@ export default function Home() {
             showsVerticalScrollIndicator={false}
           >
             <View className="mb-0.5 flex-row items-center justify-between">
-              <Text className="text-base font-bold tracking-[-0.3px] text-ink">
+              <Text className="text-base font-heading-bold tracking-[-0.3px] text-texto">
                 Órdenes activas
               </Text>
-              <Text className="font-mono text-[10px] tracking-[1px] text-label">
+              <Text className="font-mono text-[10px] tracking-[1px] text-texto-suave">
                 {orders.length}
               </Text>
             </View>

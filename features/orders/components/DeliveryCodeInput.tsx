@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { Neutrals, OrderStatusColors } from "@/constants/theme";
+import { Colors, OrderStatusColors } from "@/constants/theme";
 
 import { DELIVERY_CODE_LENGTH } from "../types/order.types";
 
@@ -37,7 +37,9 @@ export function DeliveryCodeInput({
 
   return (
     <View className="gap-3">
-      <Text className="font-mono text-[11px] tracking-[1.4px] text-label">CÓDIGO DEL CLIENTE</Text>
+      <Text className="font-mono text-[11px] tracking-[1.4px] text-texto-suave">
+        CÓDIGO DEL CLIENTE
+      </Text>
 
       {/* El TextInput real cubre exactamente las casillas (mismo tamaño,
           opacidad 0) — el toque cae directo sobre el input nativo, así el
@@ -49,12 +51,12 @@ export function DeliveryCodeInput({
           {digits.map((digit, i) => (
             <View
               key={i}
-              className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
+              className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-superficie"
               style={{
-                borderColor: error ? OrderStatusColors.error : Neutrals.borderInput,
+                borderColor: error ? OrderStatusColors.error : Colors.borde,
               }}
             >
-              <Text className="text-[20px] font-bold text-ink">{digit}</Text>
+              <Text className="text-[20px] font-heading-bold text-texto">{digit}</Text>
             </View>
           ))}
         </View>
@@ -72,7 +74,7 @@ export function DeliveryCodeInput({
       </View>
 
       {error ? (
-        <Text className="text-[13px] font-medium" style={{ color: OrderStatusColors.error }}>
+        <Text className="text-[13px] font-heading" style={{ color: OrderStatusColors.error }}>
           {error}
         </Text>
       ) : null}
@@ -86,7 +88,7 @@ export function DeliveryCodeInput({
           opacity: !complete || submitting ? 0.5 : 1,
         }}
       >
-        <Text className="text-[16px] font-bold text-white">Confirmar entrega</Text>
+        <Text className="text-[16px] font-heading-bold text-white">Confirmar entrega</Text>
       </Pressable>
     </View>
   );

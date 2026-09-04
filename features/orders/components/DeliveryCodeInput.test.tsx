@@ -1,5 +1,7 @@
 import { fireEvent, render } from "@testing-library/react-native";
 
+import { OrderStatusColors } from "@/constants/theme";
+
 import { DeliveryCodeInput } from "./DeliveryCodeInput";
 
 describe("DeliveryCodeInput", () => {
@@ -11,7 +13,7 @@ describe("DeliveryCodeInput", () => {
         onChangeCode={() => {}}
         onSubmit={onSubmit}
         submitting={false}
-        color="#3b82f6"
+        color={OrderStatusColors.enroute}
       />,
     );
 
@@ -24,7 +26,7 @@ describe("DeliveryCodeInput", () => {
         onChangeCode={() => {}}
         onSubmit={onSubmit}
         submitting={false}
-        color="#3b82f6"
+        color={OrderStatusColors.enroute}
         error="Código inválido"
       />,
     );

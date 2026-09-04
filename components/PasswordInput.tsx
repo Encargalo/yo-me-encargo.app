@@ -2,6 +2,8 @@ import { Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
+import { Colors, FontFamilies } from "@/constants/theme";
+
 interface PasswordInputProps {
   value: string;
   onChangeText: (text: string) => void;
@@ -26,7 +28,7 @@ export function PasswordInput({
           onChangeText={onChangeText}
           secureTextEntry={!visible}
           placeholder={placeholder}
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor={Colors.textoTenue}
           autoComplete="password"
         />
         <TouchableOpacity
@@ -34,7 +36,11 @@ export function PasswordInput({
           style={styles.toggle}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          {visible ? <EyeOff size={20} color="#9ca3af" /> : <Eye size={20} color="#9ca3af" />}
+          {visible ? (
+            <EyeOff size={20} color={Colors.textoTenue} />
+          ) : (
+            <Eye size={20} color={Colors.textoTenue} />
+          )}
         </TouchableOpacity>
       </View>
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -47,27 +53,29 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#d1d5db",
+    borderColor: Colors.borde,
     borderRadius: 4,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.superficie,
     height: 56,
     paddingHorizontal: 12,
   },
   containerError: {
-    borderColor: "#dc2626",
+    borderColor: Colors.error,
   },
   input: {
     flex: 1,
+    fontFamily: FontFamilies.body,
     fontSize: 15,
-    color: "#111827",
+    color: Colors.texto,
     padding: 0,
   },
   toggle: {
     paddingLeft: 8,
   },
   errorText: {
+    fontFamily: FontFamilies.body,
     fontSize: 12,
-    color: "#dc2626",
+    color: Colors.error,
     marginTop: 6,
   },
 });

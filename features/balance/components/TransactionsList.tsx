@@ -1,7 +1,7 @@
 import { Receipt } from "lucide-react-native";
 import { Text, View } from "react-native";
 
-import { Neutrals } from "@/constants/theme";
+import { Colors } from "@/constants/theme";
 
 import type { Transaction } from "../types/balance.types";
 import { TransactionRow } from "./TransactionRow";
@@ -13,12 +13,14 @@ interface TransactionsListProps {
 export function TransactionsList({ transactions }: TransactionsListProps) {
   if (transactions.length === 0) {
     return (
-      <View className="items-center justify-center rounded-[14px] border border-hair bg-white px-6 py-8">
-        <View className="mb-3 h-[52px] w-[52px] items-center justify-center rounded-full bg-block">
-          <Receipt size={24} color={Neutrals.placeholder} />
+      <View className="items-center justify-center rounded-[14px] border border-borde-suave bg-superficie px-6 py-8">
+        <View className="mb-3 h-[52px] w-[52px] items-center justify-center rounded-full bg-fondo">
+          <Receipt size={24} color={Colors.textoTenue} />
         </View>
-        <Text className="text-[15px] font-semibold text-body">Sin movimientos todavía</Text>
-        <Text className="mt-1 text-center text-[13px] text-muted">
+        <Text className="text-[15px] font-heading-semibold text-texto-suave">
+          Sin movimientos todavía
+        </Text>
+        <Text className="font-body mt-1 text-center text-[13px] text-texto-suave">
           Tus comisiones y descuentos aparecerán aquí.
         </Text>
       </View>
@@ -26,7 +28,7 @@ export function TransactionsList({ transactions }: TransactionsListProps) {
   }
 
   return (
-    <View className="overflow-hidden rounded-[14px] border border-hair bg-white">
+    <View className="overflow-hidden rounded-[14px] border border-borde-suave bg-superficie">
       {transactions.map((transaction, index) => (
         <TransactionRow
           key={transaction.id}

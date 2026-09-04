@@ -1,6 +1,8 @@
 import { act, fireEvent, render } from "@testing-library/react-native";
 import * as Linking from "expo-linking";
 
+import { OrderStatusColors } from "@/constants/theme";
+
 import { OrderPartyBlock } from "./OrderPartyBlock";
 
 jest.mock("expo-linking", () => ({ openURL: jest.fn() }));
@@ -11,7 +13,7 @@ describe("OrderPartyBlock", () => {
       <OrderPartyBlock
         eyebrow="RESTAURANTE"
         role="shop"
-        pinColor="#f59e0b"
+        pinColor={OrderStatusColors.pending}
         name="Goofy Delicias"
         address="Carrera 27 #72v-2"
         phone="+573156147912"
@@ -38,7 +40,12 @@ describe("OrderPartyBlock", () => {
 
   it("oculta llamar cuando no hay teléfono", async () => {
     const { queryByLabelText } = await render(
-      <OrderPartyBlock eyebrow="CLIENTE" role="customer" pinColor="#3b82f6" name="Ruben" />,
+      <OrderPartyBlock
+        eyebrow="CLIENTE"
+        role="customer"
+        pinColor={OrderStatusColors.enroute}
+        name="Ruben"
+      />,
     );
 
     expect(queryByLabelText("Llamar a Ruben")).toBeNull();

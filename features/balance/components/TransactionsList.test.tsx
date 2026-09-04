@@ -6,7 +6,8 @@ import { TransactionsList } from "./TransactionsList";
 function makeTransaction(overrides: Partial<Transaction> = {}): Transaction {
   return {
     id: "tx-1",
-    amount: 8.5,
+    amountBs: 340,
+    amountUsd: 8.5,
     createdAt: "2026-06-30T10:00:00Z",
     movementType: "Comisión entrega",
     ...overrides,
@@ -19,7 +20,7 @@ describe("TransactionsList", () => {
       <TransactionsList
         transactions={[
           makeTransaction({ id: "tx-1" }),
-          makeTransaction({ id: "tx-2", movementType: "Descuento plataforma", amount: -1.2 }),
+          makeTransaction({ id: "tx-2", movementType: "Descuento plataforma", amountBs: -48 }),
         ]}
       />,
     );

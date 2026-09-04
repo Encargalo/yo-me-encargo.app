@@ -5,7 +5,7 @@ exports[`DeliveryCodeInput deshabilita confirmar hasta completar los dígitos y 
   className="gap-3"
 >
   <Text
-    className="font-mono text-[11px] tracking-[1.4px] text-label"
+    className="font-mono text-[11px] tracking-[1.4px] text-texto-suave"
   >
     CÓDIGO DEL CLIENTE
   </Text>
@@ -21,57 +21,57 @@ exports[`DeliveryCodeInput deshabilita confirmar hasta completar los dígitos y 
       pointerEvents="none"
     >
       <View
-        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
+        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-superficie"
         style={
           {
-            "borderColor": "#ef4444",
+            "borderColor": "#dc2626",
           }
         }
       >
         <Text
-          className="text-[20px] font-bold text-ink"
+          className="text-[20px] font-heading-bold text-texto"
         >
           4
         </Text>
       </View>
       <View
-        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
+        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-superficie"
         style={
           {
-            "borderColor": "#ef4444",
+            "borderColor": "#dc2626",
           }
         }
       >
         <Text
-          className="text-[20px] font-bold text-ink"
+          className="text-[20px] font-heading-bold text-texto"
         >
           8
         </Text>
       </View>
       <View
-        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
+        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-superficie"
         style={
           {
-            "borderColor": "#ef4444",
+            "borderColor": "#dc2626",
           }
         }
       >
         <Text
-          className="text-[20px] font-bold text-ink"
+          className="text-[20px] font-heading-bold text-texto"
         >
           2
         </Text>
       </View>
       <View
-        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-white"
+        className="h-12 flex-1 items-center justify-center rounded-[10px] border-[1.5px] bg-superficie"
         style={
           {
-            "borderColor": "#ef4444",
+            "borderColor": "#dc2626",
           }
         }
       >
         <Text
-          className="text-[20px] font-bold text-ink"
+          className="text-[20px] font-heading-bold text-texto"
         >
           9
         </Text>
@@ -101,10 +101,10 @@ exports[`DeliveryCodeInput deshabilita confirmar hasta completar los dígitos y 
     />
   </View>
   <Text
-    className="text-[13px] font-medium"
+    className="text-[13px] font-heading"
     style={
       {
-        "color": "#ef4444",
+        "color": "#dc2626",
       }
     }
   >
@@ -143,13 +143,13 @@ exports[`DeliveryCodeInput deshabilita confirmar hasta completar los dígitos y 
     onStartShouldSetResponder={[Function]}
     style={
       {
-        "backgroundColor": "#3b82f6",
+        "backgroundColor": "#1d4ed8",
         "opacity": 1,
       }
     }
   >
     <Text
-      className="text-[16px] font-bold text-white"
+      className="text-[16px] font-heading-bold text-white"
     >
       Confirmar entrega
     </Text>

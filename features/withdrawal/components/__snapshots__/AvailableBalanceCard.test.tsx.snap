@@ -1,18 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AvailableBalanceCard muestra el saldo disponible formateado 1`] = `
+exports[`AvailableBalanceCard muestra el saldo disponible en Bs con el USD referencial 1`] = `
 <View
-  className="items-center rounded-[16px] border border-hair bg-white p-[18px]"
+  className="items-center rounded-[16px] border border-borde-suave bg-superficie p-[18px]"
 >
   <Text
-    className="font-mono text-[10px] tracking-[1.2px] text-label"
+    className="font-mono text-[10px] tracking-[1.2px] text-texto-suave"
   >
     DISPONIBLE PARA RETIRO
   </Text>
   <Text
-    className="mt-1.5 text-[34px] font-bold tracking-[-0.4px] text-ink"
+    className="mt-1.5 text-[34px] font-heading-bold tracking-[-0.4px] text-texto"
   >
-    24.5$
+    3.200Bs
+  </Text>
+  <Text
+    className="mt-0.5 text-[12px] font-heading-semibold text-texto-suave"
+  >
+    Ref. 80$
   </Text>
 </View>
 `;

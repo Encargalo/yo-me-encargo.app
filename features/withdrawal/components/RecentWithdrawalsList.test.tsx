@@ -7,14 +7,14 @@ describe("RecentWithdrawalsList", () => {
     const { getByText, toJSON } = await render(
       <RecentWithdrawalsList
         withdrawals={[
-          { amount: 30, date: "2026-06-28T12:00:00Z", status: "processed" },
-          { amount: 18, date: "2026-06-30T12:00:00Z", status: "pending" },
+          { amount: 1200, date: "2026-06-28T12:00:00Z", status: "processed" },
+          { amount: 720, date: "2026-06-30T12:00:00Z", status: "pending" },
         ]}
       />,
     );
 
-    expect(getByText("30$")).toBeTruthy();
-    expect(getByText("18$")).toBeTruthy();
+    expect(getByText("1.200Bs")).toBeTruthy();
+    expect(getByText("720Bs")).toBeTruthy();
     expect(toJSON()).toMatchSnapshot();
   });
 

@@ -10,14 +10,16 @@ interface RecentWithdrawalsListProps {
 export function RecentWithdrawalsList({ withdrawals }: RecentWithdrawalsListProps) {
   if (withdrawals.length === 0) {
     return (
-      <View className="items-center justify-center rounded-[14px] border border-hair bg-white px-6 py-6">
-        <Text className="text-[13px] text-muted">Todavía no has solicitado ningún retiro.</Text>
+      <View className="items-center justify-center rounded-[14px] border border-borde-suave bg-superficie px-6 py-6">
+        <Text className="font-body text-[13px] text-texto-suave">
+          Todavía no has solicitado ningún retiro.
+        </Text>
       </View>
     );
   }
 
   return (
-    <View className="overflow-hidden rounded-[14px] border border-hair bg-white">
+    <View className="overflow-hidden rounded-[14px] border border-borde-suave bg-superficie">
       {withdrawals.map((withdrawal, index) => (
         <RecentWithdrawalRow
           key={`${withdrawal.date}-${withdrawal.amount}`}

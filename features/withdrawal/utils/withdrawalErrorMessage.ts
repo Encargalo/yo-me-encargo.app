@@ -6,6 +6,9 @@ export function getWithdrawalErrorMessage(status?: number): string {
   if (status === 422) {
     return "Tu saldo es insuficiente para retirar.";
   }
+  if (status === 503) {
+    return "La tasa BCV no está disponible ahora. Intenta en unos minutos.";
+  }
   if (status === 401) {
     return "Tu sesión expiró. Vuelve a iniciar sesión.";
   }

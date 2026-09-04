@@ -7,7 +7,9 @@ import { TransactionDetailModal } from "./TransactionDetailModal";
 function makeTransaction(overrides: Partial<Transaction> = {}): Transaction {
   return {
     id: "tx-1",
-    amount: 8.5,
+    amountBs: 340,
+    amountUsd: 8.5,
+    bcvRate: 40,
     createdAt: "2026-06-30T14:20:00Z",
     distanceKm: 3.1,
     movementType: "ride_bank",
@@ -24,15 +26,16 @@ describe("TransactionDetailModal", () => {
     expect(toJSON()).toBeNull();
   });
 
-  it("muestra los campos de la transacción, sin payment_method", async () => {
+  it("muestra los campos de la transacción en Bs, con la tasa BCV, sin payment_method", async () => {
     const { getByText, queryByText } = await render(
       <TransactionDetailModal transaction={makeTransaction()} onClose={jest.fn()} />,
     );
 
     expect(getByText("Carrera")).toBeTruthy();
-    expect(getByText("+8.5$")).toBeTruthy();
+    expect(getByText("+340Bs")).toBeTruthy();
     expect(getByText("30 jun")).toBeTruthy();
     expect(getByText("3.1 km")).toBeTruthy();
+    expect(getByText("40 Bs/$")).toBeTruthy();
     expect(queryByText(/efectivo/)).toBeNull();
   });
 
@@ -45,6 +48,17 @@ describe("TransactionDetailModal", () => {
     );
 
     expect(queryByText(/km/)).toBeNull();
+  });
+
+  it("no muestra la fila de tasa BCV cuando no está presente", async () => {
+    const { queryByText } = await render(
+      <TransactionDetailModal
+        transaction={makeTransaction({ bcvRate: undefined })}
+        onClose={jest.fn()}
+      />,
+    );
+
+    expect(queryByText("Tasa BCV")).toBeNull();
   });
 
   it("cierra al tocar el botón 'Cerrar' o el fondo", async () => {

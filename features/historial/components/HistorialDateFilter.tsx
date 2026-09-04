@@ -3,7 +3,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { X } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
 
-import { Primary } from "@/constants/theme";
+import { Colors } from "@/constants/theme";
 
 import type { DateRange } from "../hooks/useTransactionHistory";
 
@@ -35,16 +35,16 @@ export function HistorialDateFilter({ dateRange, onApply, onClear }: HistorialDa
   }
 
   return (
-    <View className="mx-4 mt-3 mb-2 rounded-[14px] border border-hair bg-card p-3">
+    <View className="mx-4 mt-3 mb-2 rounded-[14px] border border-borde-suave bg-superficie p-3">
       <View className="flex-row items-center gap-2">
         <Pressable
           onPress={() => setOpenPicker("from")}
           className={`h-10 flex-1 items-center justify-center rounded-[10px] border ${
-            pendingFrom ? "border-primary bg-primary/10" : "border-line bg-white"
+            pendingFrom ? "border-primary bg-primary/10" : "border-borde bg-superficie"
           }`}
         >
           <Text
-            className={`text-[12.5px] font-semibold ${pendingFrom ? "text-primary" : "text-ink"}`}
+            className={`text-[12.5px] font-heading-semibold ${pendingFrom ? "text-primary" : "text-texto"}`}
           >
             {pendingFrom ? formatDate(pendingFrom) : "Desde"}
           </Text>
@@ -52,11 +52,11 @@ export function HistorialDateFilter({ dateRange, onApply, onClear }: HistorialDa
         <Pressable
           onPress={() => setOpenPicker("to")}
           className={`h-10 flex-1 items-center justify-center rounded-[10px] border ${
-            pendingTo ? "border-primary bg-primary/10" : "border-line bg-white"
+            pendingTo ? "border-primary bg-primary/10" : "border-borde bg-superficie"
           }`}
         >
           <Text
-            className={`text-[12.5px] font-semibold ${pendingTo ? "text-primary" : "text-ink"}`}
+            className={`text-[12.5px] font-heading-semibold ${pendingTo ? "text-primary" : "text-texto"}`}
           >
             {pendingTo ? formatDate(pendingTo) : "Hasta"}
           </Text>
@@ -68,7 +68,7 @@ export function HistorialDateFilter({ dateRange, onApply, onClear }: HistorialDa
             canApply ? "" : "opacity-40"
           }`}
         >
-          <Text className="text-[12.5px] font-semibold text-white">Aplicar</Text>
+          <Text className="text-[12.5px] font-heading-semibold text-white">Aplicar</Text>
         </Pressable>
       </View>
 
@@ -77,8 +77,8 @@ export function HistorialDateFilter({ dateRange, onApply, onClear }: HistorialDa
           onPress={handleClear}
           className="mt-3 flex-row items-center gap-1 self-start rounded-full border border-primary px-3 py-1.5"
         >
-          <X size={13} color={Primary} />
-          <Text className="text-[12px] font-bold text-primary">Limpiar filtro</Text>
+          <X size={13} color={Colors.marca} />
+          <Text className="text-[12px] font-heading-bold text-primary">Limpiar filtro</Text>
         </Pressable>
       ) : null}
 

@@ -19,19 +19,19 @@ export function HistorialPagination({ page, totalPages, onPageChange }: Historia
           isFirst ? "opacity-40" : ""
         }`}
       >
-        <Text className="text-[12.5px] font-semibold text-white">Anterior</Text>
+        <Text className="text-[12.5px] font-heading-semibold text-white">Anterior</Text>
       </Pressable>
-      <Text className="text-[12.5px] font-semibold text-body">
+      <Text className="text-[12.5px] font-heading-semibold text-texto-suave">
         Página {page} de {totalPages}
       </Text>
       <Pressable
         onPress={() => onPageChange(page + 1)}
         disabled={isLast}
-        className={`h-9 items-center justify-center rounded-[10px] bg-ink px-4 ${
+        className={`h-9 items-center justify-center rounded-[10px] bg-marca px-4 ${
           isLast ? "opacity-50" : ""
         }`}
       >
-        <Text className="text-[12.5px] font-semibold text-white">Siguiente</Text>
+        <Text className="text-[12.5px] font-heading-semibold text-white">Siguiente</Text>
       </Pressable>
     </View>
   );

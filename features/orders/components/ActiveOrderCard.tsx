@@ -1,5 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 
+import { Colors } from "@/constants/theme";
+
 import type { ActiveOrder } from "../types/order.types";
 import { getStatusColor, getStatusLabel } from "../utils/orderStatus";
 
@@ -26,22 +28,25 @@ export function ActiveOrderCard({ order, distanceKm, onPress }: ActiveOrderCardP
   return (
     <Pressable
       onPress={onPress}
-      className="gap-1.5 rounded-[14px] border border-hair bg-white p-3.5"
-      android_ripple={{ color: "#0000000a" }}
+      className="gap-1.5 rounded-[14px] border border-borde-suave bg-superficie p-3.5"
+      android_ripple={{ color: `${Colors.texto}0a` }}
     >
       <View className="flex-row items-center justify-between">
         <View className="rounded-[20px] px-2.5 py-[3px]" style={{ backgroundColor: color }}>
-          <Text className="text-[11px] font-semibold text-white">{label}</Text>
+          <Text className="text-[11px] font-heading-semibold text-white">{label}</Text>
         </View>
-        {distance ? <Text className="font-mono text-xs text-muted">{distance}</Text> : null}
+        {distance ? <Text className="font-mono text-xs text-texto-suave">{distance}</Text> : null}
       </View>
 
-      <Text className="text-[15px] font-semibold tracking-[-0.2px] text-ink" numberOfLines={1}>
+      <Text
+        className="text-[15px] font-heading-semibold tracking-[-0.2px] text-texto"
+        numberOfLines={1}
+      >
         {title}
       </Text>
 
       {address ? (
-        <Text className="text-[13px] text-muted" numberOfLines={1}>
+        <Text className="font-body text-[13px] text-texto-suave" numberOfLines={1}>
           Cliente · {address}
         </Text>
       ) : null}

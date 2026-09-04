@@ -12,7 +12,7 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
     className="flex-1 justify-end bg-black/55"
   >
     <View
-      className="rounded-t-[28px] bg-card px-6 pb-9 pt-5"
+      className="rounded-t-[28px] bg-superficie px-6 pb-9 pt-5"
     >
       <View
         className="items-center"
@@ -84,7 +84,7 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
                 r={25}
                 stroke={
                   {
-                    "payload": 4291545280,
+                    "payload": 4290624957,
                     "type": 0,
                   }
                 }
@@ -107,7 +107,7 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
                 r={25}
                 stroke={
                   {
-                    "payload": 4294286859,
+                    "payload": 4294421032,
                     "type": 0,
                   }
                 }
@@ -126,9 +126,9 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
           <Text
             style={
               {
-                "color": "#2a2a2a",
+                "color": "#1a1a1a",
+                "fontFamily": "PlusJakartaSans-Bold",
                 "fontSize": 18,
-                "fontWeight": "700",
               }
             }
           >
@@ -137,12 +137,12 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
         </View>
       </View>
       <Text
-        className="mt-4 font-mono text-[11px] tracking-[1.4px] text-label"
+        className="mt-4 font-mono text-[11px] tracking-[1.4px] text-texto-suave"
       >
         RESTAURANTE
       </Text>
       <Text
-        className="mt-1 text-[24px] font-bold tracking-[-0.5px] text-ink"
+        className="mt-1 text-[24px] font-heading-bold tracking-[-0.5px] text-texto"
         numberOfLines={2}
       >
         Pizza Roma
@@ -154,14 +154,14 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
           className="mt-0.5 h-[22px] w-[22px] items-center justify-center border border-white"
           style={
             {
-              "backgroundColor": "#3b82f6",
+              "backgroundColor": "#1d4ed8",
               "borderBottomRightRadius": 2,
               "borderRadius": 11,
             }
           }
         >
           <Text
-            className="text-[11px] font-bold text-white"
+            className="text-[11px] font-heading-bold text-white"
           >
             B
           </Text>
@@ -170,28 +170,28 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
           className="flex-1"
         >
           <Text
-            className="text-[14px] text-body"
+            className="font-body text-[14px] text-texto-suave"
             numberOfLines={2}
           >
             55MJ+F5 La Cabrera, Venezuela
           </Text>
           <Text
-            className="mt-0.5 font-mono text-[12px] text-muted"
+            className="mt-0.5 font-mono text-[12px] text-texto-suave"
           >
             ≈ 3.1 km · 10 min
           </Text>
         </View>
       </View>
       <View
-        className="mt-5 flex-row items-center justify-between rounded-[14px] bg-block px-4 py-4"
+        className="mt-5 flex-row items-center justify-between rounded-[14px] bg-fondo px-4 py-4"
       >
         <Text
-          className="text-[15px] font-semibold text-body"
+          className="text-[15px] font-heading-semibold text-texto-suave"
         >
           Comisión
         </Text>
         <Text
-          className="text-[30px] font-bold tracking-[-0.5px] text-ink"
+          className="text-[30px] font-heading-bold tracking-[-0.5px] text-texto"
         >
           $0.64
         </Text>
@@ -218,7 +218,7 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
             }
           }
           accessible={true}
-          className="h-[56px] flex-1 items-center justify-center rounded-[14px] border-[1.5px] border-line bg-white"
+          className="h-[56px] flex-1 items-center justify-center rounded-[14px] border-[1.5px] border-borde bg-superficie"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -232,7 +232,7 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
           onStartShouldSetResponder={[Function]}
         >
           <Text
-            className="text-[16px] font-semibold text-body"
+            className="text-[16px] font-heading-semibold text-texto-suave"
           >
             Rechazar
           </Text>
@@ -256,7 +256,7 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
             }
           }
           accessible={true}
-          className="h-[56px] items-center justify-center rounded-[14px] bg-ink"
+          className="h-[56px] items-center justify-center rounded-[14px] bg-marca"
           collapsable={false}
           focusable={true}
           onBlur={[Function]}
@@ -279,14 +279,14 @@ exports[`OrderOfferModal renderiza la oferta con comisión, distancia y acciones
           }
         >
           <Text
-            className="text-[16px] font-bold text-white"
+            className="text-[16px] font-heading-bold text-white"
           >
             Aceptar
           </Text>
         </View>
       </View>
       <Text
-        className="mt-3 text-center font-mono text-[10px] tracking-[1px] text-placeholder"
+        className="mt-3 text-center font-mono text-[10px] tracking-[1px] text-texto-tenue"
       >
         ZONA DEL PULGAR · ACCIONES GRANDES LADO A LADO
       </Text>

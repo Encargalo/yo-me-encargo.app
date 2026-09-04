@@ -20,13 +20,13 @@ export function PickupCodeCard({ code }: PickupCodeCardProps) {
       style={{ backgroundColor: `${PENDING}14`, borderColor: `${PENDING}40` }}
     >
       <Text
-        className="font-mono text-[11px] font-semibold tracking-[1.4px]"
+        className="font-mono text-[11px] font-heading-semibold tracking-[1.4px]"
         style={{ color: PENDING }}
       >
         CÓDIGO DE RECOGIDA
       </Text>
       <Text
-        className="font-mono text-[34px] font-bold"
+        className="font-mono text-[34px] font-heading-bold"
         style={{ color: PENDING, letterSpacing: 6 }}
       >
         {code}

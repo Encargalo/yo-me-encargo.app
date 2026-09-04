@@ -28,7 +28,13 @@ function triggerFocus() {
 
 const mockedGetBalance = getBalance as jest.Mock;
 
-const sampleResponse = { balance: 24.5, zone: "normal", transactions: [] };
+const sampleResponse = {
+  balanceBs: 3200,
+  balanceUsd: 80,
+  zone: "withdrawal_available",
+  withdrawalMinBs: 600,
+  transactions: [],
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -43,12 +49,24 @@ describe("useBalance", () => {
     const { result } = await renderHook(() => useBalance());
 
     expect(result.current.status).toBe("success");
-    expect(result.current.balance).toBe(24.5);
-    expect(result.current.zone).toBe("normal");
+    expect(result.current.balanceBs).toBe(3200);
+    expect(result.current.balanceUsd).toBe(80);
+    expect(result.current.zone).toBe("withdrawal_available");
+    expect(result.current.withdrawalMinBs).toBe(600);
   });
 
   it("error en carga inicial", async () => {
     mockedGetBalance.mockRejectedValueOnce(new Error("network"));
+
+    const { result } = await renderHook(() => useBalance());
+
+    expect(result.current.status).toBe("error");
+  });
+
+  it("una respuesta con forma inesperada (getBalance lanza) queda en 'error'", async () => {
+    mockedGetBalance.mockRejectedValueOnce(
+      new Error("Respuesta de /riders/balance con formato inesperado"),
+    );
 
     const { result } = await renderHook(() => useBalance());
 
@@ -60,13 +78,13 @@ describe("useBalance", () => {
     const { result } = await renderHook(() => useBalance());
     expect(result.current.status).toBe("success");
 
-    mockedGetBalance.mockResolvedValueOnce({ ...sampleResponse, balance: 30 });
+    mockedGetBalance.mockResolvedValueOnce({ ...sampleResponse, balanceBs: 4000 });
     await act(async () => {
       triggerFocus();
     });
 
     expect(mockedGetBalance).toHaveBeenCalledTimes(2);
-    expect(result.current.balance).toBe(30);
+    expect(result.current.balanceBs).toBe(4000);
   });
 
   it("refresh() marca 'refreshing' sin volver a 'loading' cuando ya había datos", async () => {
@@ -87,10 +105,10 @@ describe("useBalance", () => {
     expect(result.current.status).toBe("refreshing");
 
     await act(async () => {
-      resolveSecond({ ...sampleResponse, balance: 50 });
+      resolveSecond({ ...sampleResponse, balanceBs: 5000 });
     });
 
     expect(result.current.status).toBe("success");
-    expect(result.current.balance).toBe(50);
+    expect(result.current.balanceBs).toBe(5000);
   });
 });

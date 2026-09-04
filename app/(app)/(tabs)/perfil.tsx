@@ -17,7 +17,7 @@ export default function Perfil() {
 
   return (
     <View className="flex-1 items-center justify-center gap-8 bg-white px-6">
-      <Text className="text-primary text-xl font-bold">Perfil · Próximamente</Text>
+      <Text className="text-primary text-xl font-heading-bold">Perfil · Próximamente</Text>
       <Button label="Cerrar sesión" onPress={handleLogout} />
     </View>
   );

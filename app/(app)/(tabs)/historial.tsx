@@ -22,8 +22,8 @@ export default function Historial() {
   const hasRetriableError = status === "errorPage" || status === "errorFullSet";
 
   return (
-    <View className="flex-1 bg-canvas" style={{ paddingTop: insets.top, paddingBottom: 16 }}>
-      <Text className="px-4 pb-2 pt-3 text-[18px] font-bold text-ink">Historial</Text>
+    <View className="flex-1 bg-fondo" style={{ paddingTop: insets.top, paddingBottom: 16 }}>
+      <Text className="px-4 pb-2 pt-3 text-[18px] font-heading-bold text-texto">Historial</Text>
 
       {isInitialLoading || isInitialError ? null : (
         <HistorialDateFilter
@@ -39,14 +39,14 @@ export default function Historial() {
         </View>
       ) : isInitialError ? (
         <View className="flex-1 items-center justify-center gap-3 px-8">
-          <Text className="text-center text-[15px] font-semibold text-body">
+          <Text className="text-center text-[15px] font-heading-semibold text-texto-suave">
             No pudimos cargar tu historial
           </Text>
           <Pressable
             onPress={retry}
-            className="h-11 items-center justify-center rounded-[12px] bg-ink px-5"
+            className="h-11 items-center justify-center rounded-[12px] bg-marca px-5"
           >
-            <Text className="text-[14px] font-semibold text-white">Reintentar</Text>
+            <Text className="text-[14px] font-heading-semibold text-white">Reintentar</Text>
           </Pressable>
         </View>
       ) : status === "loadingFullSet" ? (
@@ -68,14 +68,14 @@ export default function Historial() {
               onPress={retry}
               className="mx-4 mb-2 flex-row items-center justify-between rounded-[10px] bg-status-error/10 px-3 py-2.5"
             >
-              <Text className="flex-1 text-[12.5px] font-semibold text-status-error">
+              <Text className="flex-1 text-[12.5px] font-heading-semibold text-status-error">
                 No pudimos completar la acción
               </Text>
-              <Text className="text-[12.5px] font-bold text-status-error">Reintentar</Text>
+              <Text className="text-[12.5px] font-heading-bold text-status-error">Reintentar</Text>
             </Pressable>
           ) : null}
 
-          <View className="mx-4 mt-1 overflow-hidden rounded-[14px] border border-hair bg-white">
+          <View className="mx-4 mt-1 overflow-hidden rounded-[14px] border border-borde-suave bg-superficie">
             {rows.map((transaction, index) => (
               <TransactionRow
                 key={transaction.id}
