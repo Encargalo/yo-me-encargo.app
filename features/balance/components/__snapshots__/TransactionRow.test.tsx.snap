@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionRow mapea movementType a una etiqueta legible y muestra monto, fecha y distancia 1`] = `
+<View
+  className="flex-row items-center justify-between px-3.5 py-3 border-b border-borde-suave"
+>
+  <View
+    className="flex-1 pr-3"
+  >
+    <Text
+      className="text-[13px] font-heading-semibold text-texto"
+      numberOfLines={1}
+    >
+      Carrera
+    </Text>
+    <Text
+      className="font-body text-[10.5px] text-texto-suave"
+      numberOfLines={1}
+    >
+      4 jul · 3.1 km
+    </Text>
+  </View>
+  <Text
+    className="text-[14px] font-heading-bold"
+    style={
+      {
+        "color": "#09e55b",
+      }
+    }
+  >
+    +26Bs
+  </Text>
+</View>
+`;

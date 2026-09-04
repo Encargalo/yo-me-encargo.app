@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PickupCodeCard muestra el código de recogida 1`] = `
+<View
+  className="items-center gap-1.5 rounded-[14px] border px-4 py-4"
+  style={
+    {
+      "backgroundColor": "#f7aa2814",
+      "borderColor": "#f7aa2840",
+    }
+  }
+>
+  <Text
+    className="font-mono text-[11px] font-heading-semibold tracking-[1.4px]"
+    style={
+      {
+        "color": "#f7aa28",
+      }
+    }
+  >
+    CÓDIGO DE RECOGIDA
+  </Text>
+  <Text
+    className="font-mono text-[34px] font-heading-bold"
+    style={
+      {
+        "color": "#f7aa28",
+        "letterSpacing": 6,
+      }
+    }
+  >
+    4474
+  </Text>
+</View>
+`;

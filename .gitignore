@@ -30,9 +30,15 @@ yarn-error.*
 .DS_Store
 *.pem
 
+# JetBrains (Android Studio / WebStorm)
+.idea/
+
 # local env files
 .env
 .env*.local
+
+# EAS Submit — credencial de la service account de Google Cloud
+google-service-account.json
 
 # OpenSpec local config (no commitear tokens/credenciales)
 .claude/openspec-config.json

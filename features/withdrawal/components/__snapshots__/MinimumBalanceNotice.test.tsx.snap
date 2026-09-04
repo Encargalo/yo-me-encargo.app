@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MinimumBalanceNotice muestra el mínimo vigente en Bs cuando el saldo lo alcanza 1`] = `
+<View
+  className="flex-row items-start gap-2 rounded-[12px] border border-borde-suave bg-fondo px-3.5 py-3"
+>
+  <Text
+    className="font-body text-[14px]"
+  >
+    ⓘ
+  </Text>
+  <Text
+    className="font-body flex-1 text-[12px] leading-[17px] text-texto-suave"
+  >
+    Disponible para retiro a partir de
+     
+    <Text
+      className="font-heading-bold"
+    >
+      600Bs
+    </Text>
+    .
+  </Text>
+</View>
+`;

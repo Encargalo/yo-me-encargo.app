@@ -1,0 +1,187 @@
+import { mapRawOrder } from "./mapRawOrder";
+
+describe("mapRawOrder", () => {
+  it("mapea el shape real de /orders/rider (order + shop + customer hermanos)", () => {
+    const order = mapRawOrder({
+      type: "new_order",
+      order: {
+        id: "f7a9ec8d-6192-404c-a057-3d2bdaac32f7",
+        shop_id: "d33aaf08-2c43-41c4-b2e7-882b019edb1e",
+        customer_id: "a9cca4e8-4956-4c02-8974-c0f698914703",
+        batch_id: "21b5cab9-ce8e-40f8-82ad-4bb8689424c0",
+        number: 1,
+        method_payment: "PagoMovil",
+        status: "In Preparation",
+        delivery_fee: 0.96,
+        delivery_fee_bs: 626.86,
+        created_at: "0001-01-01T00:00:00Z",
+      },
+      shop: {
+        id: "d33aaf08-2c43-41c4-b2e7-882b019edb1e",
+        name: "Goofy Delicias",
+        phone: "+573156147912",
+        logo: "https://res.cloudinary.com/dxmvyitlc/image/upload/v1758042448/logo_c6lfsj.jpg",
+        address: "a 72v-40 Carrera 27 #72v-2, Cali, Valle del Cauca",
+        latitude: 10.179249,
+        longitude: -66.815325,
+      },
+      customer: {
+        address: "55MJ+G54 La Cabrera, Miranda, Venezuela",
+        latitude: 10.1837597,
+        longitude: -66.8195358,
+      },
+    });
+
+    expect(order.id).toBe("f7a9ec8d-6192-404c-a057-3d2bdaac32f7");
+    expect(order.number).toBe(1);
+    expect(order.status).toBe("In Preparation");
+    expect(order.methodPayment).toBe("PagoMovil");
+    expect(order.shopId).toBe("d33aaf08-2c43-41c4-b2e7-882b019edb1e");
+    expect(order.customerId).toBe("a9cca4e8-4956-4c02-8974-c0f698914703");
+    expect(order.batchId).toBe("21b5cab9-ce8e-40f8-82ad-4bb8689424c0");
+    // Restaurante: ahora sí llega con nombre, teléfono, logo y coords.
+    expect(order.shop.name).toBe("Goofy Delicias");
+    expect(order.shop.phone).toBe("+573156147912");
+    expect(order.shop.logo).toBe(
+      "https://res.cloudinary.com/dxmvyitlc/image/upload/v1758042448/logo_c6lfsj.jpg",
+    );
+    expect(order.shop.latitude).toBe(10.179249);
+    expect(order.shop.longitude).toBe(-66.815325);
+    // Cliente: dirección y coords vienen en su propio objeto hermano.
+    expect(order.customer.address).toBe("55MJ+G54 La Cabrera, Miranda, Venezuela");
+    expect(order.customer.latitude).toBe(10.1837597);
+    expect(order.customer.longitude).toBe(-66.8195358);
+    expect(order.deliveryFee).toBe(0.96);
+    expect(order.deliveryFeeBs).toBe(626.86);
+  });
+
+  it("soporta defensivamente el shape plano anterior (sin `order` anidado)", () => {
+    const order = mapRawOrder({
+      id: "41ecb744",
+      number: 2,
+      status: "On The Way",
+      pickup_code: "453716",
+      address: "Av. Principal, Caracas",
+      latitude: 10.178015,
+      longitude: -66.815931,
+      delivery_fee: 0.48,
+      delivery_fee_bs: 409.41,
+      created_at: "2026-06-26T22:33:26Z",
+    });
+
+    expect(order.id).toBe("41ecb744");
+    expect(order.pickupCode).toBe("453716");
+    // Sin `shop` hermano → sin nombre ni coords de tienda.
+    expect(order.shop.name).toBe("");
+    // Fallback: dirección/coords a nivel raíz de `order` = cliente.
+    expect(order.customer.address).toBe("Av. Principal, Caracas");
+    expect(order.customer.latitude).toBe(10.178015);
+    expect(order.deliveryFee).toBe(0.48);
+    expect(order.deliveryFeeBs).toBe(409.41);
+  });
+
+  it("mapea rider_id cuando la orden ya fue tomada por un rider", () => {
+    const order = mapRawOrder({
+      order: {
+        id: "taken-1",
+        status: "On The Way",
+        rider_id: "99b33691",
+      },
+    });
+
+    expect(order.riderId).toBe("99b33691");
+  });
+
+  it("deja riderId undefined en una oferta sin asignar (rider_id ausente o vacío)", () => {
+    const offer = mapRawOrder({
+      order: { id: "offer-1", status: "In Preparation" },
+    });
+    expect(offer.riderId).toBeUndefined();
+
+    const emptyRider = mapRawOrder({
+      order: { id: "offer-2", status: "In Preparation", rider_id: "" },
+    });
+    expect(emptyRider.riderId).toBeUndefined();
+  });
+
+  it("soporta defensivamente restaurante/cliente anidados si el backend los agrega dentro de `order` (shape plano)", () => {
+    const order = mapRawOrder({
+      id: "order-2",
+      status: "Ready",
+      code: "111111",
+      shop: { name: "Sushi Bar", lat: 4.5, lng: -74.1 },
+      customer: { name: "Ana", phone: "+573001112233" },
+      distance: 1.1,
+    });
+
+    expect(order.pickupCode).toBe("111111");
+    expect(order.shop.name).toBe("Sushi Bar");
+    expect(order.shop.latitude).toBe(4.5);
+    expect(order.customer.name).toBe("Ana");
+    expect(order.customer.phone).toBe("+573001112233");
+    expect(order.distanceKm).toBe(1.1);
+  });
+
+  it("mapea items[] con flavors y additions del order_update de aceptación", () => {
+    const order = mapRawOrder({
+      type: "order_update",
+      order: {
+        id: "90b3a878",
+        status: "In Preparation",
+        pickup_code: "4474",
+        rider_id: "99b33691",
+        items: [
+          {
+            id: "e326883f",
+            name: "Pizza 6 Porciones",
+            image: "https://example.com/pizza.jpg",
+            amount: 7,
+            flavors: [{ id: "a67c2dbf", name: "Pollo y Jamón", amount: 1 }],
+          },
+          {
+            id: "454e5b29",
+            name: "Perro Ranchero",
+            amount: 4,
+            additions: [
+              { id: "c93ccc45", name: "Maduro", amount: 4 },
+              { id: "a91a5198", name: "Pollo Desmechado", amount: 4 },
+            ],
+          },
+        ],
+      },
+    });
+
+    expect(order.items).toHaveLength(2);
+    expect(order.items?.[0]).toEqual({
+      id: "e326883f",
+      name: "Pizza 6 Porciones",
+      image: "https://example.com/pizza.jpg",
+      amount: 7,
+      flavors: [{ id: "a67c2dbf", name: "Pollo y Jamón", amount: 1 }],
+      additions: undefined,
+    });
+    expect(order.items?.[1].additions).toEqual([
+      { id: "c93ccc45", name: "Maduro", amount: 4 },
+      { id: "a91a5198", name: "Pollo Desmechado", amount: 4 },
+    ]);
+  });
+
+  it("deja items en [] cuando el mensaje no los trae (oferta new_order)", () => {
+    const offer = mapRawOrder({
+      type: "new_order",
+      order: { id: "offer-3", status: "In Preparation" },
+    });
+
+    expect(offer.items).toEqual([]);
+  });
+
+  it("aplica defaults seguros ante un payload vacío", () => {
+    const order = mapRawOrder({});
+    expect(order.id).toBe("");
+    expect(order.status).toBe("Pending");
+    expect(order.deliveryFee).toBe(0);
+    expect(order.shop.name).toBe("");
+    expect(order.customer.latitude).toBeUndefined();
+    expect(typeof order.createdAt).toBe("string");
+  });
+});

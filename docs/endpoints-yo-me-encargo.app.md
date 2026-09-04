@@ -171,7 +171,7 @@ Retorna el historial paginado de movimientos de balance del rider.
 ### `POST /riders/withdrawal`
 **Solicitar retiro de balance**
 
-El rider solicita retirar su balance acumulado. Requiere balance >= +$15.
+El rider solicita retirar su balance acumulado. Requiere balance >= +$0.1.
 
 **Parámetros:** Ninguno
 

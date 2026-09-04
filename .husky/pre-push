@@ -1,0 +1,10 @@
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$branch" = "master" ] || [ "$branch" = "develop" ]; then
+  echo ""
+  echo "  Push bloqueado: no se permite push directo a '$branch'."
+  echo "  Crea una branch con el formato feat/, fix/, refactor/ o chore/"
+  echo "  y abre un Pull Request hacia develop."
+  echo ""
+  exit 1
+fi

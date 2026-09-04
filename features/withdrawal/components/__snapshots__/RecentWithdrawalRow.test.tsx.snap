@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecentWithdrawalRow retiro pendiente 1`] = `
+<View
+  className="flex-row items-center justify-between px-3.5 py-3 border-b border-borde-suave"
+>
+  <View>
+    <Text
+      className="text-[13px] font-heading-semibold text-texto"
+    >
+      720Bs
+    </Text>
+    <Text
+      className="font-body text-[10.5px] text-texto-suave"
+    >
+      30 jun
+    </Text>
+  </View>
+  <View
+    className="rounded-full border px-2.5 py-[3px]"
+    style={
+      {
+        "borderColor": "#f7aa28",
+      }
+    }
+  >
+    <Text
+      className="text-[10px] font-heading-semibold"
+      style={
+        {
+          "color": "#f7aa28",
+        }
+      }
+    >
+      Pendiente
+    </Text>
+  </View>
+</View>
+`;

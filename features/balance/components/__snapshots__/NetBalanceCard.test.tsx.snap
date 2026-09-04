@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetBalanceCard muestra el saldo positivo en Bs, el USD referencial, zona y desglose 1`] = `
+<View
+  className="rounded-[18px] border border-borde-suave bg-superficie p-5"
+>
+  <View
+    className="mb-2.5 flex-row items-start justify-between"
+  >
+    <Text
+      className="font-mono text-[10px] tracking-[1.2px] text-texto-suave"
+    >
+      SALDO NETO
+    </Text>
+    <View
+      className="rounded-full border border-borde-suave px-2.5 py-[3px]"
+    >
+      <Text
+        className="text-[10px] font-heading-semibold text-texto"
+      >
+        Zona: 
+        withdrawal_available
+      </Text>
+    </View>
+  </View>
+  <Text
+    className="text-[38px] font-heading-bold tracking-[-0.4px]"
+    style={
+      {
+        "color": "#09e55b",
+      }
+    }
+  >
+    3.200Bs
+  </Text>
+  <Text
+    className="mt-0.5 text-[13px] font-heading-semibold text-texto-suave"
+  >
+    Ref. 80$
+  </Text>
+  <View
+    className="mt-3 flex-row gap-[18px] border-t border-borde-suave pt-3"
+  >
+    <View>
+      <Text
+        className="font-mono text-[9px] text-texto-suave"
+      >
+        GANADO
+      </Text>
+      <Text
+        className="text-[14px] font-heading-semibold"
+        style={
+          {
+            "color": "#09e55b",
+          }
+        }
+      >
+        +1.520Bs
+      </Text>
+    </View>
+    <View>
+      <Text
+        className="font-mono text-[9px] text-texto-suave"
+      >
+        DESCONTADO
+      </Text>
+      <Text
+        className="text-[14px] font-heading-semibold"
+        style={
+          {
+            "color": "#dc2626",
+          }
+        }
+      >
+        −540Bs
+      </Text>
+    </View>
+  </View>
+</View>
+`;
